@@ -10,14 +10,13 @@
     <link href="https://cdn.bootcss.com/MaterialDesign-Webfont/3.2.89/css/materialdesignicons.min.css" rel="stylesheet">
     <style>
         .entity {
+            float: left;
             width: 120px;
             height: 120px;
             margin: 2px;
-            float: left;
             color: white;
+            font-size: 14px;
             text-align: center;
-            font-weight: 300;
-            font-size: 11pt;
         }
 
         @media (hover: hover) {
@@ -62,8 +61,8 @@
         .extra {
             height: 34px;
             line-height: 34px;
-            text-overflow: clip;
             overflow: hidden;
+            text-overflow: clip;
             white-space: nowrap;
         }
 
@@ -90,10 +89,11 @@
         }
 
         body {
-            margin: 0px;
-            background-color: black;
+            margin: 0;
             color: white;
+            font-weight: 300;
             font-family: Helvetica;
+            background-color: black;
             -webkit-user-select: none;
         }
 
@@ -423,7 +423,7 @@
                 html += ' ondblclick="connect()"';
             }
             if (hue)
-                html += ' style="border: 0px solid hsl(' + hue + ', 100%, 50%); box-sizing: border-box; border-bottom-width: 2px"';
+                html += ' style="border: 0 solid hsl(' + hue + ', 100%, 50%); box-sizing: border-box; border-bottom-width: 2px"';
             html += '>';
             html += makeState(entity);
             html += '</div> ';
