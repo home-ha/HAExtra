@@ -211,7 +211,7 @@
                         handleEvent(json.event.data.new_state);
                         break;
                     case 'auth_invalid':
-                        floater('error', '认证无效！请先<a href=' + location.protocol + '//' + location.host + '>登录首页</a>，或指定密码和地址：' + location.href.split('?')[0] + '?password@ws:hassbian.lan:8123');
+                        floater('error', '无效认证！请先<a href="javascript:location.href=\'' + location.protocol + '//' + location.host + '\'">登录首页</a>，或指定密码和地址：' + location.href.split('?')[0] + '?password@ws:hassbian.lan:8123');
                         break;
                     default:
                         console.log(json);
