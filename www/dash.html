@@ -69,6 +69,7 @@
 			.state {
 				height: 52px;
 				line-height: 52px;
+				overflow: hidden;
 				font-size: 44px;
 			}
 
@@ -78,6 +79,14 @@
 
 			.off {
 				color: rgba(230, 230, 230, 0.5);
+			}
+
+			.caution {
+				color: #ffd835;
+			}
+
+			.critical {
+				color: #e91e63;
 			}
 
 			.unit {
@@ -456,7 +465,8 @@
 			}
 
 			function makeState(entity) {
-				var domain = entity.entity_id.split('.')[0]
+				var entity_id = entity.entity_id
+				var domain = entity_id.split('.')[0]
 				var state = entity.state
 				var attributes = entity.attributes
 
@@ -471,7 +481,8 @@
 					// TODO: Replace mdicon checking to another way
 					var value = domain == 'climate' ? attributes.current_temperature : state
 					var nan = isNaN(value)
-					html += '<div class="state' + off + (nan ? ' nan' : '') + '">'
+					var overflow = nan ? '' : stateOverflow(entity_id, value)
+					html += '<div class="state' + off + overflow + (nan ? ' nan' : '') + '">'
 					html += nan ? value : Math.floor(parseFloat(value) * 100) / 100
 
 					var unit = attributes.unit_of_measurement
@@ -512,6 +523,29 @@
 				}
 
 				return html
+			}
+
+			_SENSOR_THRESHOLDS = {
+				pm25: [40, 70],
+				co2: [900, 1600],
+				humidity: [75, 85]
+				// hcho: [0.08, 0.2],
+				// temperature: [35, 40]
+			}
+
+			function stateOverflow(entity_id, value) {
+				var warning = ''
+				for (var k in _SENSOR_THRESHOLDS) {
+					if (entity_id.endsWith(k)) {
+						var thresholds = _SENSOR_THRESHOLDS[k]
+						if (value > thresholds[1]) {
+							return ' critical'
+						} else if (value > thresholds[0]) {
+							return ' caution'
+						}
+					}
+				}
+				return ''
 			}
 
 			function floater(type, text) {
