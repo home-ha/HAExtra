@@ -1,501 +1,525 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <title>智能面板</title>
-    <meta charset="utf-8" />
-    <meta name='apple-mobile-web-app-capable' content='yes'>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel='apple-touch-icon' href='/static/images/config_insteon.png'>
-    <link href="https://cdn.bootcss.com/MaterialDesign-Webfont/3.2.89/css/materialdesignicons.min.css" rel="stylesheet">
-    <style>
-        .entity {
-            float: left;
-            width: 120px;
-            height: 120px;
-            margin: 2px;
-            color: white;
-            font-size: 14px;
-            font-weight: 300;
-            text-align: center;
-        }
-
-        @media (hover: hover) {
-            .entity:hover {
-                background-color: #4caf50;
-                cursor: pointer;
-            }
-        }
-
-        .binary_sensor {
-            background-color: #03a9f4;
-        }
-
-        .device_tracker {
-            background-color: #009688;
-        }
-
-        .fan,
-        .climate {
-            background-color: #cddc39;
-        }
-
-        .cover,
-        .media_player,
-        .vacuum {
-            background-color: #ff9800;
-        }
-
-        .switch {
-            background-color: #ffc107;
-        }
-
-        .light {
-            background-color: #ff5722;
-        }
-
-        .sensor {
-            background-color: #00bcd4;
-        }
-
-        .name,
-        .extra {
-            height: 34px;
-            line-height: 34px;
-            overflow: hidden;
-            text-overflow: clip;
-            white-space: nowrap;
-        }
-
-        .state {
-            height: 52px;
-            line-height: 52px;
-            font-size: 44px;
-        }
-
-        .nan {
-            font-size: 36px;
-        }
-
-        .off {
-            color: rgba(230, 230, 230, 0.5);
-        }
-
-        .unit {
-            font-size: 10px
-        }
-
-        ::-webkit-scrollbar {
-            display: none;
-        }
-
-        body {
-            margin: 0;
-            color: white;
-            font-family: Helvetica;
-            background-color: black;
-            -webkit-user-select: none;
-        }
-
-        #loading {
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-            width: 100px;
-            height: 100px;
-            border: 5px rgba(0, 0, 0, 0.1) solid;
-            border-left-color: #ff5500;
-            border-right-color: #0c80fe;
-            border-radius: 100%;
-            animation: loading 2s infinite linear;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        #error {
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-            width: 300px;
-            height: 32px;
-            line-height: 32px;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 3px;
-        }
-
-        @keyframes loading {
-            from {
-                transform: rotate(0deg)
-            }
-
-            to {
-                transform: rotate(360deg)
-            }
-        }
-
-        @keyframes tuning {
-            100% {
-                background: #607d8b;
-            }
-        }
-    </style>
-    <script>
-
-        _ws = null;
-        _wsid = 4;
-        _processing = false;
-
-        function load() {
-            // Respond to mobile browser
-            if (navigator.userAgent.match('Mobile') != null) {
-                var meta = document.createElement('meta');
-                meta.name = 'viewport';
-                meta.setAttribute('content', 'width=device-width, initial-scale=1, user-scalable=no');
-                document.getElementsByTagName('head')[0].appendChild(meta);
-            }
-
-            // Adjust grid width
-            var clientWidth = document.documentElement.clientWidth;
-            var count = Math.floor(clientWidth / 124);
-            var width = (clientWidth - count * 4) / count;
-            width = Math.floor(width * 10) / 10;
-            document.styleSheets[1].cssRules[0].style.width = width + 'px';
-            //alert('clientWidth:' + clientWidth + ' count:' + count + ' width:' + width);
-
-            connect();
-        }
-
-        function connect() {
-            floater('loading');
-
-            var params = location.search.split('@');
-            if (params.length > 1 && params[1].startsWith('ws'))
-                var url = params[1];
-            else
-                var url = (location.protocol == 'https:' ? 'wss:' : 'ws:') + location.host;
-
-            _ws = new WebSocket(url + '/api/websocket');
-            _ws.onopen = function () {
-                var password = params[0].slice(1);
-                if (password) {
-                    _ws.send('{"type": "auth", "api_password": "' + password + '"}');
-                } else if (localStorage.hassTokens) {
-                    var access_token = JSON.parse(localStorage.hassTokens).access_token;
-                    if (access_token) {
-                        _ws.send('{"type": "auth", "access_token": "' + access_token + '"}');
-                    }
-                }
-                _ws.send('{"id": 2, "type": "subscribe_events", "event_type": "state_changed"}');
-                _ws.send('{"id": 3, "type": "get_states"}');
-            };
-            _ws.onclose = function () {
-                if (!document.getElementById('error'))
-                    floater('error', '连接关闭，30 秒后<a href="javascript:connect()">重新连接</a>');
-                setTimeout('connect()', 30000);
-            };
-            _ws.onmessage = function (message) {
-                var json = JSON.parse(message.data);
-                switch (json.type) {
-                    case 'result':
-                        handleStates(json.result);
-                        break;
-                    case 'event':
-                        handleEvent(json.event.data.new_state);
-                        break;
-                    case 'auth_invalid':
-                        floater('error', '无效认证！请先<a href="javascript:location.href=\'' + location.protocol + '//' + location.host + '\'">登录首页</a>，或指定密码和地址：' + location.href.split('?')[0] + '?password@ws:hassbian.lan:8123');
-                        break;
-                    default:
-                        console.log(json);
-                        break;
-                }
-            };
-        }
-
-        _DOMAIN_ICONS = {
-            'sensor': 'flower',
-            'binary_sensor': 'bullseye',
-            'device_tracker': 'account',
-
-            'light': 'lightbulb',
-            'switch': 'light-switch',
-
-            'fan': 'fan',
-            'climate': 'thermostat',
-
-            'media_player': 'play-circle-outline',
-            'cover': 'window-closed',
-            'vacuum': 'robot-vacuum',
-        };
-
-        function handleStates(entities) {
-            if (entities == null) {
-                return;
-            }
-
-            function findEntity(entity_id) {
-                for (var i in entities) {
-                    var entity = entities[i];
-                    if (entity.entity_id == entity_id) {
-                        return entity;
-                    }
-                }
-                console.log('Entity id not found: ' + entity_id);
-                return null;
-            }
-
-            // Prepare group data
-            var group_count = 1;
-            var entity_group_nos = {};
-            var sorted_entity_ids = [];
-            function prepareGroup(group_id) {
-                var group = findEntity(group_id);
-                if (group) {
-                    console.log('Sort by ' + group_id);
-                    var entity_ids = group.attributes.entity_id;
-                    var group_no = group_count++;
-                    for (var i in entity_ids) {
-                        var entity_id = entity_ids[i];
-                        if (entity_id.startsWith('group')) {
-                            prepareGroup(entity_id);
-                        } else/* if (_DOMAIN_ICONS.hasOwnProperty(entity_id.split('.')[0]) && !entity.attributes.hidden)*/ {
-                            sorted_entity_ids.push(entity_id);
-                            entity_group_nos[entity_id] = group_no;
-                        }
-                    }
-                }
-                return group != null;
-            }
-
-            // Group params via hash
-            var params = (location.hash ? location.hash.slice(1) : 'default_view@1@1').split('@');
-            var sort_by_group = (params[0] != 'NA') ? prepareGroup('group.' + params[0]) : false;
-            var filter_by_group = sort_by_group ? parseInt(params[1]) : false;
-            var indicator_by_group = sort_by_group ? parseInt(params[2]) : false;
-
-            // Remove unsupport entities
-            for (var j = entities.length - 1; j >= 0; j--) {
-                var entity = entities[j];
-                var entity_id = entity.entity_id;
-                if ((filter_by_group && sorted_entity_ids.indexOf(entity_id) == -1) || !_DOMAIN_ICONS.hasOwnProperty(entity_id.split('.')[0]) || entity.attributes.hidden/* || !entity.attributes.hasOwnProperty('friendly_name')*/)
-                    entities.splice(j, 1);
-            }
-
-            // Sort entiries by domain+group order
-            var domains = Object.keys(_DOMAIN_ICONS);
-            entities.sort(function (x, y) {
-                var entity_id1 = x.entity_id;
-                var entity_id2 = y.entity_id;
-                var index1 = domains.indexOf(entity_id1.split('.')[0]);
-                var index2 = domains.indexOf(entity_id2.split('.')[0]);
-                if (index1 == index2) {
-                    if (sort_by_group) {
-                        index1 = sorted_entity_ids.indexOf(entity_id1);
-                        index2 = sorted_entity_ids.indexOf(entity_id2);
-                    } else {
-                        return x.attributes.friendly_name.localeCompare(y.attributes.friendly_name);
-                    }
-                }
-                return index1 - index2;
-            });
-
-            // Generate entities
-            var html = '';
-            for (var i in entities) {
-                var entity = entities[i];
-                var hue = indicator_by_group ? Math.floor(entity_group_nos[entity.entity_id] * 360 / group_count) : 0;
-                html += makeEntity(entity, hue);
-            }
-
-            floater();
-            document.getElementById('content').innerHTML = html;
-        }
-
-        function handleEvent(entity) {
-            var element = document.getElementById(entity.entity_id);
-            if (element) {
-                element.innerHTML = makeState(entity);
-                //console.log('Update entity: ' + entity.attributes.friendly_name);
-            } else {
-                var domain = entity.entity_id.split('.')[0];
-                if (_DOMAIN_ICONS.hasOwnProperty(domain)) {
-                    floater('error', '发现新设备，请<a href="javascript:connect()">重新连接</a>');
-                } else {
-                    console.log('Skip entity event: ' + entity.entity_id);
-                }
-            }
-        }
-
-        function handleClick(element) {
-            if (_processing) {
-                console.log('Skip processing: ' + entity_id);
-                return;
-            }
-            _processing = true;
-
-            var style = element.style.cssText;
-            element.style = 'animation: tuning 1s infinite alternate; ' + style;
-
-            entity_id = element.id;
-            var domain = entity_id.split('.')[0];
-            var state = element.children[1];
-            var off = state.className.startsWith('state off');
-            if (domain == 'cover')
-                var service = off ? 'open_cover' : 'close_cover';
-            else
-                var service = off ? 'turn_on' : 'turn_off';
-
-            console.log('Processing: ' + domain + '/' + service + '/' + entity_id);
-            _ws.send('{"id": ' + _wsid++ + ', "type": "call_service", "domain":"' + domain + '","service":"' + service + '","service_data":{"entity_id":"' + entity_id + '"}}');
-
-            setTimeout(function () {
-                element.style = style;
-                _processing = false;
-            }, 2000);    // Avoid mis-operation
-        }
-
-        _STATE_MAPS = {
-            'off': '关闭',
-            'on': '开启',
-
-            'auto': '自动',
-            'low': '低速',
-            'medium': '中速',
-            'middle': '中速',
-            'high': '高速',
-
-            'strong': '高速',
-            'silent': '静音',
-            'interval': '间歇',
-
-            'cool': '制冷',
-            'heat': '制热',
-            'dry': '除湿',
-            'fan': '送风',
-
-            'favorite': '最爱',
-            'unavailable': '不可用',
-        };
-
-        _BINARY_SENSOR_ICONS = {
-            'battery': ['battery', 'battery-outline'],
-            'cold': ['thermometer', 'snowflake'],
-            'connectivity': ['server-network-off', 'server-network'],
-            'door': ['door-closed', 'door-open'],
-            'garage_door': ['garage', 'garage-open'],
-            'gas': ['shield-check', 'alert'],
-            'power': ['shield-check', 'alert'],
-            'problem': ['shield-check', 'alert'],
-            'safety': ['shield-check', 'alert'],
-            'smoke': ['shield-check', 'alert'],
-            'heat': ['thermometer', 'fire'],
-            'light': ['brightness-5', 'brightness-7'],
-            'lock': ['lock', 'lock-open'],
-            'moisture': ['water-off', 'water'],
-            'motion': ['walk', 'run'],
-            'occupancy': ['home-outline', 'home'],
-            'opening': ['square', 'square-outline'],
-            'plug': ['power-plug-off', 'power-plug'],
-            'presence': ['home-outline', 'home'],
-            'sound': ['music-note-off', 'music-note'],
-            'vibration': ['crop-portrait', 'vibrate'],
-            'window': ['window-closed', 'window-open'],
-            'default': ['radiobox-blank', 'checkbox-marked-circle'],
-        }
-
-        function makeEntity(entity, hue) {
-            var entity_id = entity.entity_id;
-            var domain = entity_id.split('.')[0];
-
-            var html = '<div class="entity ' + domain + '" id="' + entity_id + '"';
-            if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker')
-                html += ' onclick="handleClick(this)"';
-            else if (entity_id == 'sensor.caiyun_weather') {   // Trick
-                html += ' ondblclick="connect()"';
-            }
-            if (hue)
-                html += ' style="border: 0 solid hsl(' + hue + ', 100%, 50%); box-sizing: border-box; border-bottom-width: 2px"';
-            html += '>';
-            html += makeState(entity);
-            html += '</div> ';
-
-            return html;
-        }
-
-        function makeState(entity) {
-            var domain = entity.entity_id.split('.')[0];
-            var state = entity.state;
-            var attributes = entity.attributes;
-
-            var html = '<div class="name">' + attributes.friendly_name + '</div>';
-
-            var off = (state == 'off' || state == 'not_home' || state == 'unavailable' || state == 'closed' || state == 'docked' || state == 'low') ? ' off' : '';
-            if (_STATE_MAPS.hasOwnProperty(state))
-                state = _STATE_MAPS[state];
-
-            if ((domain == 'sensor' && attributes.mdicon == null) || domain == 'climate') { // TODO: Replace mdicon checking to another way
-                var value = (domain == 'climate') ? attributes.current_temperature : state;
-                var nan = isNaN(value);
-                html += '<div class="state' + off + (nan ? ' nan' : '') + '">';
-                html += nan ? value : Math.floor(parseFloat(value) * 100) / 100;
-
-                var unit = attributes.unit_of_measurement;
-                if (unit && !off)
-                    html += '<span class="unit">' + unit + '</span>'
-            } else {
-                var icon = attributes.icon;
-                if (icon && icon.startsWith('mdi:')) {
-                    icon = icon.slice(4);
-                }
-                else if (domain == 'binary_sensor') {
-                    var device_class = attributes.device_class;
-                    if (!_BINARY_SENSOR_ICONS.hasOwnProperty(device_class))
-                        device_class = 'default';
-                    icon = _BINARY_SENSOR_ICONS[device_class][off ? 0 : 1];
-                } else {
-                    icon = _DOMAIN_ICONS[domain];
-                }
-
-                html += '<div class="state' + off + '">';
-                html += '<i class="mdi mdi-' + icon + '"></i>';
-            }
-            html += '</div>'
-
-            if (!off) {
-                if (attributes.hasOwnProperty('dashboard_static_text_attribute')) {
-                    extra = attributes[attributes.dashboard_static_text_attribute];
-                } else if (domain == 'climate') {
-                    extra = state + ' ' + attributes.temperature + '°C';
-                } else if (domain == 'fan') {
-                    var speed = attributes.speed.toLowerCase();
-                    extra = _STATE_MAPS.hasOwnProperty(speed) ? _STATE_MAPS[speed] : speed.replace("level", "档位");
-                } else {
-                    return html;
-                }
-                html += '<div class="extra">' + extra + '</div>';
-            }
-
-            return html;
-        }
-
-        function floater(type, text) {
-            document.getElementById('floater').innerHTML = type ? ('<div id="' + type + '">' + (text || '') + '</div>') : '';
-        }
-
-    </script>
-</head>
-
-<body onload="load()">
-    <div id="content"></div>
-    <div id="floater"></div>
-</body>
-
+	<head>
+		<title>智能面板</title>
+		<meta charset="utf-8" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<link rel="apple-touch-icon" href="/static/images/config_insteon.png" />
+		<link href="https://cdn.bootcss.com/MaterialDesign-Webfont/3.2.89/css/materialdesignicons.min.css" rel="stylesheet" />
+		<style>
+			.entity {
+				float: left;
+				width: 120px;
+				height: 120px;
+				margin: 2px;
+				color: white;
+				font-size: 14px;
+				font-weight: 300;
+				text-align: center;
+			}
+
+			@media (hover: hover) {
+				.entity:hover {
+					background-color: #4caf50;
+					cursor: pointer;
+				}
+			}
+
+			.binary_sensor {
+				background-color: #03a9f4;
+			}
+
+			.device_tracker {
+				background-color: #009688;
+			}
+
+			.fan,
+			.climate {
+				background-color: #cddc39;
+			}
+
+			.cover,
+			.media_player,
+			.vacuum {
+				background-color: #ff9800;
+			}
+
+			.switch {
+				background-color: #ffc107;
+			}
+
+			.light {
+				background-color: #ff5722;
+			}
+
+			.sensor {
+				background-color: #00bcd4;
+			}
+
+			.name,
+			.extra {
+				height: 34px;
+				line-height: 34px;
+				overflow: hidden;
+				text-overflow: clip;
+				white-space: nowrap;
+			}
+
+			.state {
+				height: 52px;
+				line-height: 52px;
+				font-size: 44px;
+			}
+
+			.nan {
+				font-size: 36px;
+			}
+
+			.off {
+				color: rgba(230, 230, 230, 0.5);
+			}
+
+			.unit {
+				font-size: 10px;
+			}
+
+			::-webkit-scrollbar {
+				display: none;
+			}
+
+			body {
+				margin: 0;
+				color: white;
+				font-family: Helvetica;
+				background-color: black;
+				-webkit-user-select: none;
+			}
+
+			#loading {
+				position: fixed;
+				z-index: 1;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				margin: auto;
+				width: 100px;
+				height: 100px;
+				border: 5px rgba(0, 0, 0, 0.1) solid;
+				border-left-color: #ff5500;
+				border-right-color: #0c80fe;
+				border-radius: 100%;
+				animation: loading 2s infinite linear;
+				background-color: rgba(0, 0, 0, 0.5);
+			}
+
+			#error {
+				position: fixed;
+				z-index: 1;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				margin: auto;
+				width: 300px;
+				height: 32px;
+				line-height: 32px;
+				text-align: center;
+				background-color: rgba(0, 0, 0, 0.5);
+				border-radius: 3px;
+			}
+
+			@keyframes loading {
+				from {
+					transform: rotate(0deg);
+				}
+
+				to {
+					transform: rotate(360deg);
+				}
+			}
+
+			@keyframes tuning {
+				100% {
+					background: #607d8b;
+				}
+			}
+		</style>
+		<script>
+			_ws = null
+			_wsid = 4
+			_processing = false
+
+			function load() {
+				// Respond to mobile browser
+				if (navigator.userAgent.match('Mobile')) {
+					var meta = document.createElement('meta')
+					meta.name = 'viewport'
+					meta.setAttribute('content', 'width=device-width, initial-scale=1, user-scalable=no')
+					document.getElementsByTagName('head')[0].appendChild(meta)
+				}
+
+				// Adjust grid width
+				var clientWidth = document.documentElement.clientWidth
+				var count = Math.floor(clientWidth / 124)
+				var width = (clientWidth - count * 4) / count
+				width = Math.floor(width * 10) / 10
+				document.styleSheets[1].cssRules[0].style.width = width + 'px'
+				//alert('clientWidth:' + clientWidth + ' count:' + count + ' width:' + width);
+
+				connect()
+			}
+
+			function connect() {
+				floater('loading')
+
+				var params = location.search.split('@')
+				if (params.length > 1 && params[1].startsWith('ws')) {
+					var url = params[1]
+				} else {
+					var url = (location.protocol == 'https:' ? 'wss:' : 'ws:') + location.host
+				}
+
+				_ws = new WebSocket(url + '/api/websocket')
+				_ws.onopen = function() {
+					var password = params[0].slice(1)
+					if (password) {
+						_ws.send('{"type": "auth", "api_password": "' + password + '"}')
+					} else if (localStorage.hassTokens) {
+						var access_token = JSON.parse(localStorage.hassTokens).access_token
+						if (access_token) {
+							_ws.send('{"type": "auth", "access_token": "' + access_token + '"}')
+						}
+					}
+					_ws.send('{"id": 2, "type": "subscribe_events", "event_type": "state_changed"}')
+					_ws.send('{"id": 3, "type": "get_states"}')
+				}
+				_ws.onclose = function() {
+					if (!document.getElementById('error')) {
+						floater('error', '连接关闭，30 秒后<a href="javascript:connect()">重新连接</a>')
+					}
+					setTimeout('connect()', 30000)
+				}
+				_ws.onmessage = function(message) {
+					var json = JSON.parse(message.data)
+					switch (json.type) {
+						case 'result':
+							handleStates(json.result)
+							break
+						case 'event':
+							handleEvent(json.event.data.new_state)
+							break
+						case 'auth_invalid':
+							floater(
+								'error',
+								'无效认证！请先<a href="javascript:location.href=\'' +
+									location.protocol +
+									'//' +
+									location.host +
+									'\'">登录首页</a>，或指定密码和地址：' +
+									location.href.split('?')[0] +
+									'?password@ws:host:8123'
+							)
+							break
+						default:
+							console.log(json)
+							break
+					}
+				}
+			}
+
+			_DOMAIN_ICONS = {
+				sensor: 'flower',
+				binary_sensor: 'bullseye',
+				device_tracker: 'account',
+
+				light: 'lightbulb',
+				switch: 'light-switch',
+
+				fan: 'fan',
+				climate: 'thermostat',
+
+				media_player: 'play-circle-outline',
+				cover: 'window-closed',
+				vacuum: 'robot-vacuum'
+			}
+
+			function handleStates(entities) {
+				if (entities == null) {
+					return
+				}
+
+				function findEntity(entity_id) {
+					for (var i in entities) {
+						var entity = entities[i]
+						if (entity.entity_id == entity_id) {
+							return entity
+						}
+					}
+					console.log('Entity id not found: ' + entity_id)
+					return null
+				}
+
+				// Prepare group data
+				var group_count = 1
+				var entity_group_nos = {}
+				var sorted_entity_ids = []
+				function prepareGroup(group_id) {
+					var group = findEntity(group_id)
+					if (group) {
+						console.log('Sort by ' + group_id)
+						var entity_ids = group.attributes.entity_id
+						var group_no = group_count++
+						for (var i in entity_ids) {
+							var entity_id = entity_ids[i]
+							if (entity_id.startsWith('group')) {
+								prepareGroup(entity_id)
+							} else {
+								sorted_entity_ids.push(entity_id)
+								entity_group_nos[entity_id] = group_no
+							}
+						}
+					}
+					return group != null
+				}
+
+				// Group params via hash
+				var params = (location.hash ? location.hash.slice(1) : 'default_view@1@1').split('@')
+				var sort_by_group = params[0] != 'NA' ? prepareGroup('group.' + params[0]) : false
+				var filter_by_group = sort_by_group ? parseInt(params[1]) : false
+				var indicator_by_group = sort_by_group ? parseInt(params[2]) : false
+
+				// Remove unsupport entities
+				for (var j = entities.length - 1; j >= 0; j--) {
+					var entity = entities[j]
+					var entity_id = entity.entity_id
+					if (
+						(filter_by_group && sorted_entity_ids.indexOf(entity_id) == -1) ||
+						!_DOMAIN_ICONS.hasOwnProperty(entity_id.split('.')[0]) ||
+						entity.attributes.hidden
+					) {
+						entities.splice(j, 1)
+					}
+				}
+
+				// Sort entiries by domain+group order
+				var domains = Object.keys(_DOMAIN_ICONS)
+				entities.sort(function(x, y) {
+					var entity_id1 = x.entity_id
+					var entity_id2 = y.entity_id
+					var index1 = domains.indexOf(entity_id1.split('.')[0])
+					var index2 = domains.indexOf(entity_id2.split('.')[0])
+					if (index1 == index2) {
+						if (sort_by_group) {
+							index1 = sorted_entity_ids.indexOf(entity_id1)
+							index2 = sorted_entity_ids.indexOf(entity_id2)
+						} else {
+							return x.attributes.friendly_name.localeCompare(y.attributes.friendly_name)
+						}
+					}
+					return index1 - index2
+				})
+
+				// Generate entities
+				var html = ''
+				for (var i in entities) {
+					var entity = entities[i]
+					var hue = indicator_by_group ? Math.floor((entity_group_nos[entity.entity_id] * 360) / group_count) : 0
+					html += makeEntity(entity, hue)
+				}
+
+				floater()
+				document.getElementById('content').innerHTML = html
+			}
+
+			function handleEvent(entity) {
+				var element = document.getElementById(entity.entity_id)
+				if (element) {
+					element.innerHTML = makeState(entity)
+					//console.log('Update entity: ' + entity.attributes.friendly_name);
+				} else {
+					var domain = entity.entity_id.split('.')[0]
+					if (_DOMAIN_ICONS.hasOwnProperty(domain)) {
+						floater('error', '发现新设备，请<a href="javascript:connect()">重新连接</a>')
+					} else {
+						console.log('Skip entity event: ' + entity.entity_id)
+					}
+				}
+			}
+
+			function handleClick(element) {
+				if (_processing) {
+					console.log('Skip processing: ' + entity_id)
+					return
+				}
+				_processing = true
+
+				var style = element.style.cssText
+				element.style = 'animation: tuning 1s infinite alternate; ' + style
+
+				var entity_id = element.id
+				var domain = entity_id.split('.')[0]
+				var state = element.children[1]
+				var off = state.className.startsWith('state off')
+				if (domain == 'cover') var service = off ? 'open_cover' : 'close_cover'
+				else var service = off ? 'turn_on' : 'turn_off'
+
+				console.log('Processing: ' + domain + '/' + service + '/' + entity_id)
+				_ws.send(
+					'{"id": ' +
+						_wsid++ +
+						', "type": "call_service", "domain":"' +
+						domain +
+						'","service":"' +
+						service +
+						'","service_data":{"entity_id":"' +
+						entity_id +
+						'"}}'
+				)
+
+				setTimeout(function() {
+					element.style = style
+					_processing = false
+				}, 2000) // Avoid mis-operation
+			}
+
+			_STATE_MAPS = {
+				off: '关闭',
+				on: '开启',
+
+				auto: '自动',
+				low: '低速',
+				medium: '中速',
+				middle: '中速',
+				high: '高速',
+
+				strong: '高速',
+				silent: '静音',
+				interval: '间歇',
+
+				cool: '制冷',
+				heat: '制热',
+				dry: '除湿',
+				fan: '送风',
+
+				favorite: '最爱',
+				unavailable: '不可用'
+			}
+
+			_BINARY_SENSOR_ICONS = {
+				battery: ['battery', 'battery-outline'],
+				cold: ['thermometer', 'snowflake'],
+				connectivity: ['server-network-off', 'server-network'],
+				door: ['door-closed', 'door-open'],
+				garage_door: ['garage', 'garage-open'],
+				gas: ['shield-check', 'alert'],
+				power: ['shield-check', 'alert'],
+				problem: ['shield-check', 'alert'],
+				safety: ['shield-check', 'alert'],
+				smoke: ['shield-check', 'alert'],
+				heat: ['thermometer', 'fire'],
+				light: ['brightness-5', 'brightness-7'],
+				lock: ['lock', 'lock-open'],
+				moisture: ['water-off', 'water'],
+				motion: ['walk', 'run'],
+				occupancy: ['home-outline', 'home'],
+				opening: ['square', 'square-outline'],
+				plug: ['power-plug-off', 'power-plug'],
+				presence: ['home-outline', 'home'],
+				sound: ['music-note-off', 'music-note'],
+				vibration: ['crop-portrait', 'vibrate'],
+				window: ['window-closed', 'window-open'],
+				default: ['radiobox-blank', 'checkbox-marked-circle']
+			}
+
+			function makeEntity(entity, hue) {
+				var entity_id = entity.entity_id
+				var domain = entity_id.split('.')[0]
+
+				var html = '<div class="entity ' + domain + '" id="' + entity_id + '"'
+				if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker') {
+					html += ' onclick="handleClick(this)"'
+				} else if (entity_id == 'sensor.caiyun_weather') {
+					// Trick
+					html += ' ondblclick="connect()"'
+				}
+				if (hue) {
+					html += ' style="border: 0 solid hsl(' + hue + ', 100%, 50%); box-sizing: border-box; border-bottom-width: 2px"'
+				}
+				html += '>'
+				html += makeState(entity)
+				html += '</div> '
+
+				return html
+			}
+
+			function makeState(entity) {
+				var domain = entity.entity_id.split('.')[0]
+				var state = entity.state
+				var attributes = entity.attributes
+
+				var html = '<div class="name">' + attributes.friendly_name + '</div>'
+
+				var off = state == 'off' || state == 'not_home' || state == 'unavailable' || state == 'closed' || state == 'docked' || state == 'low' ? ' off' : ''
+				if (_STATE_MAPS.hasOwnProperty(state)) {
+					state = _STATE_MAPS[state]
+				}
+
+				if ((domain == 'sensor' && attributes.mdicon == null) || domain == 'climate') {
+					// TODO: Replace mdicon checking to another way
+					var value = domain == 'climate' ? attributes.current_temperature : state
+					var nan = isNaN(value)
+					html += '<div class="state' + off + (nan ? ' nan' : '') + '">'
+					html += nan ? value : Math.floor(parseFloat(value) * 100) / 100
+
+					var unit = attributes.unit_of_measurement
+					if (unit && !off) {
+						html += '<span class="unit">' + unit + '</span>'
+					}
+				} else {
+					var icon = attributes.icon
+					if (icon && icon.startsWith('mdi:')) {
+						icon = icon.slice(4)
+					} else if (domain == 'binary_sensor') {
+						var device_class = attributes.device_class
+						if (!_BINARY_SENSOR_ICONS.hasOwnProperty(device_class)) {
+							device_class = 'default'
+						}
+						icon = _BINARY_SENSOR_ICONS[device_class][off ? 0 : 1]
+					} else {
+						icon = _DOMAIN_ICONS[domain]
+					}
+
+					html += '<div class="state' + off + '">'
+					html += '<i class="mdi mdi-' + icon + '"></i>'
+				}
+				html += '</div>'
+
+				if (!off) {
+					if (attributes.hasOwnProperty('dashboard_static_text_attribute')) {
+						extra = attributes[attributes.dashboard_static_text_attribute]
+					} else if (domain == 'climate') {
+						extra = state + ' ' + attributes.temperature + '°C'
+					} else if (domain == 'fan') {
+						var speed = attributes.speed.toLowerCase()
+						extra = _STATE_MAPS.hasOwnProperty(speed) ? _STATE_MAPS[speed] : speed.replace('level', '档位')
+					} else {
+						return html
+					}
+					html += '<div class="extra">' + extra + '</div>'
+				}
+
+				return html
+			}
+
+			function floater(type, text) {
+				document.getElementById('floater').innerHTML = type ? '<div id="' + type + '">' + (text || '') + '</div>' : ''
+			}
+		</script>
+	</head>
+
+	<body onload="load()">
+		<div id="content"></div> <div id="floater"></div>
+	</body>
 </html>
