@@ -369,7 +369,15 @@
 				}
 
 				console.log('Processing: ' + domain + '/' + service + '/' + entity_id)
-				_ws.send(JSON.stringify({ id: _wsid++, type: 'call_service', domain: domain, service: service, service_data: { entity_id: entity_id } }))
+				_ws.send(
+					JSON.stringify({
+						id: _wsid++,
+						type: 'call_service',
+						domain: domain,
+						service: service,
+						service_data: { entity_id: entity_id }
+					})
+				)
 
 				setTimeout(function() {
 					element.style = style
