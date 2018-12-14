@@ -362,21 +362,14 @@
 				var domain = entity_id.split('.')[0]
 				var state = element.children[1]
 				var off = state.className.startsWith('state off')
-				if (domain == 'cover') var service = off ? 'open_cover' : 'close_cover'
-				else var service = off ? 'turn_on' : 'turn_off'
+				if (domain == 'cover') {
+					var service = off ? 'open_cover' : 'close_cover'
+				} else {
+					var service = off ? 'turn_on' : 'turn_off'
+				}
 
 				console.log('Processing: ' + domain + '/' + service + '/' + entity_id)
-				_ws.send(
-					'{"id": ' +
-						_wsid++ +
-						', "type": "call_service", "domain":"' +
-						domain +
-						'","service":"' +
-						service +
-						'","service_data":{"entity_id":"' +
-						entity_id +
-						'"}}'
-				)
+				_ws.send(JSON.stringify({ id: _wsid++, type: 'call_service', domain: domain, service: service, service_data: { entity_id: entity_id } }))
 
 				setTimeout(function() {
 					element.style = style
