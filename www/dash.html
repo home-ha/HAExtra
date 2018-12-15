@@ -254,6 +254,8 @@
 				vacuum: 'robot-vacuum'
 			}
 
+			var _entity_indexes
+			var _filter_by_group = false
 			function handleStates(entities) {
 				if (entities == null) {
 					return
@@ -273,8 +275,8 @@
 				// Prepare group data
 				var group_count = 1
 				var entity_count = 0
-				var entity_indexes = {}
-				function prepareGroup(group_id) {
+				_entity_indexes = {}
+				function parseGroup(group_id) {
 					var group = findEntity(group_id)
 					if (group) {
 						console.log('Sort by ' + group_id)
@@ -283,9 +285,9 @@
 						for (var i in entity_ids) {
 							var entity_id = entity_ids[i]
 							if (entity_id.startsWith('group')) {
-								prepareGroup(entity_id)
+								parseGroup(entity_id)
 							} else {
-								entity_indexes[entity_id] = [entity_count++, group_no]
+								_entity_indexes[entity_id] = [entity_count++, group_no]
 							}
 						}
 					}
@@ -294,15 +296,13 @@
 
 				// Group params via hash
 				var params = (location.hash ? location.hash.slice(1) : 'default_view@1@1').split('@')
-				var sort_by_group = params[0] != 'NA' ? prepareGroup('group.' + params[0]) : false
-				var filter_by_group = sort_by_group ? parseInt(params[1]) : false
-				var indicator_by_group = sort_by_group ? parseInt(params[2]) : false
+				var sort_by_group = params[0] != 'NA' ? parseGroup('group.' + params[0]) : false
+				var indicator_by_group = sort_by_group ? parseInt(params[1]) : false
+				_filter_by_group = sort_by_group ? parseInt(params[2]) : false
 
 				// Remove unsupport entities
 				for (var j = entities.length - 1; j >= 0; j--) {
-					var entity = entities[j]
-					var entity_id = entity.entity_id
-					if ((filter_by_group && !entity_indexes.hasOwnProperty(entity_id)) || !_DOMAIN_ICONS.hasOwnProperty(entity_id.split('.')[0]) || entity.attributes.hidden) {
+					if (!isValidEntity(entities[j])) {
 						entities.splice(j, 1)
 					}
 				}
@@ -316,8 +316,8 @@
 					var index2 = domains.indexOf(entity_id2.split('.')[0])
 					if (index1 == index2) {
 						if (sort_by_group) {
-							index1 = entity_indexes[entity_id1][0]
-							index2 = entity_indexes[entity_id2][0]
+							index1 = _entity_indexes[entity_id1][0]
+							index2 = _entity_indexes[entity_id2][0]
 						} else {
 							return x.attributes.friendly_name.localeCompare(y.attributes.friendly_name)
 						}
@@ -329,7 +329,7 @@
 				var html = ''
 				for (var i in entities) {
 					var entity = entities[i]
-					var hue = indicator_by_group ? Math.floor((entity_indexes[entity.entity_id][1] * 360) / group_count) : 0
+					var hue = indicator_by_group ? Math.floor((_entity_indexes[entity.entity_id][1] * 360) / group_count) : 0
 					html += makeEntity(entity, hue)
 				}
 
@@ -344,7 +344,7 @@
 					element.innerHTML = makeState(entity)
 					//console.log('Update entity: ' + entity.attributes.friendly_name);
 				} else {
-					if (_DOMAIN_ICONS.hasOwnProperty(entity_id.split('.')[0]) && !entity.attributes.hidden) {
+					if (isValidEntity(entity)) {
 						floater('error', '发现新设备 ' + entity.attributes.friendly_name + '，请<a href="javascript:connect()">重新连接</a>')
 					} else {
 						console.log('Skip entity event: ' + entity_id)
@@ -541,6 +541,11 @@
 					}
 				}
 				return ''
+			}
+
+			function isValidEntity(entity) {
+				var entity_id = entity.entity_id
+				return (!_filter_by_group || _entity_indexes.hasOwnProperty(entity_id)) && _DOMAIN_ICONS.hasOwnProperty(entity_id.split('.')[0]) && !entity.attributes.hidden
 			}
 
 			function floater(type, text) {
