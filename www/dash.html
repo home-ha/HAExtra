@@ -180,6 +180,7 @@
 				connect()
 			}
 
+			var _retryCount = 0
 			function connect() {
 				floater('loading')
 
@@ -205,10 +206,15 @@
 					_ws.send('{"id": 3, "type": "get_states"}')
 				}
 				_ws.onclose = function() {
-					if (!document.getElementById('error')) {
-						floater('error', '连接关闭，<a href="javascript:connect()">重新连接</a>')
+					var retry = ''
+					if (_retryCount < 3) {
+						_retryCount++
+						retry = '稍后尝试第 ' + _retryCount + ' 次'
+						setTimeout('connect()', 30000)
 					}
-					//setTimeout('connect()', 30000)
+					if (!document.getElementById('error')) {
+						floater('error', '连接关闭，' + retry + '<a href="javascript:connect()">重新连接</a>')
+					}
 				}
 				_ws.onmessage = function(message) {
 					var json = JSON.parse(message.data)
@@ -217,6 +223,7 @@
 							handleStates(json.result)
 							break
 						case 'event':
+							_retryCount = 0
 							handleEvent(json.event.data.new_state)
 							break
 						case 'auth_invalid':
