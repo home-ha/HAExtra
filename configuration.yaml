@@ -14,10 +14,10 @@ homeassistant:
   customize: !include customize.yaml
   # Global Customization file
   #customize_glob: !include customize_glob.yaml
-  auth_providers:
-    - type: homeassistant
-    - type: trusted_networks
-    - type: legacy_api_password
+  # auth_providers:
+  #   - type: homeassistant
+  #   - type: trusted_networks
+  #   - type: legacy_api_password
 
 # Show links to resources in log and frontend
 #introduction:
@@ -41,10 +41,10 @@ config:
 
 http:
   api_password: !secret http_password
-  trusted_networks:
-  - 127.0.0.1
-  - 192.168.1.0/24
-  - 192.168.2.0/24
+  # trusted_networks:
+  # - 127.0.0.1
+  # - 192.168.1.0/24
+  # - 192.168.2.0/24
   base_url: !secret http_base_url
   ssl_certificate: ~/.homeassistant/fullchain.cer
   ssl_key: ~/.homeassistant/privkey.pem
@@ -681,10 +681,10 @@ panel_iframe:
   #   title: 阳台
   #   icon: mdi:chart-areaspline
   #   url: !secret nodemcu2_url
-  dashboard:
+  dash:
     title: 面板
     icon: mdi:microsoft
-    url: !secret dashboard_url
+    url: !secret dash_url
 
 #
 hello_miai:

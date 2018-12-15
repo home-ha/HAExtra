@@ -190,14 +190,12 @@
 
 				_ws = new WebSocket(url + '/api/websocket')
 				_ws.onopen = function() {
-					var password = params[0].slice(1)
-					if (password) {
-						_ws.send('{"type": "auth", "api_password": "' + password + '"}')
-					} else if (localStorage.hassTokens) {
-						var access_token = JSON.parse(localStorage.hassTokens).access_token
-						if (access_token) {
-							_ws.send('{"type": "auth", "access_token": "' + access_token + '"}')
-						}
+					var access_token = params[0].slice(1)
+					if (!access_token && localStorage.hassTokens) {
+						access_token = JSON.parse(localStorage.hassTokens).access_token
+					}
+					if (access_token) {
+						_ws.send('{"type": "auth", "' + (access_token.length < 20 ? 'api_password' : 'access_token') + '": "' + access_token + '"}')
 					}
 					_ws.send('{"id": 2, "type": "subscribe_events", "event_type": "state_changed"}')
 					_ws.send('{"id": 3, "type": "get_states"}')
