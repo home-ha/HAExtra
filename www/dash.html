@@ -300,10 +300,10 @@
 				}
 
 				// Group params via hash
-				var params = (location.hash ? location.hash.slice(1) : 'default_view@1@1').split('@')
+				var params = (location.hash ? location.hash.slice(1) : 'default_view').split('@')
 				var sort_by_group = params[0] != 'NA' ? parseGroup('group.' + params[0]) : false
-				var indicator_by_group = sort_by_group ? parseInt(params[1]) : false
-				_filter_by_group = sort_by_group ? parseInt(params[2]) : false
+				_filter_by_group = sort_by_group ? parseInt(params[1]) : false
+				var indicator_by_group = sort_by_group ? parseInt(params[2]) : false
 
 				// Remove unsupport entities
 				for (var j = entities.length - 1; j >= 0; j--) {
@@ -321,8 +321,8 @@
 					var index2 = domains.indexOf(entity_id2.split('.')[0])
 					if (index1 == index2) {
 						if (sort_by_group) {
-							index1 = _entity_indexes[entity_id1][0]
-							index2 = _entity_indexes[entity_id2][0]
+							index1 = _entity_indexes.hasOwnProperty(entity_id1) ? _entity_indexes[entity_id1][0] : 999
+							index2 = _entity_indexes.hasOwnProperty(entity_id2) ? _entity_indexes[entity_id2][0] : 999
 						} else {
 							return x.attributes.friendly_name.localeCompare(y.attributes.friendly_name)
 						}
@@ -334,7 +334,8 @@
 				var html = ''
 				for (var i in entities) {
 					var entity = entities[i]
-					var hue = indicator_by_group ? Math.floor((_entity_indexes[entity.entity_id][1] * 360) / group_count) : 0
+					var entity_id = entity.entity_id
+					var hue = indicator_by_group && _entity_indexes.hasOwnProperty(entity_id) ? Math.floor((_entity_indexes[entity_id][1] * 360) / group_count) : 0
 					html += makeEntity(entity, hue)
 				}
 
@@ -350,7 +351,7 @@
 					//console.log('Update entity: ' + entity.attributes.friendly_name);
 				} else {
 					if (isValidEntity(entity)) {
-						floater('error', '发现新设备 ' + entity.attributes.friendly_name + '，请<a href="javascript:connect()">重新连接</a>')
+						floater('error', '发现新设备“' + entity.attributes.friendly_name + '”，请<a href="javascript:connect()">重新连接</a>')
 					} else {
 						console.log('Skip entity event: ' + entity_id)
 					}
