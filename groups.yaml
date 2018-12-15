@@ -5,40 +5,39 @@ default_view:
   # - device_tracker.xphone
   # - device_tracker.yphone
   # - device_tracker.zphone
-  # - device_tracker.himedia
   - sensor.fresher_co2
   - sensor.bedroom_co2
-  - sensor.bedroom_temperature
-  - sensor.bedroom_humidity
+  - sensor.fresher_pm25
+  - sensor.aircat_pm25
   - sensor.bedroom_pm25
   - sensor.balcony_pm25
-  - group.balcony
-  - group.hallway
+  - group.parlor
   - group.diningroom
   #- group.kitchen
-  - group.parlor
+  - group.hallway
   - group.passage
   - group.washroom
+  - group.study
   - group.bedroom
   - group.parents
   - group.kids
-  - group.study
-  #- group.office
+  - group.balcony
   - group.outside
 
-Balcony:
+Parlor:
   entities:
-  - light.balcony_light
-  - binary_sensor.door_window_sensor_158d000228a52b
-  - sensor.balcony_temperature
-  - sensor.balcony_humidity
-  #- sensor.balcony_pm25
-
-Hallway:
-  entities:
-  - binary_sensor.door_window_sensor_158d0001f3e5be
-  - light.hallway_light
-  - light.hallway_spotlight
+  - light.parlor_light
+  #- light.parlor_light2
+  - light.parlor_spotlight
+  - media_player.x9400e
+  - climate.daikin2
+  - climate.saswell
+  - fan.wall_fan
+  - fan.fresher
+  - sensor.fresher_temperature
+  - sensor.fresher_humidity
+  #- sensor.fresher_pm25
+  #- sensor.fresher_co2
 
 Diningroom:
   entities:
@@ -53,25 +52,14 @@ Diningroom:
   - sensor.illumination_34ce0090901a
   - sensor.aircat_temperature
   - sensor.aircat_humidity
-  - sensor.aircat_pm25
+  #- sensor.aircat_pm25
   - sensor.aircat_hcho
 
-Parlor:
+Hallway:
   entities:
-  - light.parlor_light
-  #- light.parlor_light2
-  - light.parlor_spotlight
-  #- remote.apple_tv
-  - media_player.x9400e
-  #- media_player.apple_tv
-  - climate.daikin2
-  - climate.saswell
-  - fan.wall_fan
-  - fan.fresher
-  - sensor.fresher_temperature
-  - sensor.fresher_humidity
-  - sensor.fresher_pm25
-  #- sensor.fresher_co2
+  - binary_sensor.door_window_sensor_158d0001f3e5be
+  - light.hallway_light
+  - light.hallway_spotlight
 
 Passage:
   entities:
@@ -111,15 +99,15 @@ Bedroom:
   - media_player.x9300d
   - climate.daikin3
   - fan.purifier7
-  # - sensor.bedroom_temperature
-  # - sensor.bedroom_humidity
-  # - sensor.bedroom_pm25
-  # - sensor.bedroom_co2
+  - sensor.bedroom_temperature
+  - sensor.bedroom_humidity
+  #- sensor.bedroom_pm25
+  #- sensor.bedroom_co2
   - sensor.bedroom_hcho
 
 Parents:
-  - fan.purifier6
-  - sensor.parents_co2
+- fan.purifier6
+- sensor.parents_co2
 
 Kids:
   entities:
@@ -129,12 +117,13 @@ Kids:
   - fan.purifier4
   - sensor.kids_co2
 
-#Office:
-#  entities:
-#  - sensor.aircat2_temperature
-#  - sensor.aircat2_humidity
-#  - sensor.aircat2_pm25
-#  - sensor.aircat2_hcho
+Balcony:
+  entities:
+  - light.balcony_light
+  - binary_sensor.door_window_sensor_158d000228a52b
+  - sensor.balcony_temperature
+  - sensor.balcony_humidity
+  #- sensor.balcony_pm25
 
 Outside:
   entities:
@@ -142,20 +131,7 @@ Outside:
   - sensor.caiyun_weather
   - sensor.caiyun_temperature
   - sensor.caiyun_humidity
-  # - sensor.caiyun_cloud_rate
-  # - sensor.caiyun_pressure
-  # - sensor.caiyun_wind_direction
-  # - sensor.caiyun_wind_speed
-  # - sensor.caiyun_local_precipitation
-  # - sensor.caiyun_nearest_precipitation
-  # - sensor.caiyun_precipitation_distance
-  # - sensor.caiyun_aqi
   - sensor.caiyun_pm25
-  # - sensor.caiyun_pm10
-  # - sensor.caiyun_o3
-  # - sensor.caiyun_co
-  # - sensor.caiyun_no2
-  # - sensor.caiyun_so2
 
 Controls:
   view: yes
@@ -165,7 +141,6 @@ Controls:
   - group.all_switches
   - group.all_fans
   - group.all_vacuum_cleaners
-  #- group.all_remotes
   - media_player.x9300d
   - media_player.x9400e
   - climate.saswell
