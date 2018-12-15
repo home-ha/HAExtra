@@ -26,7 +26,6 @@ _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ['modbus']
 
-CONF_RESET_ON_FAILURE = 'reset_on_failure'
 CONF_TEMPERATURE = 'temperature'
 CONF_TARGET_TEMPERATURE = 'target_temperature'
 CONF_HUMIDITY = 'humidity'
@@ -74,7 +73,7 @@ SUPPORTED_FEATURES = {
     CONF_AWAY: SUPPORT_AWAY_MODE,
     CONF_AUX: SUPPORT_AUX_HEAT,
     CONF_IS_ON: SUPPORT_ON_OFF
-    }
+}
 
 DEFAULT_NAME = 'Modbus'
 DEFAULT_OPERATION_LIST = ['heat', 'cool', 'auto', 'off']
@@ -100,7 +99,6 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     ModbusClimate._operation_list = config.get(CONF_OPERATION_LIST)
     ModbusClimate._fan_list = config.get(CONF_FAN_LIST)
     ModbusClimate._swing_list = config.get(CONF_SWING_LIST)
-    ModbusClimate._reset_on_failure = config.get(CONF_RESET_ON_FAILURE)
     ModbusClimate._unit = hass.config.units.temperature_unit
 
     data_types = {DATA_TYPE_INT: {1: 'h', 2: 'i', 4: 'q'}}
@@ -284,26 +282,19 @@ class ModbusClimate(ClimateDevice):
 
     def reset(self):
         """Initialize USR module"""
-        import socket, time
+        import socket
+        import time
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(5)
         s.connect((modbus.HUB._client.host, modbus.HUB._client.port))
-        s.sendall(b'\x55\xAA\x55\x00\x25\x80\x03\xA8') # For USR initialize
+        s.sendall(b'\x55\xAA\x55\x00\x25\x80\x03\xA8')
         s.close()
         time.sleep(1)
 
     def reconnect(self):
         from pymodbus.client.sync import ModbusTcpClient as ModbusClient
         from pymodbus.transaction import ModbusRtuFramer as ModbusFramer
-
         modbus.HUB._client.close()
-
-        if ModbusClimate._reset_on_failure:
-            _LOGGER.error("Reset & reconnect %s", modbus.HUB._client)
-            self.reset()
-        else:
-            _LOGGER.error("Reconnect %s", modbus.HUB._client)
-
         modbus.HUB._client = ModbusClient(
             host=modbus.HUB._client.host,
             port=modbus.HUB._client.port,
@@ -326,10 +317,10 @@ class ModbusClimate(ClimateDevice):
                 else:
                     if register_type == REGISTER_TYPE_INPUT:
                         result = modbus.HUB.read_input_registers(slave,
-                                                             register, count)
+                                                                 register, count)
                     else:
                         result = modbus.HUB.read_holding_registers(slave,
-                                                               register, count)
+                                                                   register, count)
 
                     val = 0
                     registers = result.registers
@@ -343,8 +334,14 @@ class ModbusClimate(ClimateDevice):
                     value = scale * val + offset
             except:
                 self._exception += 1
-                _LOGGER.error("Exception %d on %s/%s at %s/slave%s/register%s", self._exception, self._name, prop, register_type, slave, register)
+                _LOGGER.error("Exception %d on %s/%s at %s/slave%s/register%s",
+                              self._exception, self._name, prop, register_type, slave, register)
                 if (self._exception < 5) or (self._exception % 10 == 0):
+                    if (self._exception % 3 == 0):
+                        _LOGGER.error("Reset %s", modbus.HUB._client)
+                        self.reset()
+                    else:
+                        _LOGGER.error("Reconnect %s", modbus.HUB._client)
                     self.reconnect()
                 return
 

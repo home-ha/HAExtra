@@ -631,7 +631,6 @@ climate:
   password: !secret saswell_password
 - platform: modbus
   name: Daikin
-  reset_on_failure: True
   temperature: {registers: [3,6,9,12], register_type: input, scale: 0.1}
   target_temperature: {registers: [4,8,12,16]}
   operation: {registers: [5,9,13,17]}
