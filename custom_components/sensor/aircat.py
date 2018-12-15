@@ -1,15 +1,21 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.entity import Entity
+from homeassistant.const import CONF_NAME, CONF_MAC, CONF_SENSORS, TEMP_CELSIUS
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+import voluptuous as vol
 import json
 import socket
 import select
 import logging
 
-#Bridge receive: b'\xaaO\x01UA\xf19\x8f\x0b\x00\x00\x00\x00\x00\x00\x00\x00\xb0\xf8\x93\x1f\x14U\x00Z\x00\x00\x02{"sleep":"1","startTime":82800,"endTime":21600,"type":1}\xff#END#'
-#Bridge receive: b'\xaaO\x01UA\xf19\x8f\x0b\x00\x00\x00\x00\x00\x00\x00\x00\xb0\xf8\x93\x1f\x14U\x00>\x00\x00\x02{"brightness":"25","type":2}\xff#END#'
-#Bridge receive: b'\xaaO\x01UA\xf19\x8f\x0b\x00\x00\x00\x00\x00\x00\x00\x00\xb0\xf8\x93\x1f\x14U\x007\x00\x00\x02{"type":5,"status":1}\xff#END#'
+# Bridge receive: b'\xaaO\x01UA\xf19\x8f\x0b\x00\x00\x00\x00\x00\x00\x00\x00\xb0\xf8\x93\x1f\x14U\x00Z\x00\x00\x02{"sleep":"1","startTime":82800,"endTime":21600,"type":1}\xff#END#'
+# Bridge receive: b'\xaaO\x01UA\xf19\x8f\x0b\x00\x00\x00\x00\x00\x00\x00\x00\xb0\xf8\x93\x1f\x14U\x00>\x00\x00\x02{"brightness":"25","type":2}\xff#END#'
+# Bridge receive: b'\xaaO\x01UA\xf19\x8f\x0b\x00\x00\x00\x00\x00\x00\x00\x00\xb0\xf8\x93\x1f\x14U\x007\x00\x00\x02{"type":5,"status":1}\xff#END#'
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class AirCatData(object):
     """Class for handling the data retrieval."""
@@ -19,7 +25,7 @@ class AirCatData(object):
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._socket.settimeout(1)
-        self._socket.bind(('', 9000)) # aircat.phicomm.com
+        self._socket.bind(('', 9000))  # aircat.phicomm.com
         self._socket.listen(5)
         self._rlist = [self._socket]
         self._times = 0
@@ -27,17 +33,17 @@ class AirCatData(object):
 
     def shutdown(self):
         """Shutdown."""
-        if self._socket  is not None:
+        if self._socket is not None:
             #_LOGGER.debug("Socket shutdown")
             self._socket.close()
             self._socket = None
 
     def loop(self):
         while True:
-            self.update(None) # None = wait forever
+            self.update(None)  # None = wait forever
 
-    def update(self, timeout=0): # 0 = return right now
-        rfd,wfd,efd = select.select(self._rlist, [], [], timeout)
+    def update(self, timeout=0):  # 0 = return right now
+        rfd, wfd, efd = select.select(self._rlist, [], [], timeout)
         for fd in rfd:
             try:
                 if fd is self._socket:
@@ -54,7 +60,8 @@ class AirCatData(object):
 
     def handle(self, conn):
         """Handle connection."""
-        data = conn.recv(4096) # If connection is closed, recv() will result a timeout exception and receive '' next time, so we can purge connection list
+        data = conn.recv(
+            4096)  # If connection is closed, recv() will result a timeout exception and receive '' next time, so we can purge connection list
         if not data:
             _LOGGER.error('Closed %s', conn)
             self._rlist.remove(conn)
@@ -64,7 +71,7 @@ class AirCatData(object):
         if data.startswith(b'GET'):
             _LOGGER.debug('Request from HTTP -->\n%s', data)
             conn.sendall(b'HTTP/1.0 200 OK\nContent-Type: text/json\n\n' +
-                json.dumps(self.devs, indent=2).encode('utf-8'))
+                         json.dumps(self.devs, indent=2).encode('utf-8'))
             self._rlist.remove(conn)
             conn.close()
             return
@@ -74,12 +81,14 @@ class AirCatData(object):
 
         self._times += 1
         if payload >= 11:
-            mac = ''.join(['%02X' % (x if isinstance(x, int) else ord(x)) for x in data[payload-11:payload-5]])
+            mac = ''.join(['%02X' % (x if isinstance(x, int) else ord(x))
+                           for x in data[payload-11:payload-5]])
             try:
                 jsonStr = data[payload:end].decode('utf-8')
                 attributes = json.loads(jsonStr)
                 self.devs[mac] = attributes
-                _LOGGER.debug('%d Received %s: %s', self._times, mac, attributes)
+                _LOGGER.debug('%d Received %s: %s',
+                              self._times, mac, attributes)
             except:
                 _LOGGER.error('%d Received invalid: %s', self._times, data)
         else:
@@ -109,6 +118,7 @@ class AirCatData(object):
 
         return prefix + b'\x00\x37\x00\x00\x02{"type":5,"status":1}\xff#END#'
 
+
 class AirCatBridge(AirCatData):
     """Class for handling the data retrieval."""
 
@@ -137,6 +147,7 @@ class AirCatBridge(AirCatData):
             print('  Bridge receive: None!')
             return super(AirCatBridge, self).response(data, payload, end)
 
+
 if __name__ == '__main__':
     _LOGGER.setLevel(logging.DEBUG)
     _LOGGER.addHandler(logging.StreamHandler())
@@ -156,12 +167,6 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.aircat/
 """
 
-import voluptuous as vol
-
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import CONF_NAME, CONF_MAC, CONF_SENSORS, TEMP_CELSIUS
-from homeassistant.helpers.entity import Entity
-from homeassistant.helpers import config_validation as cv
 
 SENSOR_PM25 = 'value'
 SENSOR_HCHO = 'hcho'
@@ -187,7 +192,9 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
         vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_MAP)]),
 })
 
-AIRCAT_SENSOR_THREAD_MODE = False # True: Thread mode, False: HomeAssistant update/poll mode
+# True: Thread mode, False: HomeAssistant update/poll mode
+AIRCAT_SENSOR_THREAD_MODE = False
+
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the AirCat sensor."""
@@ -209,10 +216,12 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     for index in range(count):
         for sensor_type in sensors:
             devices.append(AirCatSensor(aircat,
-                name + str(index + 1) if index else name,
-                macs[index], sensor_type))
+                                        name +
+                                        str(index + 1) if index else name,
+                                        macs[index], sensor_type))
 
     add_devices(devices)
+
 
 class AirCatSensor(Entity):
     """Implementation of a AirCat sensor."""
@@ -289,14 +298,14 @@ class AirCatSensor(Entity):
             return
 
         if AirCatSensor.times % AirCatSensor.interval == 0:
-            #_LOGGER.debug("Begin update %d: %s %s", AirCatSensor.times,
+            # _LOGGER.debug("Begin update %d: %s %s", AirCatSensor.times,
             #    self._mac, self._sensor_type)
             self._aircat.update()
-            #_LOGGER.debug("Ended update %d: %s %s", AirCatSensor.times,
+            # _LOGGER.debug("Ended update %d: %s %s", AirCatSensor.times,
             #    self._mac, self._sensor_type)
         AirCatSensor.times += 1
 
     def shutdown(self, event):
         """Signal shutdown."""
-        #_LOGGER.debug('Shutdown')
+        # _LOGGER.debug('Shutdown')
         self._aircat.shutdown()

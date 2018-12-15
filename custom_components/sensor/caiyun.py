@@ -39,7 +39,7 @@ from datetime import timedelta
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
     CONF_NAME, CONF_LONGITUDE, CONF_LATITUDE, CONF_MONITORED_CONDITIONS,
-	CONF_SCAN_INTERVAL)
+    CONF_SCAN_INTERVAL)
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_time_interval
 import homeassistant.helpers.config_validation as cv
@@ -49,20 +49,20 @@ _LOGGER = logging.getLogger(__name__)
 SCAN_INTERVAL = timedelta(seconds=1200)
 
 USER_AGENT = 'ColorfulCloudsPro/3.2.2 (iPhone; iOS 11.3; Scale/3.00)'
-DEVIEC_ID = '5F544F93-44F1-43C9-94B2-%012X' % random.randint(0,0xffffffffffff)
+DEVIEC_ID = '5F544F93-44F1-43C9-94B2-%012X' % random.randint(0, 0xffffffffffff)
 
 WEATHER_ICONS = {
-    'CLEAR_DAY': ('晴天','sunny'),
-    'CLEAR_NIGHT': ('晴夜','night'),
-    'PARTLY_CLOUDY_DAY': ('多云','partlycloudy'),
-    'PARTLY_CLOUDY_NIGHT': ('多云','windy-variant'),
-    'CLOUDY': ('阴','cloudy'),
-    'RAIN': ('雨','rainy'),
-    'SNOW': ('雪','snowy'),
-    'WIND': ('风','windy'),
-    'FOG': ('雾','fog'),
-    'HAZE': ('霾','hail'),
-    'SLEET': ('冻雨','snowy-rainy')
+    'CLEAR_DAY': ('晴天', 'sunny'),
+    'CLEAR_NIGHT': ('晴夜', 'night'),
+    'PARTLY_CLOUDY_DAY': ('多云', 'partlycloudy'),
+    'PARTLY_CLOUDY_NIGHT': ('多云', 'windy-variant'),
+    'CLOUDY': ('阴', 'cloudy'),
+    'RAIN': ('雨', 'rainy'),
+    'SNOW': ('雪', 'snowy'),
+    'WIND': ('风', 'windy'),
+    'FOG': ('雾', 'fog'),
+    'HAZE': ('霾', 'hail'),
+    'SLEET': ('冻雨', 'snowy-rainy')
 }
 
 SENSOR_TYPES = {
@@ -93,11 +93,12 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_LONGITUDE): cv.longitude,
     vol.Optional(CONF_LATITUDE): cv.latitude,
     vol.Optional(CONF_MONITORED_CONDITIONS,
-        default=['weather', 'temperature', 'humidity', 'pm25']):
-        vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
+                 default=['weather', 'temperature', 'humidity', 'pm25']):
+    vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
     vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=1200)): (
         vol.All(cv.time_period, cv.positive_timedelta)),
 })
+
 
 async def async_setup_platform(hass, config, async_add_devices,
                                discovery_info=None):
@@ -123,7 +124,7 @@ async def async_setup_platform(hass, config, async_add_devices,
 class CaiYunSensor(Entity):
 
     def __init__(self, name, type, caiyun):
-        tname,unit,icon = SENSOR_TYPES[type]
+        tname, unit, icon = SENSOR_TYPES[type]
         self._name = name + ' ' + tname
         self._type = type
         self._unit = unit
@@ -165,6 +166,7 @@ class CaiYunSensor(Entity):
     def should_poll(self):  # pylint: disable=no-self-use
         """No polling needed."""
         return False
+
 
 class CaiYunData:
     """Class for handling the data retrieval."""
@@ -212,7 +214,7 @@ class CaiYunData:
                 raise
 
             skycon = result['skycon']
-            data['weather'],data['mdicon'] = WEATHER_ICONS[skycon]
+            data['weather'], data['mdicon'] = WEATHER_ICONS[skycon]
 
             data['temperature'] = round(result['temperature'])
             data['humidity'] = int(result['humidity'] * 100)
@@ -225,10 +227,13 @@ class CaiYunData:
             precipitation = result.get('precipitation')
             if precipitation:
                 if 'nearest' in precipitation:
-                    data['nearest_precipitation'] = precipitation['nearest'].get('intensity')
-                    data['precipitation_distance'] = precipitation['nearest'].get('distance')
+                    data['nearest_precipitation'] = precipitation['nearest'].get(
+                        'intensity')
+                    data['precipitation_distance'] = precipitation['nearest'].get(
+                        'distance')
                 if 'local' in precipitation:
-                    data['local_precipitation'] = precipitation['local'].get('intensity')
+                    data['local_precipitation'] = precipitation['local'].get(
+                        'intensity')
             wind = result.get('wind')
             if wind:
                 data['wind_direction'] = wind.get('direction')

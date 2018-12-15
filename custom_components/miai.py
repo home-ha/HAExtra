@@ -13,8 +13,9 @@ _LOGGER = logging.getLogger(__name__)
 
 MAIN = 'miai'
 DOMAIN = 'miai'
-EXPIRE_HOURS = 168 # 7天过期
+EXPIRE_HOURS = 168  # 7天过期
 _hass = None
+
 
 async def async_create_refresh_token(
         user: models.User, client_id: Optional[str] = None,
@@ -44,12 +45,14 @@ async def async_create_refresh_token(
     _hass.auth._store._async_schedule_save()
     return refresh_token
 
+
 async def async_setup(hass, config):
     global _hass
     _hass = hass
     hass.auth._store.async_create_refresh_token = async_create_refresh_token
     hass.http.register_view(MiAiView)
     return True
+
 
 class MiAiView(HomeAssistantView):
     """View to handle Configuration requests."""
@@ -70,8 +73,11 @@ class MiAiView(HomeAssistantView):
             response = makeResponse("主人，程序出错啦！")
         return self.json(response)
 
+
 #
 _appName = '我家'
+
+
 def guessAction(entity_id, intent_name, query):
     if not entity_id.startswith('sensor') and not entity_id.startswith('binary_sensor') and not entity_id.startswith('device_tracker'):
         # 使用小米意图识别或做意图识别
@@ -80,6 +86,7 @@ def guessAction(entity_id, intent_name, query):
         elif intent_name == 'close' or query.startswith('关') or query.endswith('关掉') or query.endswith('关闭') or query.endswith('关上'):
             return '关闭'
     return '查询'
+
 
 #
 STATE_NAMES = {
@@ -104,6 +111,8 @@ STATE_NAMES = {
 }
 
 #
+
+
 async def handleState(entity_id, state, action):
     cover = entity_id.startswith('cover') or entity_id == 'group.all_covers'
     domain = 'cover' if cover else 'homeassistant'
@@ -122,6 +131,8 @@ async def handleState(entity_id, state, action):
     return action + ("成功" if result else "不成功")
 
 #
+
+
 async def handleStates(intent_name, query, states, group, names):
     for state in states:
         entity_id = state.entity_id
@@ -141,18 +152,22 @@ async def handleStates(intent_name, query, states, group, names):
     return None
 
 #
+
+
 def makeResponse(text, open_mic=False):
     return {
         'version': '1.0',
         'is_session_end': not open_mic,
         'response': {
             'open_mic': open_mic,
-            'to_speak': {'type': 0,'text': text},
-            #'to_display': {'type': 0,'text': text}
+            'to_speak': {'type': 0, 'text': text},
+            # 'to_display': {'type': 0,'text': text}
         }
-     }
+    }
 
 #
+
+
 async def handleRequest(data, real_ip):
     _LOGGER.info("Handle Request %s: %s", real_ip, data)
     if not real_ip.startswith('124.251'):
@@ -171,7 +186,8 @@ async def handleRequest(data, real_ip):
 
     #
     slot_info = data['request'].get('slot_info')
-    intent_name = slot_info.get('intent_name') if slot_info is not None else None
+    intent_name = slot_info.get(
+        'intent_name') if slot_info is not None else None
 
     if intent_name == 'Mi_Welcome':
         return makeResponse("您好主人，我能为你做什么呢？", True)

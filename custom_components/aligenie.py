@@ -12,9 +12,10 @@ _LOGGER = logging.getLogger(__name__)
 
 MAIN = 'aligenie'
 DOMAIN = 'aligenie'
-EXPIRE_HOURS = 8760 # 365天过期
-CHECK_ALIAS = False # 仅显示有效的天猫精灵设备名称（初次为了验证名称是否正确，请打开此开关）
+EXPIRE_HOURS = 8760  # 365天过期
+CHECK_ALIAS = False  # 仅显示有效的天猫精灵设备名称（初次为了验证名称是否正确，请打开此开关）
 _hass = None
+
 
 async def async_create_refresh_token(
         user: models.User, client_id: Optional[str] = None,
@@ -44,12 +45,14 @@ async def async_create_refresh_token(
     _hass.auth._store._async_schedule_save()
     return refresh_token
 
+
 async def async_setup(hass, config):
     global _hass
     _hass = hass
     hass.auth._store.async_create_refresh_token = async_create_refresh_token
     hass.http.register_view(AliGenieView)
     return True
+
 
 class AliGenieView(HomeAssistantView):
     """View to handle Configuration requests."""
@@ -66,9 +69,11 @@ class AliGenieView(HomeAssistantView):
         except:
             import traceback
             _LOGGER.error(traceback.format_exc())
-            response = {'header': {'name': 'errorResult'}, 'payload': errorResult('SERVICE_ERROR', 'service exception')}
+            response = {'header': {'name': 'errorResult'},
+                        'payload': errorResult('SERVICE_ERROR', 'service exception')}
 
         return self.json(response)
+
 
 def errorResult(errorCode, messsage=None):
     """Generate error result"""
@@ -82,6 +87,7 @@ def errorResult(errorCode, messsage=None):
         'ACCESS_TOKEN_INVALIDATE': ' access_token is invalidate'
     }
     return {'errorCode': errorCode, 'message': messsage if messsage else messages[errorCode]}
+
 
 async def handleRequest(data):
     """Handle request"""
@@ -121,12 +127,15 @@ async def handleRequest(data):
     _LOGGER.info("Respnose: %s", response)
     return response
 
+
 def discoveryDevice():
     # 因为天猫精灵不会经常调用发现协议，每次发现后释放以节约内存
     from urllib.request import urlopen
-    places = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/placelist').read().decode('utf-8'))['data']
+    places = json.loads(urlopen(
+        'https://open.bot.tmall.com/oauth/api/placelist').read().decode('utf-8'))['data']
     if CHECK_ALIAS:
-        aliases = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/aliaslist').read().decode('utf-8'))['data']
+        aliases = json.loads(urlopen(
+            'https://open.bot.tmall.com/oauth/api/aliaslist').read().decode('utf-8'))['data']
         aliases.append({'key': '电视', 'value': ['电视机']})
     else:
         aliases = None
@@ -158,7 +167,8 @@ def discoveryDevice():
         if zone is None:
             continue
 
-        prop,action = guessPropertyAndAction(entity_id, attributes, state.state)
+        prop, action = guessPropertyAndAction(
+            entity_id, attributes, state.state)
         if prop is None:
             continue
 
@@ -191,19 +201,20 @@ def discoveryDevice():
             'icon': 'https://home-assistant.io/demo/favicon-192x192.png',
             'properties': [prop],
             'actions': ['TurnOn', 'TurnOff', 'Query', action] if action == 'QueryPowerState' else ['Query', action],
-            #'extensions':{'extension1':'','extension2':''}
-            })
+            # 'extensions':{'extension1':'','extension2':''}
+        })
 
-    #for sensor in devices:
-        #if sensor['deviceType'] == 'sensor':
-            #_LOGGER.info(json.dumps(sensor, indent=2, ensure_ascii=False))
+    # for sensor in devices:
+        # if sensor['deviceType'] == 'sensor':
+        #_LOGGER.info(json.dumps(sensor, indent=2, ensure_ascii=False))
     return {'devices': devices}
+
 
 async def controlDevice(name, payload):
     entity_id = payload['deviceId']
     service = getControlService(name)
     domain = entity_id[:entity_id.find('.')]
-    data = {"entity_id": entity_id }
+    data = {"entity_id": entity_id}
     if domain == 'cover':
         service = 'close_cover' if service == 'turn_off' else 'open_cover'
 
@@ -211,6 +222,7 @@ async def controlDevice(name, payload):
         result = await _hass.services.async_call(domain, service, data, True)
 
     return {} if result else errorResult('IOT_DEVICE_OFFLINE')
+
 
 def queryDevice(name, payload):
     deviceId = payload['deviceId']
@@ -226,12 +238,13 @@ def queryDevice(name, payload):
                 entity_ids = attributes.get('entity_id')
                 break
 
-        properties = [{'name':'powerstate', 'value':'on'}]
+        properties = [{'name': 'powerstate', 'value': 'on'}]
         for state in states:
             entity_id = state.entity_id
             attributes = state.attributes
             if entity_id.startswith('sensor.') and (entity_id in entity_ids or attributes['friendly_name'].startswith(deviceId) or attributes.get('hagenie_zone') == deviceId):
-                prop,action = guessPropertyAndAction(entity_id, attributes, state.state)
+                prop, action = guessPropertyAndAction(
+                    entity_id, attributes, state.state)
                 if prop is None:
                     continue
                 properties.append(prop)
@@ -239,8 +252,9 @@ def queryDevice(name, payload):
     else:
         state = _hass.states.get(deviceId)
         if state is not None or state.state != 'unavailable':
-            return {'name':'powerstate', 'value':state.state}
+            return {'name': 'powerstate', 'value': state.state}
     return errorResult('IOT_DEVICE_OFFLINE')
+
 
 def getControlService(action):
     i = 0
@@ -250,48 +264,49 @@ def getControlService(action):
         i += 1
     return service
 
+
 DEVICE_TYPES = [
-    'television',#: '电视',
-    'light',#: '灯',
-    'aircondition',#: '空调',
-    'airpurifier',#: '空气净化器',
-    'outlet',#: '插座',
-    'switch',#: '开关',
-    'roboticvacuum',#: '扫地机器人',
-    'curtain',#: '窗帘',
-    'humidifier',#: '加湿器',
-    'fan',#: '风扇',
-    'bottlewarmer',#: '暖奶器',
-    'soymilkmaker',#: '豆浆机',
-    'kettle',#: '电热水壶',
-    'waterdispenser',#: '饮水机',
-    'camera',#: '摄像头',
-    'router',#: '路由器',
-    'cooker',#: '电饭煲',
-    'waterheater',#: '热水器',
-    'oven',#: '烤箱',
-    'waterpurifier',#: '净水器',
-    'fridge',#: '冰箱',
-    'STB',#: '机顶盒',
-    'sensor',#: '传感器',
-    'washmachine',#: '洗衣机',
-    'smartbed',#: '智能床',
-    'aromamachine',#: '香薰机',
-    'window',#: '窗',
-    'kitchenventilator',#: '抽油烟机',
-    'fingerprintlock',#: '指纹锁',
-    'telecontroller',#: '万能遥控器',
-    'dishwasher',#: '洗碗机',
-    'dehumidifier',#: '除湿机',
-    'dryer',#: '干衣机',
-    'wall-hung-boiler',#: '壁挂炉',
-    'microwaveoven',#: '微波炉',
-    'heater',#: '取暖器',
-    'mosquito-dispeller',#: '驱蚊器',
-    'treadmill',#: '跑步机',
-    'smart-gating',#: '智能门控(门锁)',
-    'smart-band',#: '智能手环',
-    'hanger',#: '晾衣架',
+    'television',  # : '电视',
+    'light',  # : '灯',
+    'aircondition',  # : '空调',
+    'airpurifier',  # : '空气净化器',
+    'outlet',  # : '插座',
+    'switch',  # : '开关',
+    'roboticvacuum',  # : '扫地机器人',
+    'curtain',  # : '窗帘',
+    'humidifier',  # : '加湿器',
+    'fan',  # : '风扇',
+    'bottlewarmer',  # : '暖奶器',
+    'soymilkmaker',  # : '豆浆机',
+    'kettle',  # : '电热水壶',
+    'waterdispenser',  # : '饮水机',
+    'camera',  # : '摄像头',
+    'router',  # : '路由器',
+    'cooker',  # : '电饭煲',
+    'waterheater',  # : '热水器',
+    'oven',  # : '烤箱',
+    'waterpurifier',  # : '净水器',
+    'fridge',  # : '冰箱',
+    'STB',  # : '机顶盒',
+    'sensor',  # : '传感器',
+    'washmachine',  # : '洗衣机',
+    'smartbed',  # : '智能床',
+    'aromamachine',  # : '香薰机',
+    'window',  # : '窗',
+    'kitchenventilator',  # : '抽油烟机',
+    'fingerprintlock',  # : '指纹锁',
+    'telecontroller',  # : '万能遥控器',
+    'dishwasher',  # : '洗碗机',
+    'dehumidifier',  # : '除湿机',
+    'dryer',  # : '干衣机',
+    'wall-hung-boiler',  # : '壁挂炉',
+    'microwaveoven',  # : '微波炉',
+    'heater',  # : '取暖器',
+    'mosquito-dispeller',  # : '驱蚊器',
+    'treadmill',  # : '跑步机',
+    'smart-gating',  # : '智能门控(门锁)',
+    'smart-band',  # : '智能手环',
+    'hanger',  # : '晾衣架',
 ]
 
 INCLUDE_DOMAINS = {
@@ -303,7 +318,7 @@ INCLUDE_DOMAINS = {
     'switch': 'switch',
     'vacuum': 'roboticvacuum',
     'cover': 'curtain',
-    }
+}
 
 EXCLUDE_DOMAINS = [
     'automation',
@@ -311,9 +326,11 @@ EXCLUDE_DOMAINS = [
     'device_tracker',
     'group',
     'zone',
-    ]
+]
 
 # http://doc-bot.tmall.com/docs/doc.htm?treeId=393&articleId=108271&docType=1
+
+
 def guessDeviceType(entity_id, attributes):
     if 'hagenie_deviceType' in attributes:
         return attributes['hagenie_deviceType']
@@ -330,6 +347,7 @@ def guessDeviceType(entity_id, attributes):
 
     # Map from domain
     return INCLUDE_DOMAINS[domain] if domain in INCLUDE_DOMAINS else None
+
 
 def guessDeviceName(entity_id, attributes, places, aliases):
     if 'hagenie_deviceName' in attributes:
@@ -350,8 +368,10 @@ def guessDeviceName(entity_id, attributes, places, aliases):
         if name == aliases['key'] or name in aliases['value']:
             return name
 
-    _LOGGER.error('%s is not a valid name in https://open.bot.tmall.com/oauth/api/aliaslist', name)
+    _LOGGER.error(
+        '%s is not a valid name in https://open.bot.tmall.com/oauth/api/aliaslist', name)
     return None
+
 
 def groupsAttributes(states):
     groups_attributes = []
@@ -364,6 +384,8 @@ def groupsAttributes(states):
     return groups_attributes
 
 # https://open.bot.tmall.com/oauth/api/placelist
+
+
 def guessZone(entity_id, attributes, groups_attributes, places):
     if 'hagenie_zone' in attributes:
         return attributes['hagenie_zone']
@@ -383,6 +405,7 @@ def guessZone(entity_id, attributes, groups_attributes, places):
                 return group_attributes['friendly_name']
 
     return None
+
 
 def guessPropertyAndAction(entity_id, attributes, state):
     # http://doc-bot.tmall.com/docs/doc.htm?treeId=393&articleId=108264&docType=1

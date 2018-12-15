@@ -64,9 +64,9 @@ async def async_setup_platform(hass, config, async_add_devices,
     sensors = config[CONF_SENSORS]
     scan_interval = config[CONF_SCAN_INTERVAL]
 
-    phicomm = PhicommData(username, password, \
-        hass.config.path(TOKEN_FILE + username), \
-        hass.helpers.aiohttp_client.async_get_clientsession(), hass.loop)
+    phicomm = PhicommData(username, password,
+                          hass.config.path(TOKEN_FILE + username),
+                          hass.helpers.aiohttp_client.async_get_clientsession(), hass.loop)
     await phicomm.update_data()
     if not phicomm.devs:
         _LOGGER.error("No sensors added: %s.", name)
@@ -205,8 +205,8 @@ class PhicommData():
                     'phonenumber': self._username,
                     'password': md5.hexdigest().upper()}
             headers = {'User-Agent': USER_AGENT}
-            async with self._session.post(TOKEN_URL, headers=headers, \
-                data=data) as response:
+            async with self._session.post(TOKEN_URL, headers=headers,
+                                          data=data) as response:
                 json = await response.json(content_type=None)
 
             _LOGGER.debug("Get token: %s", json)
