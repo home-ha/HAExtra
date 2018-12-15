@@ -248,9 +248,12 @@ sensor:
   unit_of_measurement: ppm
   availability_topic: NodeMCU7/status
 - platform: caiyun
-- platform: aircat
-  scan_interval: 30
-  #mac: ['B0F893249132', 'B0F893249132']
+- platform: phicomm
+  name: AirCat
+  username: !secret phicomm_username
+  password: !secret phicomm_password
+# - platform: aircat
+#   mac: ['B0F893249132', 'B0F893249132']
 - platform: template
   sensors:
     purifier_temperature:
