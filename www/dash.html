@@ -21,9 +21,13 @@
 
 			@media (hover: hover) {
 				.entity:hover {
-					background-color: #4caf50;
+					background-color: #009688;
 					cursor: pointer;
 				}
+			}
+
+			.sensor {
+				background-color: #00bcd4;
 			}
 
 			.binary_sensor {
@@ -31,30 +35,23 @@
 			}
 
 			.device_tracker {
-				background-color: #009688;
-			}
-
-			.fan,
-			.climate {
-				background-color: #cddc39;
-			}
-
-			.cover,
-			.media_player,
-			.vacuum {
-				background-color: #ff9800;
-			}
-
-			.switch {
-				background-color: #ffc107;
+				background-color: #2196f3;
 			}
 
 			.light {
 				background-color: #ff5722;
 			}
 
-			.sensor {
-				background-color: #00bcd4;
+			.switch,
+			.cover,
+			.media_player,
+			.vacuum {
+				background-color: #ff9800;
+			}
+
+			.fan,
+			.climate {
+				background-color: #8bc34a;
 			}
 
 			.name,
@@ -252,14 +249,14 @@
 				device_tracker: 'account',
 
 				light: 'lightbulb',
+
 				switch: 'light-switch',
-
-				fan: 'fan',
-				climate: 'thermostat',
-
 				media_player: 'play-circle-outline',
 				cover: 'window-closed',
-				vacuum: 'robot-vacuum'
+				vacuum: 'robot-vacuum',
+
+				fan: 'fan',
+				climate: 'thermostat'
 			}
 
 			var _entity_indexes
