@@ -352,15 +352,15 @@ switch.projector_power:
 switch.speaker:
   config:
     extra_badge:
-    - entity_id: switch.speaker
-      attribute: original_state
+      - entity_id: switch.speaker
+        attribute: original_state
     entities:
-    - entity: switch.speaker
-      icon: mdi:video-input-component
-      service: mqtt.publish
-      data:
-        topic: NodeMCU3/relay/0/set
-        payload: toggle
+      - entity: switch.speaker
+        icon: mdi:video-input-component
+        service: mqtt.publish
+        data:
+          topic: NodeMCU3/relay/0/set
+          payload: toggle
   custom_ui_state_card: state-card-button
   dashboard_static_text_attribute: original_state
   friendly_name: 音箱
