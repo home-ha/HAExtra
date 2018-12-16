@@ -167,13 +167,14 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 class ModbusClimate(ClimateDevice):
     """Representation of a Modbus climate device."""
 
+    _exception = 0
+
     def __init__(self, name, mods, index=-1):
         """Initialize the climate device."""
         self._name = name + str(index + 1) if index != -1 else name
         self._index = index
         self._mods = mods
         self._values = {}
-        self._exception = 0
 
     @property
     def name(self):
@@ -333,11 +334,11 @@ class ModbusClimate(ClimateDevice):
                     val = struct.unpack(mod[CONF_STRUCTURE], byte_string)[0]
                     value = scale * val + offset
             except:
-                self._exception += 1
+                ModbusClimate._exception += 1
                 _LOGGER.error("Exception %d on %s/%s at %s/slave%s/register%s",
-                              self._exception, self._name, prop, register_type, slave, register)
-                if (self._exception < 5) or (self._exception % 10 == 0):
-                    if (self._exception % 3 == 0):
+                              ModbusClimate._exception, self._name, prop, register_type, slave, register)
+                if (ModbusClimate._exception < 5) or (ModbusClimate._exception % 10 == 0):
+                    if (ModbusClimate._exception % 2 == 0):
                         _LOGGER.error("Reset %s", modbus.HUB._client)
                         self.reset()
                     else:
@@ -345,7 +346,7 @@ class ModbusClimate(ClimateDevice):
                     self.reconnect()
                 return
 
-            self._exception = 0
+            ModbusClimate._exception = 0
             _LOGGER.info("Read %s: %s = %f", self.name, prop, value)
             self._values[prop] = value
 

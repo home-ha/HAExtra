@@ -228,7 +228,7 @@
 							if (entity) {
 								handleEvent(entity)
 							} else {
-								floater('error', '结果错误 ' + (json.error.message || message.data) + '，<a href="javascript:connect()">重新连接</a>')
+								floater('error', '事件错误 ' + (json.error.message || message.data) + '，<a href="javascript:connect()">重新连接</a>')
 							}
 							break
 						case 'auth_invalid':
@@ -364,7 +364,7 @@
 					})
 				)
 
-				setTimeout('_processing = false', 2000) // Avoid mis-operation
+				setTimeout('_processing = false', 1000) // Avoid mis-operation
 			}
 
 			_STATE_MAPS = {
