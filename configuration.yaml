@@ -81,12 +81,9 @@ recorder:
 logbook:
 
 logger:
-  default: warning
+  # default: warning
   #logs:
   #homeassistant.components.homekit: debug
-  #custom_components.sensor.aircat: debug
-  #custom_components.aligenie: debug
-  #custom_components.miai: debug
 
 # Enables a map showing the location of tracked devices
 #map:

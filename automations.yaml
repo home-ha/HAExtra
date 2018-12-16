@@ -587,6 +587,9 @@
     - condition: numeric_state
       entity_id: sensor.aircat_hcho
       below: 0.08
+    - condition: state
+      entity_id: light.gateway_light_34ce0090901a
+      state: 'on'
   action:
     - service: light.turn_off
       entity_id: light.gateway_light_34ce0090901a
@@ -746,7 +749,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat_pm25
-      below: 5
+      below: 8
       for:
         minutes: 10
   action:
@@ -874,7 +877,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
-      below: 5
+      below: 6
       for:
         minutes: 10
   action:
