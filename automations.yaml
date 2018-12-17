@@ -554,12 +554,12 @@
         brightness: 10
     - condition: time
       after: '06:00'
-      before: '23:59'
+      before: '23:00'
     - service: hello_miai.send
       data_template:
         message: '{% set PM25 = states.sensor.aircat_pm25.state | int %}{% if PM25 >= 40 %}PM2.5为{{ PM25 }}，空气不好。{% endif %}{% set CO2 = states.sensor.fresher_co2.state | int %}{% if CO2 >= 900 %}二氧化碳浓度为{{ CO2 }}，空气很闷。{% endif %}{% set HCHO = states.sensor.aircat_hcho.state | float %}{% if HCHO > 0.2 %}甲醛浓度为{{ HCHO }}，注意通风。{% endif %}'
 
-# 室内空气达标
+# 室内空气恢复
 - alias: Indoor Air Restored
   trigger:
     - platform: numeric_state
@@ -606,7 +606,7 @@
     - service: switch.turn_on
       entity_id: switch.outlet
 
-# 客厅湿度恢复
+# 客厅湿度达标
 - alias: Parlor Humidity Good
   trigger:
     - platform: numeric_state
@@ -618,200 +618,144 @@
     - service: switch.turn_off
       entity_id: switch.outlet
 
-# 客厅空气差
-- alias: Parlor Air Bad
+# 客厅二氧化碳变化
+- alias: Parlor CO2 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.fresher_co2
-      above: 720
+      above: 750 # 触发高档
+      for:
+        minutes: 7
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      above: 700 # 触发中档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      above: 600 # 触发低档
       for:
         minutes: 5
     - platform: numeric_state
-      entity_id: sensor.fresher_pm25
-      above: 20
+      entity_id: sensor.fresher_co2
+      below: 730 # 恢复中档
       for:
         minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      below: 680 # 恢复低档
+      for:
+        minutes: 6
   action:
     - service: fan.turn_on
       entity_id: fan.fresher
     - service: fan.set_speed
-      data:
-        entity_id: fan.fresher
-        speed: strong
+      data_template:
+        entity_id: fan.purifier5
+        speed: '{% if (states("sensor.fresher_co2") | int > 750) %}strong{% elif (states("sensor.fresher_co2") | int > 700) %}middle{% else %}auto{% endif %}'
 
-# 客厅空气好
-- alias: Parlor Air Good
+# 客厅二氧化碳优
+- alias: Parlor CO2 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.fresher_co2
-      below: 680
+      below: 500 # 恢复关机
+      for:
+        minutes: 10
+  action:
+    - service: fan.turn_off
+      entity_id: fan.fresher
+
+# 餐厅颗粒物变化
+- alias: Diningroom PM2.5 Changed
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.aircat_pm25
+      above: 50
+      for:
+        minutes: 7
+    - platform: numeric_state
+      entity_id: sensor.aircat_pm25
+      above: 20
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.aircat_pm25
+      above: 13
       for:
         minutes: 5
     - platform: numeric_state
-      entity_id: sensor.fresher_pm25
-      below: 15
+      entity_id: sensor.aircat_pm25
+      below: 30
       for:
         minutes: 5
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.fresher_co2
-      below: 680
-    - condition: numeric_state
-      entity_id: sensor.fresher_pm25
+    - platform: numeric_state
+      entity_id: sensor.aircat_pm25
+      below: 15
+      for:
+        minutes: 6
+  action:
+    - service: fan.turn_on
+      entity_id: fan.purifier5
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.purifier5
+        speed: '{% if (states("sensor.aircat_pm25") | int > 50) %}high{% elif (states("sensor.aircat_pm25") | int > 20) %}medium{% else %}low{% endif %}'
+
+# 餐厅颗粒物优
+- alias: Diningroom PM2.5 Excellent
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.aircat_pm25
       below: 10
-    - condition: state
-      entity_id: fan.fresher
-      state: 'on'
-  action:
-    - service: fan.set_speed
-      data:
-        entity_id: fan.fresher
-        speed: auto
-
-# 客厅空气优
-- alias: Parlor Air Excellent
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.fresher_co2
-      below: 600
-      for:
-        minutes: 10
-    - platform: numeric_state
-      entity_id: sensor.fresher_pm25
-      below: 5
-      for:
-        minutes: 10
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.fresher_co2
-      below: 680
-    - condition: numeric_state
-      entity_id: sensor.fresher_pm25
-      below: 5
-  action:
-    - service: fan.turn_off
-      entity_id: fan.fresher
-
-# 餐厅空气差
-- alias: Diningroom Air Bad
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      above: 40
-      for:
-        minutes: 10
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier5
-    - service: fan.set_speed
-      data_template:
-        entity_id: fan.purifier5
-        speed: high
-    - condition: state
-      entity_id: binary_sensor.door_window_sensor_158d000228a52b
-      state: 'on'
-    - service: hello_miai.send
-      data:
-        message: 室内空气差，请关好门窗
-
-# 餐厅空气不好
-- alias: Diningroom Air Poor
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      above: 20
-      for:
-        minutes: 5
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier5
-    - service: fan.set_speed
-      data_template:
-        entity_id: fan.purifier5
-        speed: medium
-
-# 餐厅空气好
-- alias: Diningroom Air Good
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      below: 15
-      for:
-        minutes: 5
-  action:
-    - service: fan.set_speed
-      data:
-        entity_id: fan.purifier5
-        speed: low
-
-# 餐厅空气优
-- alias: Diningroom Air Excellent
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      below: 8
       for:
         minutes: 10
   action:
     - service: fan.turn_off
       entity_id: fan.purifier5
 
-# 书房空气差
-- alias: Study Air Bad
+# 书房颗粒物变化
+- alias: Study PM2.5 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
       above: 50
       for:
-        minutes: 10
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier
-    - service: fan.set_speed
-      data_template:
-        entity_id: fan.purifier
-        speed: favorite
-    - service: fan.xiaomi_miio_set_favorite_level
-      data_template:
-        entity_id: fan.purifier
-        level: 9
-
-# 书房空气不好
-- alias: Study Air Poor
-  trigger:
+        minutes: 7
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
       above: 35
       for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      above: 20
+      for:
         minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      below: 40
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      below: 25
+      for:
+        minutes: 6
   action:
     - service: fan.turn_on
       entity_id: fan.purifier
     - service: fan.set_speed
       data_template:
         entity_id: fan.purifier
-        speed: favorite
+        speed: '{% if (states("sensor.purifier_pm25") | int > 35) and is_state("switch.projector", "off") %}favorite{% else %}auto{% endif %}'
     - service: fan.xiaomi_miio_set_favorite_level
       data_template:
         entity_id: fan.purifier
-        level: 6
+        level: '{% if (states("sensor.purifier_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}9{% else %}6{% endif %}'
 
-# 书房空气好
-- alias: Study Air Good
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      below: 25
-      for:
-        minutes: 5
-  action:
-    - service: fan.set_speed
-      data:
-        entity_id: fan.purifier
-        speed: auto
-
-# 书房空气优
-- alias: Study Air Excellent
+# 书房颗粒物优
+- alias: Study PM2.5 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
@@ -822,62 +766,48 @@
     - service: fan.turn_off
       entity_id: fan.purifier
 
-# 主卧空气差
-- alias: Bedroom Air Bad
+# 主卧颗粒物变化
+- alias: Bedroom PM2.5 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
       above: 50
       for:
-        minutes: 10
-  condition:
-    - condition: state
-      entity_id: sun.sun
-      state: above_horizon
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier7
-    - service: fan.set_speed
-      data_template:
-        entity_id: fan.purifier7
-        speed: high
-
-# 主卧空气不好
-- alias: Bedroom Air Poor
-  trigger:
+        minutes: 7
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
       above: 20
       for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.bedroom_pm25
+      above: 10
+      for:
         minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.bedroom_pm25
+      below: 35
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.bedroom_pm25
+      below: 15
+      for:
+        minutes: 6
   action:
     - service: fan.turn_on
       entity_id: fan.purifier7
     - service: fan.set_speed
       data_template:
         entity_id: fan.purifier7
-        speed: medium
+        speed: '{% if (states("sensor.bedroom_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.bedroom_pm25") | int > 20) %}medium{% else %}low{% endif %}'
 
-# 主卧空气好
-- alias: Bedroom Air Good
+# 主卧颗粒物优
+- alias: Bedroom PM2.5 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
-      below: 15
-      for:
-        minutes: 5
-  action:
-    - service: fan.set_speed
-      data:
-        entity_id: fan.purifier7
-        speed: low
-
-# 主卧空气优
-- alias: Bedroom Air Excellent
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.bedroom_pm25
-      below: 6
+      below: 5
       for:
         minutes: 10
   action:
