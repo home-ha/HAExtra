@@ -241,3 +241,9 @@ apt-get install samba
 #     app_id: !secret baidu_app_id
 #     api_key: !secret baidu_api_key
 #     secret_key: !secret baidu_secret_key
+
+#shell_command:
+  #genie_power: 'adb connect Genie; adb -s Genie shell input keyevent 26'
+  #genie_dashboard: 'adb connect Genie; adb -s Genie shell am start -n de.rhuber.homedash/org.wallpanelproject.android.WelcomeActivity'
+  #clear_mosquitto: 'systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
+  #upgrade_homeassistant: 'systemctl stop homeassistant; pip3 install homeassistant --upgrade; systemctl start homeassistant'
