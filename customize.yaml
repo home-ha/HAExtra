@@ -32,8 +32,8 @@ climate.saswell2:
   hagenie_deviceType: heater
 cover.airer:
   friendly_name: 晾衣架
-  icon: mdi:hanger
   hagenie_deviceType: hanger
+  icon: mdi:hanger
 cover.study_cover:
   friendly_name: 书房窗帘
 customizer.customizer:
@@ -137,13 +137,13 @@ input_select.wall_fan_speed:
 input_text.miai:
   friendly_name: 小爱音箱
   icon: mdi:speaker-wireless
-light.balcony_light:
-  friendly_name: 阳台灯
-  hagenie_deviceName: 吸顶灯
-  icon: mdi:ceiling-light
 light.airer_light:
   friendly_name: 晾衣灯
   hagenie_deviceName: 天花灯
+  icon: mdi:ceiling-light
+light.balcony_light:
+  friendly_name: 阳台灯
+  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 light.diningroom_light:
   friendly_name: 餐厅灯
@@ -353,7 +353,6 @@ switch.speaker:
   friendly_name: 音箱
   hagenie_deviceName: 机顶盒
   hagenie_deviceType: STB
-  icon: mdi:speaker
 switch.storage:
   friendly_name: 网络存储
   hagenie_deviceName: 网关
