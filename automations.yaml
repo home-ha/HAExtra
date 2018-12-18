@@ -169,48 +169,30 @@
       entity_id: light.balcony_light
 
 # 阳台移门打开
-- alias: Balcony Door Opened
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.door_window_sensor_158d000228a52b
-      from: 'off'
-      to: 'on'
-      for:
-        minutes: 5
-  action:
-    - service: climate.turn_off
-      entity_id: climate.daikin2
-    - service: climate.turn_off
-      entity_id: climate.daikin1
-    - condition: numeric_state
-      entity_id: sensor.aircat_pm25
-      below: 30
-    - service: fan.turn_off
-      entity_id: fan.purifier5
-    - condition: numeric_state
-      entity_id: sensor.fresher_co2
-      below: 700
-    - service: fan.turn_off
-      entity_id: fan.fresher
+# - alias: Balcony Door Opened
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.door_window_sensor_158d000228a52b
+#       from: 'off'
+#       to: 'on'
+#       for:
+#         minutes: 5
+#   action:
+#     - service: climate.turn_off
+#       entity_id: climate.daikin2
+#     - service: climate.turn_off
+#       entity_id: climate.daikin1
 
 # 阳台移门关闭
-- alias: Balcony Door Closed
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.door_window_sensor_158d000228a52b
-      from: 'on'
-      to: 'off'
-  action:
-    - service: fan.turn_on
-      entity_id: fan.fresher
-    - service: fan.turn_on
-      entity_id: fan.purifier5
-    - condition: numeric_state
-      entity_id: sensor.fresher_co2
-      above: 900
-    - service: hello_miai.send
-      data_template:
-        message: '室内二氧化碳浓度为{{ states.sensor.fresher_co2.state }}，空气很闷，请注意通风'
+# - alias: Balcony Door Closed
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.door_window_sensor_158d000228a52b
+#       from: 'on'
+#       to: 'off'
+#   action:
+#     - service: fan.turn_on
+#       entity_id: fan.fresher
 
 # 洗手间灯感应开
 - alias: Washroom Light On
@@ -604,7 +586,7 @@
       entity_id: fan.fresher
     - service: fan.set_speed
       data_template:
-        entity_id: fan.purifier5
+        entity_id: fan.fresher
         speed: '{% if (states("sensor.fresher_co2") | int > 750) %}strong{% elif (states("sensor.fresher_co2") | int > 700) %}middle{% else %}auto{% endif %}'
 
 # 客厅二氧化碳优
