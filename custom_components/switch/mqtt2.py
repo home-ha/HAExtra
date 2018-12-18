@@ -1,0 +1,70 @@
+"""
+Support for MQTT switches with icon_template and original_state support.
+
+"""
+import logging
+
+from homeassistant.core import callback
+from homeassistant.components.mqtt import (CONF_STATE_TOPIC, CONF_QOS, subscription)
+from homeassistant.const import (CONF_OPTIMISTIC, CONF_VALUE_TEMPLATE)
+from homeassistant.helpers.typing import HomeAssistantType, ConfigType
+
+_LOGGER = logging.getLogger(__name__)
+
+async def async_setup_platform(hass: HomeAssistantType, config: ConfigType,
+                               async_add_entities, discovery_info=None):
+    """Set up MQTT switch through configuration.yaml."""
+    async_add_entities([MqttSwitch2(config, discovery_info)])
+
+
+from homeassistant.components.switch.mqtt import (MqttSwitch, PLATFORM_SCHEMA)
+
+# pylint: disable=too-many-ancestors
+class MqttSwitch2(MqttSwitch):
+    """Representation of a switch that can be toggled using MQTT."""
+
+    def __init__(self, config, discovery_hash):
+        """Initialize the MQTT switch."""
+        super().__init__(config, discovery_hash)
+        self._attributes = None
+
+    async def _subscribe_topics(self):
+        """(Re)Subscribe to topics."""
+        template = self._config.get(CONF_VALUE_TEMPLATE)
+        if template is not None:
+            template.hass = self.hass
+
+        @callback
+        def state_message_received(topic, payload, qos):
+            """Handle new MQTT state messages."""
+            if template is not None:
+                self._attributes = {'original_state': payload}
+                payload = template.async_render_with_possible_json_value(
+                    payload)
+            if payload == self._state_on:
+                self._state = True
+            elif payload == self._state_off:
+                self._state = False
+
+            self.async_schedule_update_ha_state()
+
+        if self._config.get(CONF_STATE_TOPIC) is None:
+            # Force into optimistic mode.
+            self._optimistic = True
+        else:
+            self._sub_state = await subscription.async_subscribe_topics(
+                self.hass, self._sub_state,
+                {CONF_STATE_TOPIC:
+                 {'topic': self._config.get(CONF_STATE_TOPIC),
+                  'msg_callback': state_message_received,
+                  'qos': self._config.get(CONF_QOS)}})
+
+        if self._optimistic:
+            last_state = await self.async_get_last_state()
+            if last_state:
+                self._state = last_sta
+
+    @property
+    def state_attributes(self):
+        """Return attributes."""
+        return self._attributes
