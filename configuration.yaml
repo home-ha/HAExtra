@@ -21,6 +21,7 @@ history:
     domains:
       - sun
       - group
+      - script
       - climate
       - automation
       - input_text

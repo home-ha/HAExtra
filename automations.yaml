@@ -220,7 +220,7 @@
   initial_state: false
   trigger:
     - platform: time
-      minutes: '/2'
+      minutes: '/3'
       seconds: 00
   condition:
     - condition: state
@@ -664,7 +664,7 @@
         minutes: 8
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
-      above: 20
+      above: 23
       for:
         minutes: 6
     - platform: numeric_state
@@ -694,7 +694,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
-      below: 15
+      below: 18
       for:
         minutes: 10
   action:

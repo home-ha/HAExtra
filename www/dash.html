@@ -445,7 +445,8 @@
 
 				var html = '<div class="name">' + attributes.friendly_name + '</div>'
 
-				var off = state == 'off' || state == 'not_home' || state == 'unavailable' || state == 'closed' || state == 'docked' || state == 'low' ? ' off' : ''
+				var off =
+					state == 'off' || state == 'not_home' || state == 'unavailable' || state == 'closed' || state == 'docked' || state == 'low' ? ' off' : ''
 				if (_STATE_MAPS.hasOwnProperty(state)) {
 					state = _STATE_MAPS[state]
 				}
