@@ -560,27 +560,27 @@
       entity_id: sensor.fresher_co2
       above: 750 # 触发高档
       for:
-        minutes: 7
+        minutes: 10
     - platform: numeric_state
       entity_id: sensor.fresher_co2
       above: 700 # 触发中档
       for:
-        minutes: 6
+        minutes: 8
     - platform: numeric_state
       entity_id: sensor.fresher_co2
       above: 600 # 触发低档
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.fresher_co2
       below: 730 # 恢复中档
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.fresher_co2
       below: 680 # 恢复低档
       for:
-        minutes: 6
+        minutes: 8
   action:
     - service: fan.turn_on
       entity_id: fan.fresher
@@ -608,27 +608,27 @@
       entity_id: sensor.aircat_pm25
       above: 50
       for:
-        minutes: 7
+        minutes: 10
     - platform: numeric_state
       entity_id: sensor.aircat_pm25
       above: 20
       for:
-        minutes: 6
+        minutes: 8
     - platform: numeric_state
       entity_id: sensor.aircat_pm25
       above: 13
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.aircat_pm25
       below: 30
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.aircat_pm25
       below: 15
       for:
-        minutes: 6
+        minutes: 8
   action:
     - service: fan.turn_on
       entity_id: fan.purifier5
@@ -656,27 +656,27 @@
       entity_id: sensor.purifier_pm25
       above: 50
       for:
-        minutes: 7
+        minutes: 10
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
       above: 35
       for:
-        minutes: 6
+        minutes: 8
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
       above: 20
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
       below: 40
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
       below: 25
       for:
-        minutes: 6
+        minutes: 8
   action:
     - service: fan.turn_on
       entity_id: fan.purifier
@@ -708,27 +708,27 @@
       entity_id: sensor.bedroom_pm25
       above: 50
       for:
-        minutes: 7
+        minutes: 10
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
       above: 20
       for:
-        minutes: 6
+        minutes: 8
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
       above: 10
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
       below: 35
       for:
-        minutes: 5
+        minutes: 6
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
       below: 15
       for:
-        minutes: 6
+        minutes: 8
   action:
     - service: fan.turn_on
       entity_id: fan.purifier7
@@ -770,52 +770,52 @@
         entity_id: climate.daikin4
         fan_mode: '{% if is_state("sun.sun", "above_horizon") %}自动{% else %}一级{% endif %}'
 
-# 主卧温度高
-- alias: Bedroom Temperature High
-  initial_state: false
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.bedroom_temperature
-      above: 21.8
-      for:
-        minutes: 10
-  condition:
-    - condition: or
-      conditions:
-        - condition: time
-          after: '00:00'
-          before: '08:00'
-        - condition: state
-          entity_id: device_tracker.yphone
-          state: 'home'
-        - condition: state
-          entity_id: device_tracker.zphone
-          state: 'home'
-  action:
-    - service: climate.turn_on
-      entity_id: climate.daikin3
-    - service: climate.set_temperature
-      data:
-        entity_id: climate.daikin3
-        temperature: 26
-        operation_mode: cool
+# # 主卧温度高
+# - alias: Bedroom Temperature High
+#   initial_state: false
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.bedroom_temperature
+#       above: 21.8
+#       for:
+#         minutes: 10
+#   condition:
+#     - condition: or
+#       conditions:
+#         - condition: time
+#           after: '00:00'
+#           before: '08:00'
+#         - condition: state
+#           entity_id: device_tracker.yphone
+#           state: 'home'
+#         - condition: state
+#           entity_id: device_tracker.zphone
+#           state: 'home'
+#   action:
+#     - service: climate.turn_on
+#       entity_id: climate.daikin3
+#     - service: climate.set_temperature
+#       data:
+#         entity_id: climate.daikin3
+#         temperature: 26
+#         operation_mode: cool
 
-# 主卧温度低
-- alias: Bedroom Temperature Low
-  initial_state: false
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.bedroom_temperature
-      below: 21
-      for:
-        minutes: 5
-  # condition:
-  # - condition: numeric_state
-  #   entity_id: sensor.balcony_temperature
-  #   below: 32
-  action:
-    - service: climate.turn_off
-      entity_id: climate.daikin3
+# # 主卧温度低
+# - alias: Bedroom Temperature Low
+#   initial_state: false
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.bedroom_temperature
+#       below: 21
+#       for:
+#         minutes: 5
+#   # condition:
+#   # - condition: numeric_state
+#   #   entity_id: sensor.balcony_temperature
+#   #   below: 32
+#   action:
+#     - service: climate.turn_off
+#       entity_id: climate.daikin3
 
 # 书房亮度太高
 - alias: Study Lightness High
