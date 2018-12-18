@@ -180,3 +180,64 @@ EOF
 
 apt-get install samba
 
+
+# Global Customization file
+#homeassistant:
+  #customize_glob: !include customize_glob.yaml
+  # auth_providers:
+  #   - type: homeassistant
+  #   - type: trusted_networks
+  #   - type: legacy_api_password
+
+#http:
+  #api_password: !secret http_password
+  # trusted_networks:
+  # - 127.0.0.1
+  # - 192.168.1.0/24
+  # - 192.168.2.0/24
+
+# Enables the frontend
+#frontend:
+  #javascript_version: latest
+  #extra_html_url:
+  #  - /local/custom_ui/state-card-button.html
+  # - /local/custom_ui/state-card-custom-ui.html
+  #extra_html_url_es5:
+  #  - /local/custom_ui/state-card-button.html
+  # - /local/custom_ui/state-card-custom-ui-es5.html
+
+# Customizer
+# customizer:
+#   custom_ui: local
+  # customize.yaml
+  # config:
+  #   extra_badge:
+  #     - entity_id: switch.speaker
+  #       attribute: original_state
+  #   entities:
+  #     - entity: switch.speaker
+  #       icon: mdi:video-input-component
+  #       service: mqtt.publish
+  #       data:
+  #         topic: NodeMCU3/relay/0/set
+  #         payload: toggle
+  # custom_ui_state_card: state-card-button
+  #dashboard_static_text_attribute: original_state
+
+#recorder:
+#  purge_keep_days: 2
+#  db_url: sqlite:////tmp/home-assistant.db
+
+#logger:
+  # default: warning
+  #logs:
+  #homeassistant.components.homekit: debug
+
+# Text to speech
+#tts:
+#  - platform: google
+#    language: zh-cn
+#   - platform: baidu
+#     app_id: !secret baidu_app_id
+#     api_key: !secret baidu_api_key
+#     secret_key: !secret baidu_secret_key
