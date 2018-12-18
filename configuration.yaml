@@ -572,6 +572,14 @@ panel_iframe:
     title: 面板
     icon: mdi:microsoft
     url: !secret dash_url
+  nodemcu:
+    title: 室内
+    icon: mdi:chart-line
+    url: !secret nodemcu_url
+  nodemcu2:
+    title: 阳台
+    icon: mdi:chart-areaspline
+    url: !secret nodemcu2_url
 
 aligenie:
 
