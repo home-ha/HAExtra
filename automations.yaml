@@ -146,8 +146,10 @@
         entity_id: binary_sensor.switch_158d000201a73f
         click_type: long_click_press
   action:
-    - service: switch.turn_off
-      entity_id: switch.speaker
+    - service: mqtt.publish
+      data:
+        topic: NodeMCU3/relay/0/set
+        payload: 'off'
 
 # 阳台移门开合
 - alias: Balcony Door Toggled

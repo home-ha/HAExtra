@@ -564,10 +564,6 @@ media_player:
     host: X9400e
     name: X9400e
 
-# apple_tv:
-# - host: AppleTV
-#   login_id: '00000000-3c08-4dfe-85e9-307cddc945b6'
-
 panel_iframe:
   dash:
     title: 面板
