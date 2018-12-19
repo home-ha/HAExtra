@@ -108,7 +108,7 @@
 			.moder {
 				border: 0;
 				color: white;
-				padding: 0 8px;
+				padding: 1px 8px;
 				appearance: none;
 				-webkit-appearance: none;
 				text-transform: capitalize;
@@ -549,8 +549,10 @@
 				}
 				html += '</div>'
 
-				if (!off) {
-					if (domain == 'climate' || domain == 'fan') {
+				if (!off) { // Enabled extra only in off state?
+					if (attributes.hasOwnProperty('dash_extra')) {
+						var extra = attributes[attributes.dash_extra]
+					} else if (domain == 'climate' || domain == 'fan') {
 						var extra = ''
 						if (domain == 'climate') {
 							extra += '<span class="tuner" onclick="handleTune(event)">▽</span>'
@@ -564,7 +566,7 @@
 							var key = mode.toLowerCase()
 							var text = _STATE_MAPS.hasOwnProperty(key) ? _STATE_MAPS[key] : mode.replace('level', '档位')
 							extra += '<option value="' + mode + '"' + (mode == current ? ' selected' : '') + '>' + text
-							if (mode == current && attributes.temperature) {
+							if (mode == current && domain == 'climate') {
 								extra += ' ' + attributes.temperature
 							}
 							extra += '</option>'
@@ -574,8 +576,6 @@
 						if (domain == 'climate') {
 							extra += '<span class="tuner" onclick="handleTune(event)">△</span>'
 						}
-					} else if (attributes.hasOwnProperty('dash_extra')) {
-						var extra = attributes[attributes.dash_extra]
 					} else {
 						return html
 					}

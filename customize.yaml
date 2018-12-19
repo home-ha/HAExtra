@@ -292,6 +292,7 @@ sensor.caiyun_so2:
 sensor.caiyun_temperature:
   friendly_name: 室外气温
 sensor.caiyun_weather:
+  dash_extra: weather
   friendly_name: 天气
 sensor.caiyun_wind_direction:
   friendly_name: 风向
@@ -350,6 +351,7 @@ switch.projector_power:
   friendly_name: 投影仪电源
   hidden: true
 switch.speaker:
+  dash_extra: original_state
   friendly_name: 音箱
   hagenie_deviceName: 机顶盒
   hagenie_deviceType: STB
