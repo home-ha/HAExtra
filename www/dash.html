@@ -217,7 +217,7 @@
 				// Parse access token
 				_token = params[0].slice(1)
 				if (!_token && localStorage.hassTokens) {
-					_token = JSON.parse(localStorage.hassTokens)._token
+					_token = JSON.parse(localStorage.hassTokens).access_token
 				}
 
 				connect()
