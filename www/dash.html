@@ -24,6 +24,12 @@
 					background-color: #009688;
 					cursor: pointer;
 				}
+
+				.tuner:hover,
+				.moder:hover {
+					background-color: #9c27b0;
+					cursor: pointer;
+				}
 			}
 
 			.sensor {
@@ -88,6 +94,29 @@
 
 			.unit {
 				font-size: 10px;
+			}
+
+			.moder,
+			.tuner {
+				height: 30px;
+				line-height: 30px;
+				display: inline-block;
+				border-radius: 4px;
+				background-color: rgba(0, 0, 0, 0.05);
+			}
+
+			.moder {
+				border: 0;
+				color: white;
+				padding: 0 8px;
+				appearance: none;
+				-webkit-appearance: none;
+				text-transform: capitalize;
+			}
+
+			.tuner {
+				margin: 2px;
+				width: 30px;
 			}
 
 			::-webkit-scrollbar {
@@ -309,7 +338,7 @@
 				// Generate entities
 				var html = ''
 				for (var i in entities) {
-					html += makeEntity(entities[i])
+					html += makeGrid(entities[i])
 				}
 
 				floater()
@@ -318,12 +347,12 @@
 
 			function handleEvent(entity) {
 				var entity_id = entity.entity_id
-				var element = document.getElementById(entity_id)
-				if (element) {
-					element.innerHTML = makeState(entity)
-					if (element.style.cssText) {
+				var grid = document.getElementById(entity_id)
+				if (grid) {
+					grid.innerHTML = makeEntity(entity)
+					if (grid.style.cssText) {
 						//console.log('Restore processing animation: ' + entity_id)
-						element.style = ''
+						grid.style = '' // TODO: based on wsid
 					}
 					//console.log('Update entity: ' + entity_id);
 				} else {
@@ -335,35 +364,60 @@
 				}
 			}
 
-			function handleClick(element) {
-				var entity_id = element.id
-				if (_processing) {
-					console.log('Skip processing: ' + entity_id)
-					return
-				}
-				_processing = true
-
-				var domain = entity_id.split('.')[0]
-				var state = element.children[1]
-				var off = state.className.startsWith('state off')
-				if (domain == 'cover') {
+			function handleClick(grid) {
+				var off = grid.children[1].className.startsWith('state off')
+				if (grid.className == 'cover') {
 					var service = off ? 'open_cover' : 'close_cover'
 				} else {
 					var service = off ? 'turn_on' : 'turn_off'
 				}
+				callService(service, { entity_id: grid.id }, grid)
+			}
 
+			function handleTune(event) {
+				event.stopPropagation()
+
+				var target = event.target
+				var extra = target.parentElement
+				var grid = extra.parentElement
+				var moder = extra.children[1]
+				var text = moder.options[moder.selectedIndex].innerText
+				var temperature = parseInt(text.split(' ')[1]) + (target.innerText == '▶' ? 1 : -1)
+				callService('set_temperature', { entity_id: grid.id, temperature: temperature }, target)
+			}
+
+			function handleMode(moder) {
+				var extra = moder.parentElement
+				var grid = extra.parentElement
+				var mode = moder.options[moder.selectedIndex].value
+				if (grid.className == 'entity climate') {
+					callService('set_operation_mode', { entity_id: grid.id, operation_mode: mode }, moder)
+				} else {
+					callService('set_speed', { entity_id: grid.id, speed: mode }, moder)
+				}
+			}
+
+			function callService(service, data, element) {
+				if (_processing) {
+					console.log('Skip call: ' + service + '/' + data.entity_id)
+					return
+				}
+				_processing = true
+
+				var domain = data.entity_id.split('.')[0]
 				element.style = 'animation: tuning 1s infinite alternate'
-				console.log('Processing: ' + domain + '/' + service + '/' + entity_id)
+				console.log('Processing: ' + domain + '/' + service + '/' + data.entity_id)
 				_ws.send(
 					JSON.stringify({
 						id: _wsid++,
 						type: 'call_service',
 						domain: domain,
 						service: service,
-						service_data: { entity_id: entity_id }
+						service_data: data
 					})
 				)
 
+				// TODO: monitor result
 				setTimeout('_processing = false', 1000) // Avoid mis-operation
 			}
 
@@ -371,6 +425,7 @@
 				off: '关闭',
 				on: '开启',
 
+				idle: '空闲',
 				auto: '自动',
 				low: '低速',
 				medium: '中速',
@@ -416,7 +471,7 @@
 				default: ['radiobox-blank', 'checkbox-marked-circle']
 			}
 
-			function makeEntity(entity) {
+			function makeGrid(entity) {
 				var entity_id = entity.entity_id
 				var domain = entity_id.split('.')[0]
 
@@ -431,13 +486,13 @@
 				// 	html += ' style="border: 0 solid hsl(' + hue + ', 100%, 50%); box-sizing: border-box; border-bottom-width: 2px"'
 				// }
 				html += '>'
-				html += makeState(entity)
+				html += makeEntity(entity)
 				html += '</div> '
 
 				return html
 			}
 
-			function makeState(entity) {
+			function makeEntity(entity) {
 				var entity_id = entity.entity_id
 				var domain = entity_id.split('.')[0]
 				var state = entity.state
@@ -459,7 +514,7 @@
 					html += '<div class="state' + off + overflow + (nan ? ' nan' : '') + '">'
 					html += nan ? value : Math.floor(parseFloat(value) * 100) / 100
 
-					var unit = attributes.unit_of_measurement
+					var unit = domain == /*'climate' ? attributes.temperature : */ attributes.unit_of_measurement
 					if (unit && !off) {
 						html += '<span class="unit">' + unit + '</span>'
 					}
@@ -483,13 +538,43 @@
 				html += '</div>'
 
 				if (!off) {
-					if (attributes.hasOwnProperty('dashboard_static_text_attribute')) {
-						extra = attributes[attributes.dashboard_static_text_attribute]
-					} else if (domain == 'climate') {
-						extra = state + ' ' + attributes.temperature + '°C'
+					if (domain == 'climate') {
+						var extra = '<span class="tuner" onclick="handleTune(event)">◀︎</span>'
+						//extra += '<span class="moder" onclick="handleTune(event)">' + state + ' ' + attributes.temperature + '</span>'
+
+						extra += '<select class="moder" onclick="event.stopPropagation()" onchange="handleMode(this)">'
+						var current = domain == 'climate' ? attributes.operation_mode : attributes.speed
+						var mode_list = domain == 'climate' ? attributes.operation_list : attributes.speed_list
+						for (var i in mode_list) {
+							var mode = mode_list[i]
+							var key = mode.toLowerCase()
+							var text = _STATE_MAPS.hasOwnProperty(key) ? _STATE_MAPS[key] : mode.replace('level', '档位')
+							extra += '<option value="' + mode + '"'
+							if (mode == current) {
+								extra += ' selected'
+							}
+							extra += '>' + text
+							if (mode == current) {
+								extra += ' ' + attributes.temperature
+							}
+							extra += '</option>'
+						}
+						extra += '</select>'
+
+						extra += '<span class="tuner" onclick="handleTune(event)">▶</span>'
 					} else if (domain == 'fan') {
-						var speed = attributes.speed.toLowerCase()
-						extra = _STATE_MAPS.hasOwnProperty(speed) ? _STATE_MAPS[speed] : speed.replace('level', '档位')
+						var current = attributes.speed
+						var extra = '<select class="moder" onclick="event.stopPropagation()" onchange="handleMode(this)">'
+						var speed_list = attributes.speed_list
+						for (var i in speed_list) {
+							var speed = speed_list[i]
+							var key = speed.toLowerCase()
+							var mode = _STATE_MAPS.hasOwnProperty(key) ? _STATE_MAPS[key] : speed.replace('level', '档位')
+							extra += '<option value="' + speed + '"' + (speed == current ? ' selected' : '') + '>' + mode + '</option>'
+						}
+						extra += '</select>'
+					} else if (attributes.hasOwnProperty('dash_extra')) {
+						var extra = attributes[attributes.dash_extra]
 					} else {
 						return html
 					}
