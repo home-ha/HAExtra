@@ -251,6 +251,7 @@ sensor.balcony_pm25:
 sensor.balcony_temperature:
   friendly_name: 阳台温度
 sensor.bedroom_co2:
+  dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
   friendly_name: 主卧二氧化碳
   icon: mdi:periodic-table-co2
 sensor.bedroom_hcho:
@@ -292,7 +293,7 @@ sensor.caiyun_so2:
 sensor.caiyun_temperature:
   friendly_name: 室外气温
 sensor.caiyun_weather:
-  dash_extra: weather
+  dash_extra: 温${temperature} 湿${humidity}% 污${pm25}
   friendly_name: 天气
 sensor.caiyun_wind_direction:
   friendly_name: 风向
@@ -368,6 +369,8 @@ switch.washroom_fan:
 updater.updater:
   friendly_name: 有更新
 vacuum.vacuum:
+  dash_extra: 'eval:"${status}"=="Charging" ? "充电中" : "${status}"'
+  dash_extra_forced: true
   friendly_name: 扫地机
 zone.home:
   friendly_name: 我家

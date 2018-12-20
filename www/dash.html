@@ -514,13 +514,10 @@
 
 				var off =
 					state == 'off' || state == 'not_home' || state == 'unavailable' || state == 'closed' || state == 'docked' || state == 'low' ? ' off' : ''
-				if (_STATE_MAPS.hasOwnProperty(state)) {
-					state = _STATE_MAPS[state]
-				}
 
 				if ((domain == 'sensor' && attributes.mdicon == null) || domain == 'climate') {
 					// TODO: Replace mdicon checking to another way
-					var value = domain == 'climate' ? attributes.current_temperature : state
+					var value = domain == 'climate' ? attributes.current_temperature : (_STATE_MAPS[state] || state)
 					var nan = isNaN(value)
 					var overflow = nan ? '' : stateOverflow(entity_id, value)
 					html += '<div class="state' + off + overflow + (nan ? ' nan' : '') + '">'
@@ -549,11 +546,11 @@
 				}
 				html += '</div>'
 
-				if (!off) {
+				if (!off || attributes.dash_extra_forced) {
 					// Enabled extra only in off state?
 					if (attributes.hasOwnProperty('dash_extra')) {
 						var dash_extra = attributes.dash_extra
-						var extra = attributes.hasOwnProperty(dash_extra) ? attributes[dash_extra] : renderTemplate(dash_extra + '}aa', attributes)
+						var extra = attributes.hasOwnProperty(dash_extra) ? attributes[dash_extra] : renderTemplate(dash_extra, state, attributes)
 					} else if (domain == 'climate' || domain == 'fan') {
 						var extra = ''
 						if (domain == 'climate') {
@@ -610,34 +607,30 @@
 				return ''
 			}
 
-			function renderTemplate(template, attributes) {
+			function renderTemplate(template, state, attributes) {
 				var result = ''
-				var last = 0
-				while (true) {
-					var start = template.indexOf('{', last)
+				for (var end = 0; true; end++) {
+					var start = template.indexOf('${', end)
 					if (start != -1) {
-						result += template.slice(last, start)
-						var end = template.indexOf('}', start)
+						result += template.slice(end, start)
+						end = template.indexOf('}', start)
 						if (end != -1) {
-							var macro = template.slice(start + 1, end)
-							console.log(macro)
+							var macro = template.slice(start + 2, end)
 							var parts = macro.split('.')
 							var count = parts.length
 							if (count == 1) {
-								result += attributes[macro] || '无效属性'
+								result += (macro == 'state') ? state : (attributes[macro] || '无效属性')
 							} else {
 								// TODO: Global entities?
 								var entity = findEntity(parts[0] + '.' + parts[1], null)
 								result += entity ? (parts == 2 ? entity.state : entity.attributes[parts[2]] || '无效属性') : '无效设备'
 							}
-
-							last = end + 1
 							continue
 						}
 					} else {
-						result += template.slice(last)
+						result += template.slice(end)
 					}
-					return result
+					return result.startsWith('eval:') ?  eval(result.slice(5)) : result
 				}
 			}
 
