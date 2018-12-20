@@ -517,13 +517,13 @@
 
 				if ((domain == 'sensor' && attributes.mdicon == null) || domain == 'climate') {
 					// TODO: Replace mdicon checking to another way
-					var value = domain == 'climate' ? attributes.current_temperature : (_STATE_MAPS[state] || state)
+					var value = domain == 'climate' ? attributes.current_temperature : _STATE_MAPS[state] || state
 					var nan = isNaN(value)
 					var overflow = nan ? '' : stateOverflow(entity_id, value)
 					html += '<div class="state' + off + overflow + (nan ? ' nan' : '') + '">'
 					html += nan ? value : Math.floor(parseFloat(value) * 100) / 100
 
-					var unit = domain == /*'climate' ? attributes.temperature : */ attributes.unit_of_measurement
+					var unit = /*domain == 'climate' ? attributes.temperature : */ attributes.unit_of_measurement
 					if (unit && !off) {
 						html += '<span class="unit">' + unit + '</span>'
 					}
@@ -619,7 +619,7 @@
 							var parts = macro.split('.')
 							var count = parts.length
 							if (count == 1) {
-								result += (macro == 'state') ? state : (attributes[macro] || '无效属性')
+								result += macro == 'state' ? state : attributes[macro] || '无效属性'
 							} else {
 								// TODO: Global entities?
 								var entity = findEntity(parts[0] + '.' + parts[1], null)
@@ -630,7 +630,7 @@
 					} else {
 						result += template.slice(end)
 					}
-					return result.startsWith('eval:') ?  eval(result.slice(5)) : result
+					return result.startsWith('eval:') ? eval(result.slice(5)) : result
 				}
 			}
 

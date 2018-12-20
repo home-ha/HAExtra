@@ -293,7 +293,7 @@ sensor.caiyun_so2:
 sensor.caiyun_temperature:
   friendly_name: 室外气温
 sensor.caiyun_weather:
-  dash_extra: 温${temperature} 湿${humidity}% 污${pm25}
+  dash_extra: 温${temperature} 湿${humidity} 污${pm25}
   friendly_name: 天气
 sensor.caiyun_wind_direction:
   friendly_name: 风向
