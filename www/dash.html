@@ -108,7 +108,7 @@
 			.moder {
 				border: 0;
 				color: white;
-				padding: 1px 8px;
+				padding: 1px 6px;
 				appearance: none;
 				-webkit-appearance: none;
 				text-transform: capitalize;
@@ -380,7 +380,7 @@
 
 			function handleClick(grid) {
 				var off = grid.children[1].className.startsWith('state off')
-				if (grid.className == 'cover') {
+				if (grid.className == 'entity cover') {
 					var service = off ? 'open_cover' : 'close_cover'
 				} else {
 					var service = off ? 'turn_on' : 'turn_off'
@@ -549,9 +549,11 @@
 				}
 				html += '</div>'
 
-				if (!off) { // Enabled extra only in off state?
+				if (!off) {
+					// Enabled extra only in off state?
 					if (attributes.hasOwnProperty('dash_extra')) {
-						var extra = attributes[attributes.dash_extra]
+						var dash_extra = attributes.dash_extra
+						var extra = attributes.hasOwnProperty(dash_extra) ? attributes[dash_extra] : renderTemplate(dash_extra + '}aa', attributes)
 					} else if (domain == 'climate' || domain == 'fan') {
 						var extra = ''
 						if (domain == 'climate') {
@@ -606,6 +608,37 @@
 					}
 				}
 				return ''
+			}
+
+			function renderTemplate(template, attributes) {
+				var result = ''
+				var last = 0
+				while (true) {
+					var start = template.indexOf('{', last)
+					if (start != -1) {
+						result += template.slice(last, start)
+						var end = template.indexOf('}', start)
+						if (end != -1) {
+							var macro = template.slice(start + 1, end)
+							console.log(macro)
+							var parts = macro.split('.')
+							var count = parts.length
+							if (count == 1) {
+								result += attributes[macro] || '无效属性'
+							} else {
+								// TODO: Global entities?
+								var entity = findEntity(parts[0] + '.' + parts[1], null)
+								result += entity ? (parts == 2 ? entity.state : entity.attributes[parts[2]] || '无效属性') : '无效设备'
+							}
+
+							last = end + 1
+							continue
+						}
+					} else {
+						result += template.slice(last)
+					}
+					return result
+				}
 			}
 
 			function findEntity(entity_id, entities) {
