@@ -325,7 +325,10 @@
 				var group_id = location.hash ? location.hash.slice(1) : 'group.default_view'
 				if (group_id.startsWith('group.')) {
 					_group_entity_ids = []
-					findEntityIds(group_id, entities)
+					fetchEntities(group_id, entities)
+					if (_group_entity_ids.length == 0) {
+						_group_entity_ids = null
+					}
 				} else {
 					_group_entity_ids = null
 				}
@@ -657,7 +660,7 @@
 				return null
 			}
 
-			function findEntityIds(group_id, entities) {
+			function fetchEntities(group_id, entities) {
 				var group = findEntity(group_id, entities)
 				if (group) {
 					console.log('Sort by ' + group_id)
@@ -665,7 +668,7 @@
 					for (var i in ids) {
 						var entity_id = ids[i]
 						if (entity_id.startsWith('group')) {
-							findEntityIds(entity_id, entities)
+							fetchEntities(entity_id, entities)
 						} else {
 							_group_entity_ids.push(entity_id)
 						}
