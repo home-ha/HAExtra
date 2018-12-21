@@ -27,16 +27,14 @@ turn_on_projector:
     #  entity_id: light.airer_light
     - service: light.turn_off
       entity_id: light.study_light
+    - delay: 2
+    - service: automation.turn_on
+      entity_id: automation.study_switch_dbclicked
     - condition: numeric_state
       entity_id: sensor.purifier_temperature
       above: 28
     - service: switch.turn_on
       entity_id: switch.mitsubishi
-    - delay: 2
-    - service: switch.turn_on
-      entity_id: switch.benq
-    - service: automation.turn_on
-      entity_id: automation.study_switch_dbclicked
 
 #
 turn_off_projector:
