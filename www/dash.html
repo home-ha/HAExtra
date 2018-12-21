@@ -324,7 +324,7 @@
 
 			var _group_entity_ids = null
 			function handleStates() {
-				// Find entities id in group
+				// Fetch entities id in group
 				var group_id = location.hash ? location.hash.slice(1) : 'group.default_view'
 				if (group_id.startsWith('group.')) {
 					_group_entity_ids = []
@@ -337,13 +337,32 @@
 				}
 
 				// Purify and sort
-				var entities = _entities
-				for (var j = entities.length - 1; j >= 0; j--) {
-					if (!isValidEntity(entities[j])) {
-						entities.splice(j, 1)
+				//console.time('Purify')
+				// var entities = _entities
+				// for (var j = entities.length - 1; j >= 0; j--) {
+				// 	if (!isValidEntity(entities[j])) {
+				// 		entities.splice(j, 1)
+				// 	}
+				// }
+				// entities.sort(compareEntity)
+
+				// Purify and sort to another array (without purifying _entities)
+				var entities = []
+				var entities_count = 0
+				for (var k in _entities) {
+					var entity = _entities[k]
+					if (isValidEntity(entity)) {
+						var low = 0
+						var high = entities_count++
+						while (low < high) {
+							var mid = (low + high) >>> 1
+							if (compareEntity(entities[mid], entity) < 0) low = mid + 1
+							else high = mid
+						}
+						entities.splice(low, 0, entity)
 					}
 				}
-				entities.sort(compareEntity)
+				//console.timeEnd('Purify')
 
 				// Generate entities
 				var html = ''
