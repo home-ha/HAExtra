@@ -187,6 +187,8 @@
 			_wsapi = null // WebSocket api url
 			_token = null // Access token or password
 			_call_entity_id = null // Processing entity_id
+			_entities = null // All entities
+			_entities_retained = false
 
 			function load() {
 				// Respond to mobile browser
@@ -263,7 +265,12 @@
 							if (json.id == 1) {
 								// Responed to get_states
 								_retryCount = 0
-								handleStates(json.result)
+								_entities = json.result
+								_entities_retained = false
+								handleStates()
+								if (!_entities_retained) {
+									_entities = null // Free _entities if not used in handleEvent/makeEntity/renderTemplate
+								}
 								break
 							} else if (json.id == 2) {
 								// Responed to subscribe_events
@@ -316,16 +323,12 @@
 			}
 
 			var _group_entity_ids = null
-			function handleStates(entities) {
-				if (entities == null) {
-					return
-				}
-
+			function handleStates() {
 				// Find entities id in group
 				var group_id = location.hash ? location.hash.slice(1) : 'group.default_view'
 				if (group_id.startsWith('group.')) {
 					_group_entity_ids = []
-					fetchEntities(group_id, entities)
+					fetchEntities(group_id)
 					if (_group_entity_ids.length == 0) {
 						_group_entity_ids = null
 					}
@@ -334,6 +337,7 @@
 				}
 
 				// Remove invalid entities
+				var entities = _entities
 				for (var j = entities.length - 1; j >= 0; j--) {
 					if (!isValidEntity(entities[j])) {
 						entities.splice(j, 1)
@@ -446,6 +450,7 @@
 				medium: '中速',
 				middle: '中速',
 				high: '高速',
+				favorite: '最爱',
 
 				strong: '高速',
 				silent: '静音',
@@ -456,7 +461,6 @@
 				dry: '除湿',
 				fan: '送风',
 
-				favorite: '最爱',
 				unknown: '未知',
 				unavailable: '不可用'
 			}
@@ -495,12 +499,8 @@
 				if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker') {
 					html += ' onclick="handleClick(this)"'
 				} else if (entity_id == 'sensor.caiyun_weather') {
-					// Trick
-					html += ' ondblclick="connect()"'
+					html += ' ondblclick="connect()"' // Trick
 				}
-				// if (hue) {
-				// 	html += ' style="border: 0 solid hsl(' + hue + ', 100%, 50%); box-sizing: border-box; border-bottom-width: 2px"'
-				// }
 				html += '>'
 				html += makeEntity(entity)
 				html += '</div> '
@@ -531,20 +531,24 @@
 						? ' off'
 						: ''
 
-				var dash_icon = attributes.dash_icon
-				if (!dash_icon && (domain == 'sensor' || domain == 'climate')) {
+				var has_dash_icon = attributes.hasOwnProperty('dash_icon')
+				if (!has_dash_icon && (domain == 'sensor' || domain == 'climate')) {
 					var value = domain == 'climate' ? attributes.current_temperature : _STATE_MAPS[state] || state
 					var nan = isNaN(value)
 					var overflow = nan ? '' : stateOverflow(entity_id, value)
 					html += '<div class="state' + off + overflow + (nan ? ' nan' : '') + '">'
 					html += nan ? value : Math.floor(parseFloat(value) * 100) / 100
 
-					var unit = /*domain == 'climate' ? attributes.temperature : */ attributes.unit_of_measurement
-					if (unit && !off) {
-						html += '<span class="unit">' + unit + '</span>'
+					if (!off) {
+						var unit = attributes.hasOwnProperty('dash_unit')
+							? renderTemplate(attributes.dash_unit, state, attributes)
+							: attributes.unit_of_measurement
+						if (unit) {
+							html += '<span class="unit">' + unit + '</span>'
+						}
 					}
 				} else {
-					var icon = dash_icon ? renderTemplate(dash_icon, state, attributes) : attributes.icon
+					var icon = has_dash_icon ? renderTemplate(attributes.dash_icon, state, attributes) : attributes.icon
 					if (icon && icon.startsWith('mdi:')) {
 						icon = icon.slice(4)
 					} else if (domain == 'binary_sensor') {
@@ -563,7 +567,6 @@
 				html += '</div>'
 
 				if (!off || attributes.dash_extra_forced) {
-					// Enabled extra only in off state?
 					if (attributes.hasOwnProperty('dash_extra')) {
 						var extra = renderTemplate(attributes.dash_extra, state, attributes)
 					} else if (domain == 'climate' || domain == 'fan') {
@@ -578,7 +581,7 @@
 						for (var i in mode_list) {
 							var mode = mode_list[i]
 							var key = mode.toLowerCase()
-							var text = _STATE_MAPS.hasOwnProperty(key) ? _STATE_MAPS[key] : mode.replace('level', '档位')
+							var text = _STATE_MAPS[key] || mode.replace('level', '档位')
 							extra += '<option value="' + mode + '"' + (mode == current ? ' selected' : '') + '>' + text
 							if (mode == current && domain == 'climate') {
 								extra += ' ' + attributes.temperature
@@ -602,9 +605,9 @@
 			_SENSOR_THRESHOLDS = {
 				pm25: [40, 70],
 				co2: [900, 1600],
-				humidity: [75, 85]
-				// hcho: [0.08, 0.2],
-				// temperature: [35, 40]
+				humidity: [75, 85],
+				hcho: [0.08, 0.2],
+				temperature: [32, 40]
 			}
 
 			function stateOverflow(entity_id, value) {
@@ -640,9 +643,9 @@
 							if (count == 1) {
 								result += macro == 'state' ? state : attributes[macro] || '无效属性'
 							} else {
-								// TODO: Global entities?
-								var entity = findEntity(parts[0] + '.' + parts[1], null)
-								result += entity ? (parts == 2 ? entity.state : entity.attributes[parts[2]] || '无效属性') : '无效设备'
+								_entities_retained = true // Retained _entities for feature using
+								var entity = findEntity(parts[0] + '.' + parts[1])
+								result += entity ? (count == 2 ? entity.state : entity.attributes[parts[2]] || '无效属性') : '无效设备'
 							}
 							continue
 						}
@@ -653,9 +656,9 @@
 				}
 			}
 
-			function findEntity(entity_id, entities) {
-				for (var i in entities) {
-					var entity = entities[i]
+			function findEntity(entity_id) {
+				for (var i in _entities) {
+					var entity = _entities[i]
 					if (entity.entity_id == entity_id) {
 						return entity
 					}
@@ -664,15 +667,15 @@
 				return null
 			}
 
-			function fetchEntities(group_id, entities) {
-				var group = findEntity(group_id, entities)
+			function fetchEntities(group_id) {
+				var group = findEntity(group_id)
 				if (group) {
-					console.log('Sort by ' + group_id)
+					//console.log('Sort by ' + group_id)
 					var ids = group.attributes.entity_id
 					for (var i in ids) {
 						var entity_id = ids[i]
 						if (entity_id.startsWith('group')) {
-							fetchEntities(entity_id, entities)
+							fetchEntities(entity_id)
 						} else {
 							_group_entity_ids.push(entity_id)
 						}
