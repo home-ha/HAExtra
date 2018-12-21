@@ -454,6 +454,7 @@
 				fan: '送风',
 
 				favorite: '最爱',
+				unknown: '未知',
 				unavailable: '不可用'
 			}
 
@@ -512,8 +513,19 @@
 
 				var html = '<div class="name">' + attributes.friendly_name + '</div>'
 
+				if (state == '') {
+					state = 'unavailable'
+				}
 				var off =
-					state == 'off' || state == 'not_home' || state == 'unavailable' || state == 'closed' || state == 'docked' || state == 'low' ? ' off' : ''
+					state == 'off' ||
+					state == 'not_home' ||
+					state == 'unknown' ||
+					state == 'unavailable' ||
+					state == 'closed' ||
+					state == 'docked' ||
+					state == 'low'
+						? ' off'
+						: ''
 
 				if ((domain == 'sensor' && attributes.mdicon == null) || domain == 'climate') {
 					// TODO: Replace mdicon checking to another way
