@@ -336,31 +336,14 @@
 					_group_entity_ids = null
 				}
 
-				// Remove invalid entities
+				// Purify and sort
 				var entities = _entities
 				for (var j = entities.length - 1; j >= 0; j--) {
 					if (!isValidEntity(entities[j])) {
 						entities.splice(j, 1)
 					}
 				}
-
-				// Sort entities by domain+group order
-				var domains = Object.keys(_DOMAIN_ICONS)
-				entities.sort(function(x, y) {
-					var entity_id1 = x.entity_id
-					var entity_id2 = y.entity_id
-					var index1 = domains.indexOf(entity_id1.split('.')[0])
-					var index2 = domains.indexOf(entity_id2.split('.')[0])
-					if (index1 == index2) {
-						if (_group_entity_ids) {
-							index1 = _group_entity_ids.indexOf(entity_id1)
-							index2 = _group_entity_ids.indexOf(entity_id2)
-						} else {
-							return x.attributes.friendly_name.localeCompare(y.attributes.friendly_name)
-						}
-					}
-					return index1 - index2
-				})
+				entities.sort(compareEntity)
 
 				// Generate entities
 				var html = ''
@@ -654,6 +637,24 @@
 					}
 					return result.startsWith('eval:') ? eval(result.slice(5)) : result
 				}
+			}
+
+			var _sorted_domains = Object.keys(_DOMAIN_ICONS)
+			function compareEntity(entity1, entity2) {
+				// Sort entities by domain+group order
+				var entity_id1 = entity1.entity_id
+				var entity_id2 = entity2.entity_id
+				var index1 = _sorted_domains.indexOf(entity_id1.split('.')[0])
+				var index2 = _sorted_domains.indexOf(entity_id2.split('.')[0])
+				if (index1 == index2) {
+					if (_group_entity_ids) {
+						index1 = _group_entity_ids.indexOf(entity_id1)
+						index2 = _group_entity_ids.indexOf(entity_id2)
+					} else {
+						return entity1.attributes.friendly_name.localeCompare(entity2.attributes.friendly_name)
+					}
+				}
+				return index1 - index2
 			}
 
 			function findEntity(entity_id) {
