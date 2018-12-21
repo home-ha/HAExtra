@@ -514,7 +514,8 @@
 				var state = entity.state
 				var attributes = entity.attributes
 
-				var html = '<div class="name">' + attributes.friendly_name + '</div>'
+				var name = attributes.hasOwnProperty('dash_name') ? renderTemplate(attributes.dash_name, state, attributes) : attributes.friendly_name
+				var html = '<div class="name">' + name + '</div>'
 
 				if (state == '') {
 					state = 'unavailable'
@@ -530,8 +531,8 @@
 						? ' off'
 						: ''
 
-				if ((domain == 'sensor' && attributes.mdicon == null) || domain == 'climate') {
-					// TODO: Replace mdicon checking to another way
+				var dash_icon = attributes.dash_icon
+				if (!dash_icon && (domain == 'sensor' || domain == 'climate')) {
 					var value = domain == 'climate' ? attributes.current_temperature : _STATE_MAPS[state] || state
 					var nan = isNaN(value)
 					var overflow = nan ? '' : stateOverflow(entity_id, value)
@@ -543,7 +544,7 @@
 						html += '<span class="unit">' + unit + '</span>'
 					}
 				} else {
-					var icon = attributes.icon
+					var icon = dash_icon ? renderTemplate(dash_icon, state, attributes) : attributes.icon
 					if (icon && icon.startsWith('mdi:')) {
 						icon = icon.slice(4)
 					} else if (domain == 'binary_sensor') {
@@ -564,8 +565,7 @@
 				if (!off || attributes.dash_extra_forced) {
 					// Enabled extra only in off state?
 					if (attributes.hasOwnProperty('dash_extra')) {
-						var dash_extra = attributes.dash_extra
-						var extra = attributes.hasOwnProperty(dash_extra) ? attributes[dash_extra] : renderTemplate(dash_extra, state, attributes)
+						var extra = renderTemplate(attributes.dash_extra, state, attributes)
 					} else if (domain == 'climate' || domain == 'fan') {
 						var extra = ''
 						if (domain == 'climate') {
@@ -623,6 +623,10 @@
 			}
 
 			function renderTemplate(template, state, attributes) {
+				if (attributes.hasOwnProperty(template)) {
+					return attributes[template]
+				}
+
 				var result = ''
 				for (var end = 0; true; end++) {
 					var start = template.indexOf('${', end)

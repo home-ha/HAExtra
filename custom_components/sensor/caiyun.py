@@ -137,7 +137,7 @@ class CaiYunSensor(Entity):
 
     @property
     def icon(self):
-        return 'mdi:' + ('weather-' + self._caiyun.data.get('mdicon') if self._type == 'weather' else self._icon)
+        return self._caiyun.data.get('dash_icon') if self._type == 'weather' else 'mdi:' + self._icon
 
     @property
     def unit_of_measurement(self):
@@ -214,7 +214,8 @@ class CaiYunData:
                 raise
 
             skycon = result['skycon']
-            data['weather'], data['mdicon'] = WEATHER_ICONS[skycon]
+            data['weather'], icon = WEATHER_ICONS[skycon]
+            data['dash_icon'] = 'mdi:weather-' + icon
 
             data['temperature'] = round(result['temperature'])
             data['humidity'] = int(result['humidity'] * 100)
