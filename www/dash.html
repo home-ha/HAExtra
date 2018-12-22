@@ -296,7 +296,7 @@
 						}
 						break
 					case 'auth_invalid':
-						var error = '无效认证！请先<a href="javascript:location.href=\'' + location.protocol + '//' + location.host + '\'">登录首页</a>'
+						var error = '无效认证！请先<a href="javascript:location=\'' + location.protocol + '//' + location.host + '\'">登录首页</a>'
 						error += '，或指定密码和地址' + location.href.split('?')[0] + '?password@ws:host:8123'
 						floater('error', error)
 						break
@@ -501,7 +501,7 @@
 				if (entity.attributes.hasOwnProperty('dash_click')) {
 					var dash_click = entity.attributes.dash_click
 					if (dash_click.startsWith('http')) {
-						dash_click = 'location.href=\'' + dash_click + '\''
+						dash_click = 'location=\'' + dash_click + '\''
 					}
 					html += ' onclick="' + dash_click + '"'
 				} else if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker') {
@@ -647,11 +647,11 @@
 							var parts = macro.split('.')
 							var count = parts.length
 							if (count == 1) {
-								result += macro == 'state' ? state : attributes[macro] || '无效属性'
+								result += macro == 'state' ? state : attributes[macro] || '无属性'
 							} else {
 								_entities_retained = true // Retained _entities for feature using
 								var entity = findEntity(parts[0] + '.' + parts[1])
-								result += entity ? (count == 2 ? entity.state : entity.attributes[parts[2]] || '无效属性') : '无效设备'
+								result += entity ? (count == 2 ? entity.state : entity.attributes[parts[2]] || '无属性') : '无设备'
 							}
 							continue
 						}
