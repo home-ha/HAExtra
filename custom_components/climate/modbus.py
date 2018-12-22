@@ -347,7 +347,7 @@ class ModbusClimate(ClimateDevice):
                 return
 
             ModbusClimate._exception = 0
-            _LOGGER.info("Read %s: %s = %f", self.name, prop, value)
+            #_LOGGER.info("Read %s: %s = %f", self.name, prop, value)
             self._values[prop] = value
 
     def set_temperature(self, **kwargs):
@@ -438,7 +438,7 @@ class ModbusClimate(ClimateDevice):
         """Set property value."""
         mod = self._mods[prop]
         register_type, slave, register, scale, offset = self.register_info(mod)
-        _LOGGER.info("Write %s: %s = %f", self.name, prop, value)
+        #_LOGGER.info("Write %s: %s = %f", self.name, prop, value)
 
         if register_type == REGISTER_TYPE_COIL:
             modbus.HUB.write_coil(slave, register, bool(value))

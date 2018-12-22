@@ -220,13 +220,13 @@ media_player.x9400e:
 remote.apple_tv:
   friendly_name: 苹果遥控
 sensor.aircat2_hcho:
-  friendly_name: 儿童房甲醛
+  friendly_name: 卧室甲醛
 sensor.aircat2_humidity:
-  friendly_name: 儿童房湿度
+  friendly_name: 卧室湿度
 sensor.aircat2_pm25:
-  friendly_name: 儿童房颗粒物
+  friendly_name: 卧室颗粒物
 sensor.aircat2_temperature:
-  friendly_name: 儿童房温度
+  friendly_name: 卧室温度
 sensor.aircat3_hcho:
   friendly_name: 工位甲醛
 sensor.aircat3_humidity:

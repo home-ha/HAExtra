@@ -116,6 +116,10 @@ Kids:
     - fan.fan
     - fan.purifier4
     - sensor.kids_co2
+    - sensor.aircat2_temperature
+    - sensor.aircat2_humidity
+    - sensor.aircat2_pm25
+    - sensor.aircat2_hcho
 
 Balcony:
   entities:
