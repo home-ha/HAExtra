@@ -19,7 +19,7 @@ from homeassistant.helpers.entity import async_generate_entity_id
 import homeassistant.helpers.config_validation as cv
 from homeassistant.core import callback
 
-REQUIREMENTS = ['broadlink==0.8']
+REQUIREMENTS = ['broadlink==0.9.0']
 
 _LOGGER = logging.getLogger(__name__)
 

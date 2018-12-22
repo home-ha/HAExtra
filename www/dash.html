@@ -498,10 +498,14 @@
 				var domain = entity_id.split('.')[0]
 
 				var html = '<div class="entity ' + domain + '" id="' + entity_id + '"'
-				if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker') {
+				if (entity.attributes.hasOwnProperty('dash_click')) {
+					var dash_click = entity.attributes.dash_click
+					if (dash_click.startsWith('http')) {
+						dash_click = 'location.href=\'' + dash_click + '\''
+					}
+					html += ' onclick="' + dash_click + '"'
+				} else if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker') {
 					html += ' onclick="handleClick(this)"'
-				} else if (entity_id == 'sensor.caiyun_weather') {
-					html += ' ondblclick="connect()"' // Trick
 				}
 				html += '>'
 				html += makeEntity(entity)
