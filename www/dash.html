@@ -501,7 +501,7 @@
 				if (entity.attributes.hasOwnProperty('dash_click')) {
 					var dash_click = entity.attributes.dash_click
 					if (dash_click.startsWith('http')) {
-						dash_click = 'location=\'' + dash_click + '\''
+						dash_click = "location='" + dash_click + "'"
 					}
 					html += ' onclick="' + dash_click + '"'
 				} else if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker') {
@@ -523,23 +523,12 @@
 				var name = attributes.hasOwnProperty('dash_name') ? renderTemplate(attributes.dash_name, state, attributes) : attributes.friendly_name
 				var html = '<div class="name">' + name + '</div>'
 
-				if (state == '') {
-					state = 'unavailable'
-				}
-				var off =
-					state == 'off' ||
-					state == 'not_home' ||
-					state == 'unknown' ||
-					state == 'unavailable' ||
-					state == 'closed' ||
-					state == 'docked' ||
-					state == 'low'
-						? ' off'
-						: ''
+				var na = state == '' || state == 'unavailable' || state == 'unknown'
+				var off = state == 'off' || state == 'not_home' || state == 'closed' || state == 'docked' || state == 'low' || na ? ' off' : ''
 
 				var has_dash_icon = attributes.hasOwnProperty('dash_icon')
-				if (!has_dash_icon && (domain == 'sensor' || domain == 'climate')) {
-					var value = domain == 'climate' ? attributes.current_temperature : _STATE_MAPS[state] || state
+				if ((!has_dash_icon && (domain == 'sensor' || domain == 'climate')) || na) {
+					var value = !na && domain == 'climate' ? attributes.current_temperature : _STATE_MAPS[state] || state || '无'
 					var nan = isNaN(value)
 					var overflow = nan ? '' : stateOverflow(entity_id, value)
 					html += '<div class="state' + off + overflow + (nan ? ' nan' : '') + '">'

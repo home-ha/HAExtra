@@ -261,7 +261,7 @@ sensor.bedroom_hcho:
 sensor.bedroom_humidity:
   friendly_name: 主卧湿度
 sensor.bedroom_pm25:
-  dash_click: https://www.lewei50.com/u/g/34131
+  dash_click: https://www.lewei50.com/u/g/33981
   friendly_name: 主卧颗粒物
   icon: mdi:blur
 sensor.bedroom_temperature:
@@ -276,7 +276,7 @@ sensor.caiyun_temperature:
 sensor.caiyun_weather:
   dash_click: location.reload()
   dash_extra: 颗粒物 ${pm25}
-  dash_name: 温${temperature} 湿${humidity}
+  dash_name: ${temperature}℃ ${humidity}%
   friendly_name: 天气
 sensor.fresher_co2:
   friendly_name: 客厅二氧化碳

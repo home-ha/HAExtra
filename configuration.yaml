@@ -144,17 +144,18 @@ sensor:
     name: Bedroom PM2.5
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU7/status
-  - platform: mqtt
-    state_topic: NodeMCU7/hcho
-    name: Bedroom HCHO
-    unit_of_measurement: mg/m³
-    availability_topic: NodeMCU7/status
+  # - platform: mqtt
+  #   state_topic: NodeMCU7/hcho
+  #   name: Bedroom HCHO
+  #   unit_of_measurement: mg/m³
+  #   availability_topic: NodeMCU7/status
   - platform: mqtt
     state_topic: NodeMCU7/co2
     name: Bedroom CO2
     unit_of_measurement: ppm
     availability_topic: NodeMCU7/status
   - platform: caiyun
+    monitored_conditions: ['weather']
   # - platform: phicomm
   #   name: AirCat
   #   username: !secret phicomm_username
