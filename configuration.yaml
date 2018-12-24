@@ -420,12 +420,15 @@ fan:
     availability_topic: NodeMCU4/status
     oscillation_state_topic: NodeMCU4/relay/1
     oscillation_command_topic: NodeMCU4/relay/1/set
-    speed_state_topic: NodeMCU4/relay/2
-    speed_command_topic: NodeMCU4/relay/2/set
-    payload_low_speed: 'OFF'
-    payload_high_speed: 'ON'
+    speed_state_topic: NodeMCU4/relay/0
+    speed_command_topic: NodeMCU4/relay/0/set
+    state_value_template: "{% if value == '0' %}OFF{% else %}ON{% endif %}"
+    payload_low_speed: '1'
+    payload_medium_speed: '2'
+    payload_high_speed: '3'
     speeds:
       - low
+      - medium
       - high
   - platform: mqtt
     name: Purifier5
