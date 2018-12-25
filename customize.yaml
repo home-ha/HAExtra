@@ -244,12 +244,14 @@ sensor.aircat_pm25:
 sensor.aircat_temperature:
   friendly_name: 餐厅温度
 sensor.balcony_humidity:
+  dash_click: location.reload()
   friendly_name: 阳台湿度
 sensor.balcony_pm25:
   friendly_name: 阳台颗粒物
   icon: mdi:blur
   dash_click: https://www.lewei50.com/u/g/34131
 sensor.balcony_temperature:
+  dash_click: connect()
   friendly_name: 阳台温度
 sensor.bedroom_co2:
   dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
@@ -274,7 +276,7 @@ sensor.caiyun_pm25:
 sensor.caiyun_temperature:
   friendly_name: 室外气温
 sensor.caiyun_weather:
-  dash_click: location.reload()
+  dash_click: https://caiyunapp.com/map
   dash_extra: 颗粒物 ${pm25}
   dash_name: ${temperature}℃ ${humidity}%
   friendly_name: 天气
