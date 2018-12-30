@@ -524,7 +524,8 @@
 				var html = '<div class="name">' + name + '</div>'
 
 				var na = state == '' || state == 'unavailable' || state == 'unknown'
-				var off = state == 'off' || state == 'not_home' || state == 'closed' || state == 'docked' || state == 'low' || na ? ' off' : ''
+				var off =
+					state == 'off' || state == 'not_home' || state == 'closed' || state == 'docked' || state == 'idle' || state == 'low' || na ? ' off' : ''
 
 				var has_dash_icon = attributes.hasOwnProperty('dash_icon')
 				if ((!has_dash_icon && (domain == 'sensor' || domain == 'climate')) || na) {
@@ -636,11 +637,17 @@
 							var parts = macro.split('.')
 							var count = parts.length
 							if (count == 1) {
-								result += macro == 'state' ? state : attributes[macro] || '无属性'
+								result += macro == 'state' ? state : attributes.hasOwnProperty(macro) ? attributes[macro] : '无属性'
 							} else {
 								_entities_retained = true // Retained _entities for feature using
 								var entity = findEntity(parts[0] + '.' + parts[1])
-								result += entity ? (count == 2 ? entity.state : entity.attributes[parts[2]] || '无属性') : '无设备'
+								result += entity
+									? count == 2
+										? entity.state
+										: attributes.hasOwnProperty(parts[2])
+										? attributes[parts[2]]
+										: '无属性'
+									: '无设备'
 							}
 							continue
 						}
