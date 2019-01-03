@@ -25,6 +25,8 @@ panel_iframe:
 
 - **分组排序**：dash.html 后面可以用`#`指定一个 group 名称（如 `dash.html#group.dash`，依此仅显示此分组的设备，且按这个分组排序（优先依据类型排序，同类型的按分组先后排序）。如果不指定，默认情况下使用 `group.default_view` 分组；如果不想使用分组，可以使用 `dash.html#NA` 来显示所有设备（如果你的 HA 中为使用分组功能，即 group.default_view 不存在，也会 fallback 到显示所有设备）。
 
+- **移动设备**：自适应移动设备，同时在 iOS 中支持 WPA 模式（添加到桌面后使用，看起来非常像个 APP）。
+
 # 2. 个性化配置
 
 可以在 customize.yaml 中对特定的设备进行个性化定制，目前支持以下配置：
