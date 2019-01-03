@@ -4,14 +4,14 @@
 
 # 一、[dash.html](www/dash.html) 操作面板
 
-[dash.html](www/dash.html) 是为 Home Assistant 开发 Dashboard 操作面板，使用 HA WebSocket API 作为数据通道，基于非常简单的 HTML+JS+CSS 渲染而成的高效、快速的操控面板。
+[dash.html](www/dash.html) 是为 Home Assistant 开发操作面板，使用 HA WebSocket API 作为数据通道，基于非常简单的 HTML+JS+CSS 渲染而成的高效、快速的操控面板。可完美替代 AppDaemon 的 HADashboard。
 
 # 1. 用法
 
 - **使用方法**非常简单，只要放入 www 目录，然后使用 `http://xxx.xxx.xxx:8123/local/dash.html` 访问即可。
 
     - 如果曾经登录过 Home Assistant 并保存过登录会话，访问 /local/dash.html 时会自动复用 HA localStorage accessToken 用于 WebSocket 认证。如果没有会提示转到 Home Assistant 主页登录，请选择保存本次登录才会记录 accessToken。
-    - **最佳姿势**：在 configuration.yaml 中加入以下配置，可以在侧栏中直接访问：
+    - **最佳姿势**：在 configuration.yaml 中加入以下配置，可以在侧栏中直接访问（在 [WallPanel](https://github.com/thanksmister/wallpanel-android) 中配合使用更佳）：
     
 ```yaml
 panel_iframe:
