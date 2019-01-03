@@ -2,9 +2,9 @@
 
 这是我个人的 Home Assistant 配置和扩展插件库，请酌情参考。
 
-# 一、[www/dash.html](www/dash.html) 操作面板
+# 一、[dash.html](www/dash.html) 操作面板
 
-dash.html 是为 Home Assistant 开发 Dashboard 操作面板，使用 HA WebSocket API 作为数据通道，基于非常简单的 HTML+JS+CSS 渲染而成的高效、快速的操控面板。使用方法也非常简单，只要放入 www 目录，然后使用 http://xxx.xxx.xxx/local/dash.html 访问即可。
+[dash.html](www/dash.html) 是为 Home Assistant 开发 Dashboard 操作面板，使用 HA WebSocket API 作为数据通道，基于非常简单的 HTML+JS+CSS 渲染而成的高效、快速的操控面板。使用方法也非常简单，只要放入 www 目录，然后使用 http://xxx.xxx.xxx/local/dash.html 访问即可。
 
 # 1. 参数
 
@@ -53,7 +53,7 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 
 基于 mqtt swicth 扩展的 MQTT 开关，支持以下功能：
 
-- 支持 icon_template 配置，可以使用 Jinja 脚本运算出不通的图标（参考我的 configuration.yaml 中的 mqtt2 Speaker）；
+- 支持 icon_template 配置，可以使用 Jinja 脚本运算出不同的图标（参考我的 configuration.yaml 中的 mqtt2 Speaker）；
 - 支持 original_state attribute。
 
 # 7. [swicth/broadlink2.py](custom_components/swicth/broadlink2.py)
