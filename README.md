@@ -2,7 +2,7 @@
 
 这是我个人的 Home Assistant 配置和扩展插件库，请酌情参考。
 
-# 一、[www/dash.html](www/dash.html)
+# 一、[www/dash.html](www/dash.html) 操作面板
 
 dash.html 是为 Home Assistant 开发 Dashboard 操作面板，使用 HA WebSocket API 作为数据通道，基于非常简单的 HTML+JS+CSS 渲染而成的高效、快速的操控面板。使用方法也非常简单，只要放入 www 目录，然后使用 http://xxx.xxx.xxx/local/dash.html 访问即可。
 
@@ -18,7 +18,7 @@ dash.html 是为 Home Assistant 开发 Dashboard 操作面板，使用 HA WebSoc
 
 待续
 
-# 二、custom_components 插件
+# 二、[custom_components](custom_components) 插件
 
 # 1. [climate/modbus.py](custom_components/climate/modbus.py)
 
@@ -53,8 +53,8 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 
 基于 mqtt swicth 扩展的 MQTT 开关，支持以下功能：
 
--   支持 icon_template 配置，可以使用 Jinja 脚本运算出不通的图标（参考我的 configuration.yaml 中的 mqtt2 Speaker）；
--    支持 original_state attribute。
+- 支持 icon_template 配置，可以使用 Jinja 脚本运算出不通的图标（参考我的 configuration.yaml 中的 mqtt2 Speaker）；
+- 支持 original_state attribute。
 
 # 7. [swicth/broadlink2.py](custom_components/swicth/broadlink2.py)
 
@@ -62,9 +62,9 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 
 # 7. [aligenie.py](custom_components/aligenie.py)
 
-几乎零配置，一键接入 Home Assistant 的大部分设备到天猫精灵，可以语音控制相关设备开关。详情请参考 [https://bbs.hassbian.com/thread-2700-1-1.html](https://bbs.hassbian.com/thread-2700-1-1.html)
+几乎零配置，一键接入 Home Assistant 的大部分设备到天猫精灵，可以语音控制相关设备开关。详情请参考 [https://bbs.hassbian.com/thread-2700-1-1.html](https://bbs.hassbian.com/thread-2700-1-1.html)
 
-但上述文章是老的实现方式，不适用于此插件。此插件使用姿势更妙，无需第三方服务器，直接使用 Home Assistant 作为服务器和 OAuth，链路更高效。具体可参考网友的帖子 [https://bbs.hassbian.com/thread-4758-1-1.html](https://bbs.hassbian.com/thread-4758-1-1.html)
+但上述文章是老的实现方式，不适用于此插件。此插件使用姿势更妙，无需第三方服务器，直接使用 Home Assistant 作为服务器和 OAuth，链路更高效。具体可参考网友的帖子 [https://bbs.hassbian.com/thread-4758-1-1.html](https://bbs.hassbian.com/thread-4758-1-1.html)
 
 # 8.[miai.py](custom_components/miai.py)
 
@@ -98,9 +98,9 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 
 这是我的 Home Assistant 脚本文件，主要是开关投影仪的批量处理脚本。
 
-# 四、extra
+# 四、[extra](extra) 其它
 
-# 1. [extra/setup.sh](extra/setup.sh)
+# 1. [setup.sh](extra/setup.sh)
 
 树莓派和斐讯 N1 armbian 下安装 Home Assistant 的脚本，仅供参考，请按需逐步执行，不要整个脚本直接运行。
 
