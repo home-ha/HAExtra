@@ -276,7 +276,7 @@ sensor.caiyun_pm25:
 sensor.caiyun_temperature:
   friendly_name: 室外气温
 sensor.caiyun_weather:
-  dash_click: https://caiyunapp.com/map
+  dash_click: https://m.tianqi.com/hangzhou
   dash_extra: 颗粒物 ${pm25}
   dash_name: ${temperature}℃ ${humidity}%
   friendly_name: 天气
@@ -350,7 +350,8 @@ switch.washroom_fan:
 updater.updater:
   friendly_name: 有更新
 vacuum.vacuum:
-  dash_extra: 'eval:"${status}"=="Charging" ? "充电中" : "${status}"'
+  dash_extra: 'eval:"${status}"=="Charging" ? "充电中" : ("${status}"=="Charger disconnected"
+    ? "充电断开" : "${status}")'
   dash_extra_forced: true
   friendly_name: 扫地机
 zone.home:

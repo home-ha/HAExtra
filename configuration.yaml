@@ -577,7 +577,7 @@ panel_iframe:
   dash:
     title: 面板
     icon: mdi:microsoft
-    url: !secret dash_url
+    url: /local/dash.html
   nodemcu:
     title: 室内
     icon: mdi:chart-line
