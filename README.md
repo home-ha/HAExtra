@@ -39,7 +39,7 @@ panel_iframe:
 
 关于 `template 模式`：支持以下几种示例：
 
-- 直接输入文字如，如`我的设备`
+- 直接输入文字如，如 `我的设备`
 - 插入 state 宏，如 `状态 ${sate}`
 - 插入 attributes 宏，如 `温度 ${temperature}℃`
 - 插入其它设备的 state 宏，如 `气温 ${sensor.caiyun_temperature}℃`
