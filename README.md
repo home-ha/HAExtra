@@ -20,17 +20,24 @@
 
 可以在 customize.yaml 中对特定的设备进行个性化定制，目前支持以下配置：
 
-| key | 用途 | 不配置时的默认情况 | 备注 |
-| ------ | ------ | ------ |
+| key  | 用途 | 不配置/默认情况 | 备注 |
+| ------------- | ------------- | ------------- | ------------- |
 | dash_name | 名称 | 使用 attributes.friendly_name | 支持 template 模式 |
 | dash_icon | 图标 | 传感器显示 state；空调显示当前温度；其它使用 attributes.icon | 支持 template 模式 |
 | dash_extra | 扩展信息 | 空调和风扇显示操作模式和设定温度，其它无 | 支持 template 模式 |
 | dash_extra_forced | 强制显示扩展信息 | off 状态下不显示扩展信息 |
-| dash_click | 点击时的动作 | 传感器无动作，其它执行开关操作 | 支持 http 链接或 javascript |
+| dash_click | 点击时的动作 | 传感器无动作，其它执行开关操作 | 支持 http 链接或 JavaScript |
 
-关于 `支持 template 模式`：待续
+关于 `template 模式`：支持以下几种示例：
 
-更多个性化配置案例可以在我的 [customize.yaml](customize.yaml) 中搜索 `dash`。
+- 直接输入文字如，如`我的设备`
+- 插入 state 宏，如 `状态 ${sate}`
+- 插入 attributes 宏，如 `温度 ${temperature}℃`
+- 插入其它设备的 state 宏，如 `气温 ${sensor.caiyun_temperature}℃`
+- 插入其它设备的 attributes 宏，如 `气温 ${sensor.caiyun_weather.temperature}℃`
+- 使用 JavaScript eval 运算，如`eval:"${status}"=="Charging" ? "充电中" : "${status}"`
+
+更多个性化配置案例可以在我的 [customize.yaml](customize.yaml) 中搜索 `dash`，以上几种用法基本上都能找到案例。
 
 # 二、[custom_components](custom_components) 插件
 
