@@ -8,22 +8,22 @@
 
 # 1. 用法
 
-- 使用方法也非常简单，只要放入 www 目录，然后使用 `http://xxx.xxx.xxx:8123/local/dash.html` 访问即可。
+- **使用方法**非常简单，只要放入 www 目录，然后使用 `http://xxx.xxx.xxx:8123/local/dash.html` 访问即可。
 
     - 如果曾经登录过 Home Assistant 并保存过登录会话，访问 /local/dash.html 时会自动复用 HA localStorage accessToken 用于 WebSocket 认证。如果没有会提示转到 Home Assistant 主页登录，请选择保存本次登录才会记录 accessToken。
     - **最佳姿势**：在 configuration.yaml 中加入以下配置，可以在侧栏中直接访问：
     
-`
+```yaml
 panel_iframe:
   dash:
     title: 面板
     icon: mdi:microsoft
     url: /local/dash.html
- `
+```
  
-- 你也可以把 dash.html 放在任何位置，用浏览器打开后，在使用 `dash.html?password@ws:host:8123` 指定要访问的 WS API 地址，其中 password 可以是 HA Legacy Password 或者永久有效的 accessToken（在 HA 用户管理页面中创建“长期访问令牌”）。
+- **指定地址**：你也可以把 dash.html 放在任何位置，用浏览器打开后，在使用 `dash.html?password@ws:host:8123` 指定要访问的 WS API 地址，其中 password 可以是 HA Legacy Password 或者永久有效的 accessToken（在 HA 用户管理页面中创建“长期访问令牌”）。
 
-- dash.html 后面可以用`#`指定一个 group 名称（如 `dash.html#group.dash`，依此仅显示此分组组的设备，且按这个分组排序（优先依据类型排序，同类型的按分组先后排序）。如果不指定，默认情况下使用 `group.default_view` 分组；如果不想使用分组，可以使用 `dash.html#NA` 来显示所有设备（如果你的 HA 中为使用分组功能，即 group.default_view 不存在，也会 fallback 到显示所有设备）。
+- **分组排序**：dash.html 后面可以用`#`指定一个 group 名称（如 `dash.html#group.dash`，依此仅显示此分组的设备，且按这个分组排序（优先依据类型排序，同类型的按分组先后排序）。如果不指定，默认情况下使用 `group.default_view` 分组；如果不想使用分组，可以使用 `dash.html#NA` 来显示所有设备（如果你的 HA 中为使用分组功能，即 group.default_view 不存在，也会 fallback 到显示所有设备）。
 
 # 2. 个性化配置
 
