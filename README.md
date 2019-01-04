@@ -29,8 +29,6 @@ panel_iframe:
 
 - **移动设备**：自适应移动设备，同时在 iOS 中支持 WPA 模式（添加到桌面后使用，看起来非常像个 APP）。
 
-![dash mobile](https://bbs.hassbian.com/data/attachment/forum/201901/03/180923xhhhojhbxchxoxf2.jpeg)
-
 - **设备操作**：支持大多数设备的开关操作，支持空调和风扇的操作模式和温度设置。
 
 # 2. 个性化配置
