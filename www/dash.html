@@ -212,7 +212,7 @@
 				if (params.length > 1 && params[1].startsWith('ws')) {
 					_wsapi = params[1]
 				} else {
-					_wsapi = (location.protocol == 'https:' ? 'wss:' : 'ws:') + location.host
+					_wsapi = (location.protocol == 'https:' ? 'wss://' : 'ws://') + location.host
 				}
 				_wsapi += '/api/websocket'
 
@@ -221,8 +221,7 @@
 				if (!_token && localStorage.hassTokens) {
 					try {
 						_token = JSON.parse(localStorage.hassTokens).access_token
-					} catch(e) {
-					}
+					} catch (e) {}
 				}
 
 				connect()
@@ -711,6 +710,7 @@
 				return (
 					_DOMAIN_ICONS.hasOwnProperty(entity_id.split('.')[0]) &&
 					!entity.attributes.hidden &&
+					!entity.attributes.dash_hidden &&
 					(!_group_entity_ids || _group_entity_ids.indexOf(entity_id) != -1)
 				)
 			}
