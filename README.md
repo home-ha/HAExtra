@@ -41,6 +41,7 @@ panel_iframe:
 | dash_icon | 图标 | 传感器显示 state；空调显示当前温度；其它使用 attributes.icon | 支持 template 模式 |
 | dash_extra | 扩展信息 | 空调和风扇显示操作模式和设定温度，其它无 | 支持 template 模式 |
 | dash_extra_forced | 强制显示扩展信息 | off 状态下不显示扩展信息 |
+| dash_hidden | 不显示 | | hidden 也不显示
 | dash_click | 点击时的动作 | 传感器无动作，其它执行开关操作 | 支持 http 链接或 JavaScript |
 
 关于 `template 模式`：支持以下几种示例：
