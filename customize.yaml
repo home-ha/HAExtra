@@ -356,3 +356,5 @@ vacuum.vacuum:
   friendly_name: 扫地机
 zone.home:
   friendly_name: 我家
+light.kids_light:
+  friendly_name: 儿童房灯

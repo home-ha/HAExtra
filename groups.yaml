@@ -112,6 +112,7 @@ Parents:
 Kids:
   entities:
     - light.lamp
+    - light.kids_light
     - climate.daikin4
     - fan.fan
     - fan.purifier4
