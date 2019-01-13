@@ -590,6 +590,7 @@
       data_template:
         entity_id: fan.fresher
         speed: '{% if (states("sensor.fresher_co2") | int > 730) %}strong{% elif (states("sensor.fresher_co2") | int > 680) %}middle{% else %}auto{% endif %}'
+    - delay: 1
     - service: logbook.log
       data_template:
         name: '{{ state_attr("sensor.fresher_co2", "friendly_name") }}={{ states("sensor.fresher_co2") }}'
@@ -642,6 +643,7 @@
       data_template:
         entity_id: fan.purifier5
         speed: '{% if (states("sensor.aircat_pm25") | int > 50) %}high{% elif (states("sensor.aircat_pm25") | int > 20) %}medium{% else %}low{% endif %}'
+    - delay: 1
     - service: logbook.log
       data_template:
         name: '{{ state_attr("sensor.aircat_pm25", "friendly_name") }}={{ states("sensor.aircat_pm25") }}'
@@ -698,6 +700,7 @@
       data_template:
         entity_id: fan.purifier
         level: '{% if (states("sensor.purifier_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}9{% else %}6{% endif %}'
+    - delay: 1
     - service: logbook.log
       data_template:
         name: '{{ state_attr("sensor.purifier_pm25", "friendly_name") }}={{ states("sensor.purifier_pm25") }}'
@@ -750,6 +753,7 @@
       data_template:
         entity_id: fan.purifier7
         speed: '{% if (states("sensor.bedroom_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.bedroom_pm25") | int > 20) %}medium{% else %}low{% endif %}'
+    - delay: 1
     - service: logbook.log
       data_template:
         name: '{{ state_attr("sensor.bedroom_pm25", "friendly_name") }}={{ states("sensor.bedroom_pm25") }}'
@@ -802,6 +806,7 @@
       data_template:
         entity_id: fan.purifier4
         speed: '{% if (states("sensor.aircat2_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.aircat2_pm25") | int > 30) %}medium{% else %}low{% endif %}'
+    - delay: 1
     - service: logbook.log
       data_template:
         name: '{{ state_attr("sensor.aircat2_pm25", "friendly_name") }}={{ states("sensor.aircat2_pm25") }}'

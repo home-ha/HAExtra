@@ -7,6 +7,11 @@ homeassistant:
   time_zone: Asia/Shanghai
   customize: !include customize.yaml
 
+logger:
+  default: warning
+  logs:
+    custom_components.sensor.aircat: debug
+
 frontend:
 
 config:
@@ -122,11 +127,11 @@ sensor:
     name: Kids CO2
     unit_of_measurement: ppm
     availability_topic: NodeMCU4/status
-  - platform: mqtt
-    state_topic: NodeMCU6/co2
-    name: Parents CO2
-    unit_of_measurement: ppm
-    availability_topic: NodeMCU6/status
+  # - platform: mqtt
+  #   state_topic: NodeMCU6/co2
+  #   name: Parents CO2
+  #   unit_of_measurement: ppm
+  #   availability_topic: NodeMCU6/status
   - platform: mqtt
     device_class: temperature
     state_topic: NodeMCU7/temperature
@@ -161,7 +166,7 @@ sensor:
   #   username: !secret phicomm_username
   #   password: !secret phicomm_password
   - platform: aircat
-    mac: ['B0F893249132', 'B0F893249132']
+    mac: ['B0F8931EA148', 'B0F893249132']
   - platform: template
     sensors:
       purifier_temperature:
@@ -388,6 +393,7 @@ shell_command:
   turn_off_storage: 'ssh root@Storage shutdown -h now'
 
 xiaomi_aqara:
+  interface: 192.168.2.40
   gateways:
     - mac: 34CE0090901A
       key: 3ECB50168D7F4AEB
