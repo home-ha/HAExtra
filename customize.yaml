@@ -165,6 +165,8 @@ light.hallway_light:
 light.hallway_spotlight:
   friendly_name: 玄关筒灯
   icon: mdi:spotlight
+light.kids_light:
+  friendly_name: 儿童房灯
 light.lamp:
   friendly_name: 台灯
   icon: mdi:lamp
@@ -247,9 +249,9 @@ sensor.balcony_humidity:
   dash_click: location.reload()
   friendly_name: 阳台湿度
 sensor.balcony_pm25:
+  dash_click: !secret nodemcu_url2
   friendly_name: 阳台颗粒物
   icon: mdi:blur
-  dash_click: https://www.lewei50.com/u/g/34131
 sensor.balcony_temperature:
   dash_click: connect()
   friendly_name: 阳台温度
@@ -263,7 +265,7 @@ sensor.bedroom_hcho:
 sensor.bedroom_humidity:
   friendly_name: 主卧湿度
 sensor.bedroom_pm25:
-  dash_click: https://www.lewei50.com/u/g/33981
+  dash_click: !secret nodemcu_url
   friendly_name: 主卧颗粒物
   icon: mdi:blur
 sensor.bedroom_temperature:
@@ -271,8 +273,8 @@ sensor.bedroom_temperature:
 sensor.caiyun_humidity:
   friendly_name: 室外湿度
 sensor.caiyun_pm25:
-  friendly_name: 室外颗粒物
   dash_click: connect()
+  friendly_name: 室外颗粒物
 sensor.caiyun_temperature:
   friendly_name: 室外气温
 sensor.caiyun_weather:
@@ -281,6 +283,7 @@ sensor.caiyun_weather:
   dash_name: ${temperature}℃ ${humidity}%
   friendly_name: 天气
 sensor.fresher_co2:
+  dash_click: !secret http_base_url
   friendly_name: 客厅二氧化碳
   icon: mdi:periodic-table-co2
 sensor.fresher_humidity:
@@ -356,5 +359,3 @@ vacuum.vacuum:
   friendly_name: 扫地机
 zone.home:
   friendly_name: 我家
-light.kids_light:
-  friendly_name: 儿童房灯

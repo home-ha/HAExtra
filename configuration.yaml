@@ -50,7 +50,7 @@ modbus:
   port: 8899
 
 homekit:
-  ip_address: 192.168.1.40
+  #ip_address: 192.168.1.40
   filter:
     exclude_domains:
       - script
@@ -208,7 +208,7 @@ switch:
   - platform: wake_on_lan
     name: Storage
     mac_address: 00-11-32-6B-75-F7
-    broadcast_address: 192.168.1.255
+    #broadcast_address: 192.168.1.255
     host: Storage
     turn_off:
       service: shell_command.turn_off_storage
@@ -393,7 +393,7 @@ shell_command:
   turn_off_storage: 'ssh root@Storage shutdown -h now'
 
 xiaomi_aqara:
-  interface: 192.168.2.40
+  #interface: 192.168.2.40
   gateways:
     - mac: 34CE0090901A
       key: 3ECB50168D7F4AEB
