@@ -249,7 +249,7 @@ sensor.balcony_humidity:
   dash_click: location.reload()
   friendly_name: 阳台湿度
 sensor.balcony_pm25:
-  dash_click: !secret nodemcu_url2
+  dash_click: !secret nodemcu2_url
   friendly_name: 阳台颗粒物
   icon: mdi:blur
 sensor.balcony_temperature:
