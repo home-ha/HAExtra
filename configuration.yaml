@@ -119,7 +119,7 @@ sensor:
     availability_topic: NodeMCU2/status
   - platform: mqtt
     state_topic: NodeMCU2/pm2dot5
-    name: Balcony PM2.5
+    name: Balcony PM25
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU2/status
   - platform: mqtt
@@ -146,7 +146,7 @@ sensor:
     availability_topic: NodeMCU7/status
   - platform: mqtt
     state_topic: NodeMCU7/pm2dot5
-    name: Bedroom PM2.5
+    name: Bedroom PM25
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU7/status
   # - platform: mqtt
@@ -180,7 +180,7 @@ sensor:
         value_template: '{{ states.fan.purifier.attributes.humidity }}'
         unit_of_measurement: '%'
       purifier_pm25:
-        friendly_name: Purifier PM2.5
+        friendly_name: Purifier PM25
         value_template: '{{ states.fan.purifier.attributes.aqi }}'
         unit_of_measurement: 'μg/m³'
 
@@ -195,7 +195,7 @@ sensor:
         value_template: '{{ states.fan.fresher.attributes.humidity }}'
         unit_of_measurement: '%'
       fresher_pm25:
-        friendly_name: Fresher PM2.5
+        friendly_name: Fresher PM25
         value_template: '{{ states.fan.fresher.attributes.aqi }}'
         unit_of_measurement: 'μg/m³'
       fresher_co2:

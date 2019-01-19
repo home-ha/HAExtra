@@ -80,7 +80,7 @@ SENSOR_TYPES = {
     'precipitation_distance': ('Precipitation Distance', None, 'mixcloud'),
 
     'aqi': ('AQI', None, 'leaf'),
-    'pm25': ('PM2.5', 'μg/m³', 'blur'),
+    'pm25': ('PM25', 'μg/m³', 'blur'),
     'pm10': ('PM10', 'μg/m³', 'blur-linear'),
     'o3': ('O3', None, 'blur-radial'),
     'co': ('CO', None, 'blur-radial'),

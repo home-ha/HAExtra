@@ -609,7 +609,7 @@
       entity_id: fan.fresher
 
 # 餐厅颗粒物变化
-- alias: Diningroom PM2.5 Changed
+- alias: Diningroom PM25 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat_pm25
@@ -650,7 +650,7 @@
         message: '{{ state_attr("fan.purifier5", "friendly_name") }}⇒{{ state_attr("fan.purifier5", "speed") }}'
 
 # 餐厅颗粒物优
-- alias: Diningroom PM2.5 Excellent
+- alias: Diningroom PM25 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat_pm25
@@ -662,7 +662,7 @@
       entity_id: fan.purifier5
 
 # 书房颗粒物变化
-- alias: Study PM2.5 Changed
+- alias: Study PM25 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
@@ -707,7 +707,7 @@
         message: '{{ state_attr("fan.purifier", "friendly_name") }}⇒{{ state_attr("fan.purifier", "speed") }} {{ state_attr("fan.purifier", "favorite_level") }}'
 
 # 书房颗粒物优
-- alias: Study PM2.5 Excellent
+- alias: Study PM25 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
@@ -719,7 +719,7 @@
       entity_id: fan.purifier
 
 # 主卧颗粒物变化
-- alias: Bedroom PM2.5 Changed
+- alias: Bedroom PM25 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
@@ -760,7 +760,7 @@
         message: '{{ state_attr("fan.purifier7", "friendly_name") }}⇒{{ state_attr("fan.purifier7", "speed") }}'
 
 # 主卧颗粒物优
-- alias: Bedroom PM2.5 Excellent
+- alias: Bedroom PM25 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.bedroom_pm25
@@ -772,7 +772,7 @@
       entity_id: fan.purifier7
 
 # 儿童房颗粒物变化
-- alias: Kids PM2.5 Changed
+- alias: Kids PM25 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat2_pm25
@@ -813,7 +813,7 @@
         message: '{{ state_attr("fan.purifier4", "friendly_name") }}⇒{{ state_attr("fan.purifier4", "speed") }}'
 
 # 儿童房颗粒物优
-- alias: Kids PM2.5 Excellent
+- alias: Kids PM25 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat2_pm25
