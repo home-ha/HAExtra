@@ -51,7 +51,7 @@ apt-get install mosquitto mosquitto-clients
 apt-get install libavahi-compat-libdnssd-dev
 
 # For Raspbian
-apt-get install python3 python3-pip
+##apt-get install python3 python3-pip
 
 # Install PIP 18
 ##python3 -m pip install --upgrade pip # Logout after install
@@ -89,28 +89,30 @@ WantedBy=multi-user.target
 
 EOF
 
-# Appdaemon
-cat <<EOF > /etc/systemd/system/appdaemon.service
-[Unit]
-Description=App Daemon
-After=network-online.target
-
-[Service]
-Type=simple
-User=admin
-ExecStart=/usr/local/bin/appdaemon
-
-[Install]
-WantedBy=multi-user.target
-
-EOF
 
 systemctl --system daemon-reload
 systemctl enable homeassistant
 systemctl start homeassistant
 
-systemctl enable appdaemon
-systemctl start appdaemon
+
+# Appdaemon
+# cat <<EOF > /etc/systemd/system/appdaemon.service
+# [Unit]
+# Description=App Daemon
+# After=network-online.target
+
+# [Service]
+# Type=simple
+# User=admin
+# ExecStart=/usr/local/bin/appdaemon
+
+# [Install]
+# WantedBy=multi-user.target
+
+# EOF
+
+# systemctl enable appdaemon
+# systemctl start appdaemon
 
 # Switch to admin
 
