@@ -102,7 +102,7 @@ Bedroom:
     - media_player.x9300d
     - climate.daikin3
     - fan.purifier7
-    - sensor.bedroom_temperature
+    - sensor.purifier7_temperature
     - sensor.purifier7_humidity
     #- sensor.purifier7_pm25
     #- sensor.purifier7_co2

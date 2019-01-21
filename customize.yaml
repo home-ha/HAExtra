@@ -268,7 +268,7 @@ sensor.purifier7_pm25:
   dash_click: !secret nodemcu_url
   friendly_name: 主卧颗粒物
   icon: mdi:blur
-sensor.bedroom_temperature:
+sensor.purifier7_temperature:
   friendly_name: 主卧温度
 sensor.caiyun_humidity:
   friendly_name: 室外湿度

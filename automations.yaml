@@ -850,7 +850,7 @@
 #   initial_state: false
 #   trigger:
 #     - platform: numeric_state
-#       entity_id: sensor.bedroom_temperature
+#       entity_id: sensor.purifier7_temperature
 #       above: 21.8
 #       for:
 #         minutes: 10
@@ -880,7 +880,7 @@
 #   initial_state: false
 #   trigger:
 #     - platform: numeric_state
-#       entity_id: sensor.bedroom_temperature
+#       entity_id: sensor.purifier7_temperature
 #       below: 21
 #       for:
 #         minutes: 5

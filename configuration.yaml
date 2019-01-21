@@ -135,28 +135,28 @@ sensor:
   - platform: mqtt
     device_class: temperature
     state_topic: NodeMCU7/temperature
-    name: Bedroom Temperature
+    name: Purifier7 Temperature
     unit_of_measurement: °C
     availability_topic: NodeMCU7/status
   - platform: mqtt
     device_class: humidity
     state_topic: NodeMCU7/humidity
-    name: Bedroom Humidity
+    name: Purifier7 Humidity
     unit_of_measurement: '%'
     availability_topic: NodeMCU7/status
   - platform: mqtt
     state_topic: NodeMCU7/pm2dot5
-    name: Bedroom PM25
+    name: Purifier7 PM25
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU7/status
   # - platform: mqtt
   #   state_topic: NodeMCU7/hcho
-  #   name: Bedroom HCHO
+  #   name: Purifier7 HCHO
   #   unit_of_measurement: mg/m³
   #   availability_topic: NodeMCU7/status
   - platform: mqtt
     state_topic: NodeMCU7/co2
-    name: Bedroom CO2
+    name: Purifier7 CO2
     unit_of_measurement: ppm
     availability_topic: NodeMCU7/status
   - platform: caiyun
