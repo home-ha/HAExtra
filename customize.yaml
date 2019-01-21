@@ -46,11 +46,11 @@ fan.fresher:
   hagenie_deviceType: VMC
   icon: mdi:leaf
 fan.purifier:
-  friendly_name: 书房净化器
+  friendly_name: 次卧净化器
   hagenie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.purifier4:
-  friendly_name: 儿童房净化器
+  friendly_name: 书房净化器
   hagenie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.purifier5:
@@ -58,7 +58,7 @@ fan.purifier5:
   hagenie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.purifier6:
-  friendly_name: 次卧净化器
+  friendly_name: 儿童房净化器
   hagenie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.purifier7:
@@ -255,16 +255,16 @@ sensor.balcony_pm25:
 sensor.balcony_temperature:
   dash_click: connect()
   friendly_name: 阳台温度
-sensor.bedroom_co2:
+sensor.purifier7_co2:
   dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
   friendly_name: 主卧二氧化碳
   icon: mdi:periodic-table-co2
-sensor.bedroom_hcho:
+sensor.purifier7_hcho:
   friendly_name: 主卧甲醛
   icon: mdi:biohazard
-sensor.bedroom_humidity:
+sensor.purifier7_humidity:
   friendly_name: 主卧湿度
-sensor.bedroom_pm25:
+sensor.purifier7_pm25:
   dash_click: !secret nodemcu_url
   friendly_name: 主卧颗粒物
   icon: mdi:blur
@@ -295,20 +295,20 @@ sensor.fresher_temperature:
   friendly_name: 客厅温度
 sensor.illumination_34ce0090901a:
   friendly_name: 餐厅亮度
-sensor.kids_co2:
+sensor.purifier4_co2:
+  friendly_name: 书房二氧化碳
+  icon: mdi:periodic-table-co2
+sensor.purifier6_co2:
   friendly_name: 儿童房二氧化碳
   icon: mdi:periodic-table-co2
-sensor.parents_co2:
-  friendly_name: 次卧二氧化碳
-  icon: mdi:periodic-table-co2
 sensor.purifier_humidity:
-  friendly_name: 书房房湿度
+  friendly_name: 次卧湿度
   icon: mdi:water-percent
 sensor.purifier_pm25:
-  friendly_name: 书房房颗粒物
+  friendly_name: 次卧颗粒物
   icon: mdi:blur
 sensor.purifier_temperature:
-  friendly_name: 书房房温度
+  friendly_name: 次卧温度
 sensor.study_lightness:
   friendly_name: 书房亮度
 sun.sun:
@@ -359,3 +359,5 @@ vacuum.vacuum:
   friendly_name: 扫地机
 zone.home:
   friendly_name: 我家
+binary_sensor.door_window_sensor_158d0001f3d2d1:
+  friendly_name: 厨房移门

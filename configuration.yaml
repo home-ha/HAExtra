@@ -124,12 +124,12 @@ sensor:
     availability_topic: NodeMCU2/status
   - platform: mqtt
     state_topic: NodeMCU4/co2
-    name: Kids CO2
+    name: Purifier4 CO2
     unit_of_measurement: ppm
     availability_topic: NodeMCU4/status
   # - platform: mqtt
   #   state_topic: NodeMCU6/co2
-  #   name: Parents CO2
+  #   name: Purifier6 CO2
   #   unit_of_measurement: ppm
   #   availability_topic: NodeMCU6/status
   - platform: mqtt

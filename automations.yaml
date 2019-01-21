@@ -35,7 +35,7 @@
   action:
     - service: hello_miai.send
       data_template:
-        message: '阳台PM2.5为{{ states("sensor.balcony_pm25") }}，餐厅PM2.5为{{ states("sensor.aircat_pm25") }}，主卧PM2.5为{{ states("sensor.bedroom_pm25") }}。客厅二氧化碳浓度为{{ states("sensor.fresher_co2") }}，主卧二氧化碳浓度为{{ states("sensor.bedroom_co2") }}，次卧二氧化碳浓度为{{ states("sensor.parents_co2") }}'
+        message: '阳台PM2.5为{{ states("sensor.balcony_pm25") }}，餐厅PM2.5为{{ states("sensor.aircat_pm25") }}，主卧PM2.5为{{ states("sensor.purifier7_pm25") }}。客厅二氧化碳浓度为{{ states("sensor.fresher_co2") }}，主卧二氧化碳浓度为{{ states("sensor.purifier7_co2") }}，儿童房二氧化碳浓度为{{ states("sensor.purifier6_co2") }}'
 
 # 过道无线开关双击
 - alias: Passage Switch DBClicked
@@ -478,7 +478,7 @@
       entity_id: sensor.fresher_co2
       above: 900
     - platform: numeric_state
-      entity_id: sensor.bedroom_co2
+      entity_id: sensor.purifier7_co2
       above: 900
     - platform: numeric_state
       entity_id: sensor.aircat_hcho
@@ -487,7 +487,7 @@
     - service: light.turn_on
       data_template:
         entity_id: light.gateway_light_34ce0090901a
-        color_name: '{% if states("sensor.fresher_co2") | int > 900 %}red{% elif states("sensor.bedroom_co2") | int > 900 %}purple{% elif states("sensor.aircat_hcho") | float > 0.08 %}green{% elif states("sensor.aircat_pm25") | int > 40 %}blue{% endif %}'
+        color_name: '{% if states("sensor.fresher_co2") | int > 900 %}red{% elif states("sensor.purifier7_co2") | int > 900 %}purple{% elif states("sensor.aircat_hcho") | float > 0.08 %}green{% elif states("sensor.aircat_pm25") | int > 40 %}blue{% endif %}'
         brightness: 10
     - condition: time
       after: '06:00'
@@ -506,7 +506,7 @@
       entity_id: sensor.fresher_co2
       below: 900
     - platform: numeric_state
-      entity_id: sensor.bedroom_co2
+      entity_id: sensor.purifier7_co2
       below: 900
     - platform: numeric_state
       entity_id: sensor.aircat_hcho
@@ -519,7 +519,7 @@
       entity_id: sensor.fresher_co2
       below: 900
     - condition: numeric_state
-      entity_id: sensor.bedroom_co2
+      entity_id: sensor.purifier7_co2
       below: 900
     - condition: numeric_state
       entity_id: sensor.aircat_hcho
@@ -722,27 +722,27 @@
 - alias: Bedroom PM25 Changed
   trigger:
     - platform: numeric_state
-      entity_id: sensor.bedroom_pm25
+      entity_id: sensor.purifier7_pm25
       above: 50
       for:
         minutes: 10
     - platform: numeric_state
-      entity_id: sensor.bedroom_pm25
+      entity_id: sensor.purifier7_pm25
       above: 20
       for:
         minutes: 8
     - platform: numeric_state
-      entity_id: sensor.bedroom_pm25
+      entity_id: sensor.purifier7_pm25
       above: 10
       for:
         minutes: 6
     - platform: numeric_state
-      entity_id: sensor.bedroom_pm25
+      entity_id: sensor.purifier7_pm25
       below: 35
       for:
         minutes: 6
     - platform: numeric_state
-      entity_id: sensor.bedroom_pm25
+      entity_id: sensor.purifier7_pm25
       below: 15
       for:
         minutes: 8
@@ -752,18 +752,18 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.purifier7
-        speed: '{% if (states("sensor.bedroom_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.bedroom_pm25") | int > 20) %}medium{% else %}low{% endif %}'
+        speed: '{% if (states("sensor.purifier7_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.purifier7_pm25") | int > 20) %}medium{% else %}low{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
-        name: '{{ state_attr("sensor.bedroom_pm25", "friendly_name") }}={{ states("sensor.bedroom_pm25") }}'
+        name: '{{ state_attr("sensor.purifier7_pm25", "friendly_name") }}={{ states("sensor.purifier7_pm25") }}'
         message: '{{ state_attr("fan.purifier7", "friendly_name") }}⇒{{ state_attr("fan.purifier7", "speed") }}'
 
 # 主卧颗粒物优
 - alias: Bedroom PM25 Excellent
   trigger:
     - platform: numeric_state
-      entity_id: sensor.bedroom_pm25
+      entity_id: sensor.purifier7_pm25
       below: 5
       for:
         minutes: 10
