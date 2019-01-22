@@ -1,3 +1,5 @@
+binary_sensor.door_window_sensor_158d0001f3d2d1:
+  friendly_name: 厨房移门
 binary_sensor.door_window_sensor_158d0001f3e5be:
   friendly_name: 入户门
 binary_sensor.door_window_sensor_158d000228a52b:
@@ -222,13 +224,13 @@ media_player.x9400e:
 remote.apple_tv:
   friendly_name: 苹果遥控
 sensor.aircat2_hcho:
-  friendly_name: 卧室甲醛
+  friendly_name: 书房甲醛
 sensor.aircat2_humidity:
-  friendly_name: 卧室湿度
+  friendly_name: 书房湿度
 sensor.aircat2_pm25:
-  friendly_name: 卧室颗粒物
+  friendly_name: 书房颗粒物
 sensor.aircat2_temperature:
-  friendly_name: 卧室温度
+  friendly_name: 书房温度
 sensor.aircat3_hcho:
   friendly_name: 工位甲醛
 sensor.aircat3_humidity:
@@ -255,21 +257,6 @@ sensor.balcony_pm25:
 sensor.balcony_temperature:
   dash_click: connect()
   friendly_name: 阳台温度
-sensor.purifier7_co2:
-  dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
-  friendly_name: 主卧二氧化碳
-  icon: mdi:periodic-table-co2
-sensor.purifier7_hcho:
-  friendly_name: 主卧甲醛
-  icon: mdi:biohazard
-sensor.purifier7_humidity:
-  friendly_name: 主卧湿度
-sensor.purifier7_pm25:
-  dash_click: !secret nodemcu_url
-  friendly_name: 主卧颗粒物
-  icon: mdi:blur
-sensor.purifier7_temperature:
-  friendly_name: 主卧温度
 sensor.caiyun_humidity:
   friendly_name: 室外湿度
 sensor.caiyun_pm25:
@@ -301,6 +288,21 @@ sensor.purifier4_co2:
 sensor.purifier6_co2:
   friendly_name: 儿童房二氧化碳
   icon: mdi:periodic-table-co2
+sensor.purifier7_co2:
+  dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
+  friendly_name: 主卧二氧化碳
+  icon: mdi:periodic-table-co2
+sensor.purifier7_hcho:
+  friendly_name: 主卧甲醛
+  icon: mdi:biohazard
+sensor.purifier7_humidity:
+  friendly_name: 主卧湿度
+sensor.purifier7_pm25:
+  dash_click: !secret nodemcu_url
+  friendly_name: 主卧颗粒物
+  icon: mdi:blur
+sensor.purifier7_temperature:
+  friendly_name: 主卧温度
 sensor.purifier_humidity:
   friendly_name: 次卧湿度
   icon: mdi:water-percent
@@ -359,5 +361,3 @@ vacuum.vacuum:
   friendly_name: 扫地机
 zone.home:
   friendly_name: 我家
-binary_sensor.door_window_sensor_158d0001f3d2d1:
-  friendly_name: 厨房移门
