@@ -661,63 +661,6 @@
     - service: fan.turn_off
       entity_id: fan.purifier5
 
-# 书房颗粒物变化
-- alias: Study PM25 Changed
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      above: 50
-      for:
-        minutes: 10
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      above: 35
-      for:
-        minutes: 8
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      above: 23
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      below: 40
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      below: 25
-      for:
-        minutes: 8
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier
-    - service: fan.set_speed
-      data_template:
-        entity_id: fan.purifier
-        speed: '{% if (states("sensor.purifier_pm25") | int > 35) and is_state("switch.projector", "off") %}favorite{% else %}auto{% endif %}'
-    - service: fan.xiaomi_miio_set_favorite_level
-      data_template:
-        entity_id: fan.purifier
-        level: '{% if (states("sensor.purifier_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}9{% else %}6{% endif %}'
-    - delay: 1
-    - service: logbook.log
-      data_template:
-        name: '{{ state_attr("sensor.purifier_pm25", "friendly_name") }}={{ states("sensor.purifier_pm25") }}'
-        message: '{{ state_attr("fan.purifier", "friendly_name") }}⇒{{ state_attr("fan.purifier", "speed") }} {{ state_attr("fan.purifier", "favorite_level") }}'
-
-# 书房颗粒物优
-- alias: Study PM25 Excellent
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      below: 18
-      for:
-        minutes: 10
-  action:
-    - service: fan.turn_off
-      entity_id: fan.purifier
-
 # 主卧颗粒物变化
 - alias: Bedroom PM25 Changed
   trigger:
@@ -771,8 +714,118 @@
     - service: fan.turn_off
       entity_id: fan.purifier7
 
+# 次卧颗粒物变化
+- alias: Parents PM25 Changed
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      above: 60
+      for:
+        minutes: 10
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      above: 40
+      for:
+        minutes: 8
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      above: 25
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      below: 45
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      below: 30
+      for:
+        minutes: 8
+  action:
+    - service: fan.turn_on
+      entity_id: fan.purifier
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.purifier
+        speed: '{% if (states("sensor.purifier_pm25") | int > 35) and is_state("switch.projector", "off") %}favorite{% else %}auto{% endif %}'
+    - service: fan.xiaomi_miio_set_favorite_level
+      data_template:
+        entity_id: fan.purifier
+        level: '{% if (states("sensor.purifier_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}9{% else %}6{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("sensor.purifier_pm25", "friendly_name") }}={{ states("sensor.purifier_pm25") }}'
+        message: '{{ state_attr("fan.purifier", "friendly_name") }}⇒{{ state_attr("fan.purifier", "speed") }} {{ state_attr("fan.purifier", "favorite_level") }}'
+
+# 次卧颗粒物优
+- alias: Parents PM25 Excellent
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier_pm25
+      below: 18
+      for:
+        minutes: 10
+  action:
+    - service: fan.turn_off
+      entity_id: fan.purifier
+
 # 儿童房颗粒物变化
 - alias: Kids PM25 Changed
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier6_pm25
+      above: 50
+      for:
+        minutes: 10
+    - platform: numeric_state
+      entity_id: sensor.purifier6_pm25
+      above: 20
+      for:
+        minutes: 8
+    - platform: numeric_state
+      entity_id: sensor.purifier6_pm25
+      above: 10
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier6_pm25
+      below: 35
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier6_pm25
+      below: 15
+      for:
+        minutes: 8
+  action:
+    - service: fan.turn_on
+      entity_id: fan.purifier6
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.purifier6
+        speed: '{% if (states("sensor.purifier6_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.purifier6_pm25") | int > 20) %}medium{% else %}low{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("sensor.purifier6_pm25", "friendly_name") }}={{ states("sensor.purifier6_pm25") }}'
+        message: '{{ state_attr("fan.purifier6", "friendly_name") }}⇒{{ state_attr("fan.purifier6", "speed") }}'
+
+# 儿童房颗粒物优
+- alias: Kids PM25 Excellent
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier6_pm25
+      below: 5
+      for:
+        minutes: 10
+  action:
+    - service: fan.turn_off
+      entity_id: fan.purifier6
+
+# 书房颗粒物变化
+- alias: Study PM25 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat2_pm25
@@ -781,12 +834,12 @@
         minutes: 10
     - platform: numeric_state
       entity_id: sensor.aircat2_pm25
-      above: 30
+      above: 20
       for:
         minutes: 8
     - platform: numeric_state
       entity_id: sensor.aircat2_pm25
-      above: 19
+      above: 13
       for:
         minutes: 6
     - platform: numeric_state
@@ -796,7 +849,7 @@
         minutes: 6
     - platform: numeric_state
       entity_id: sensor.aircat2_pm25
-      below: 20
+      below: 15
       for:
         minutes: 8
   action:
@@ -812,12 +865,12 @@
         name: '{{ state_attr("sensor.aircat2_pm25", "friendly_name") }}={{ states("sensor.aircat2_pm25") }}'
         message: '{{ state_attr("fan.purifier4", "friendly_name") }}⇒{{ state_attr("fan.purifier4", "speed") }}'
 
-# 儿童房颗粒物优
-- alias: Kids PM25 Excellent
+# 书房颗粒物优
+- alias: Study PM25 Excellent
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat2_pm25
-      below: 15
+      below: 10
       for:
         minutes: 10
   action:
