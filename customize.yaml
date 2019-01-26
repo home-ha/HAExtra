@@ -288,6 +288,16 @@ sensor.purifier4_co2:
 sensor.purifier6_co2:
   friendly_name: 儿童房二氧化碳
   icon: mdi:periodic-table-co2
+sensor.purifier6_hcho:
+  friendly_name: 儿童房甲醛
+  icon: mdi:biohazard
+sensor.purifier6_humidity:
+  friendly_name: 儿童房湿度
+sensor.purifier6_pm25:
+  friendly_name: 儿童房颗粒物
+  icon: mdi:blur
+sensor.purifier6_temperature:
+  friendly_name: 儿童房温度
 sensor.purifier7_co2:
   dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
   friendly_name: 主卧二氧化碳

@@ -657,6 +657,10 @@
       below: 10
       for:
         minutes: 10
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.aircat_humidity
+      above: 55
   action:
     - service: fan.turn_off
       entity_id: fan.purifier5
@@ -710,6 +714,10 @@
       below: 5
       for:
         minutes: 10
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.purifier7_humidity
+      above: 55
   action:
     - service: fan.turn_off
       entity_id: fan.purifier7
@@ -820,6 +828,10 @@
       below: 5
       for:
         minutes: 10
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.purifier6_humidity
+      above: 50
   action:
     - service: fan.turn_off
       entity_id: fan.purifier6
