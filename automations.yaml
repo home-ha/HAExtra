@@ -88,7 +88,7 @@
   initial_state: false
   trigger:
     - platform: time
-      at: '06:00:00'
+      at: '07:00:00'
   action:
     - service: automation.turn_on
       entity_id: automation.passage_light_on_day
@@ -558,16 +558,16 @@
 - alias: Diningroom Humidity Low
   trigger:
     - platform: numeric_state
-      entity_id: sensor.purifier4_humidity
-      below: 52
+      entity_id: sensor.purifier5_humidity
+      below: 54
       for:
         minutes: 10
   action:
     - service: fan.turn_on
-      entity_id: fan.purifier4
+      entity_id: fan.purifier5
     - service: fan.oscillate
       data:
-        entity_id: fan.purifier4
+        entity_id: fan.purifier5
         oscillating: true
 
 # 主卧湿度过高
@@ -599,7 +599,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier7_humidity
-      below: 52
+      below: 54
       for:
         minutes: 10
   action:
@@ -615,7 +615,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier6_humidity
-      below: 52
+      below: 54
       for:
         minutes: 10
   action:
@@ -731,7 +731,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.aircat_humidity
-      above: 55
+      above: 58
   action:
     - service: fan.turn_off
       entity_id: fan.purifier5
@@ -788,7 +788,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.purifier7_humidity
-      above: 55
+      above: 58
   action:
     - service: fan.turn_off
       entity_id: fan.purifier7
@@ -902,7 +902,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.purifier6_humidity
-      above: 55
+      above: 58
   action:
     - service: fan.turn_off
       entity_id: fan.purifier6
