@@ -221,9 +221,8 @@
 - alias: Washroom Light Off
   initial_state: false
   trigger:
-    - platform: time
+    - platform: time_pattern
       minutes: '/3'
-      seconds: 00
   condition:
     - condition: state
       entity_id: binary_sensor.motion_sensor_158d0001f4a238
@@ -831,7 +830,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.purifier6_humidity
-      above: 50
+      above: 55
   action:
     - service: fan.turn_off
       entity_id: fan.purifier6

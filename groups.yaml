@@ -32,7 +32,7 @@ Parlor:
     - media_player.x9400e
     - climate.daikin2
     - climate.saswell
-    - fan.wall_fan
+    #- fan.wall_fan
     - fan.fresher
     - sensor.fresher_temperature
     - sensor.fresher_humidity
@@ -44,7 +44,7 @@ Diningroom:
     - light.diningroom_light
     #- light.diningroom_light2
     - light.diningroom_spotlight
-    - switch.outlet
+    #- switch.outlet
     - light.gateway_light_34ce0090901a
     - fan.purifier5
     - climate.daikin1
@@ -99,10 +99,10 @@ Parents:
 
 Kids:
   entities:
-    - light.lamp
+    #- light.lamp
     - light.kids_light
     - climate.daikin4
-    - fan.fan
+    #- fan.fan
     - fan.purifier6
     - sensor.purifier6_temperature
     - sensor.purifier6_humidity
@@ -113,9 +113,9 @@ Kids:
 Study:
   entities:
     - light.study_light
-    - light.airer_light
+    #- light.airer_light
     - cover.study_cover
-    - cover.airer
+    #- cover.airer
     - switch.projector
     - switch.speaker
     - switch.mitsubishi
@@ -125,7 +125,7 @@ Study:
     - sensor.aircat2_humidity
     - sensor.aircat2_pm25
     - sensor.aircat2_hcho
-    - sensor.purifier4_co2
+    #- sensor.purifier4_co2
     - sensor.study_lightness
 
 Balcony:

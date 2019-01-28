@@ -13,7 +13,7 @@ from homeassistant.const import (
     CONF_OPTIMISTIC, CONF_VALUE_TEMPLATE, CONF_ICON_TEMPLATE)
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.typing import HomeAssistantType, ConfigType
-from homeassistant.components.switch.mqtt import (MqttSwitch, PLATFORM_SCHEMA)
+from homeassistant.components.mqtt.switch import (MqttSwitch, PLATFORM_SCHEMA)
 
 _LOGGER = logging.getLogger(__name__)
 
