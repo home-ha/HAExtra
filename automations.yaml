@@ -530,8 +530,8 @@
     - service: light.turn_off
       entity_id: light.gateway_light_34ce0090901a
 
-# 客厅湿度超标
-- alias: Parlor Humidity Bad
+# 餐厅湿度过高
+- alias: Diningroom Humidity High
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat_humidity
@@ -542,8 +542,8 @@
     - service: switch.turn_on
       entity_id: switch.outlet
 
-# 客厅湿度达标
-- alias: Parlor Humidity Good
+# 餐厅湿度正常
+- alias: Diningroom Humidity Normal
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat_humidity
@@ -553,6 +553,78 @@
   action:
     - service: switch.turn_off
       entity_id: switch.outlet
+
+# 餐厅湿度过低
+- alias: Diningroom Humidity Low
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier4_humidity
+      below: 52
+      for:
+        minutes: 10
+  action:
+    - service: fan.turn_on
+      entity_id: fan.purifier4
+    - service: fan.oscillate
+      data:
+        entity_id: fan.purifier4
+        oscillating: true
+
+# 主卧湿度过高
+- alias: Bedroom Humidity High
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier7_humidity
+      above: 72
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_on
+      entity_id: switch.outlet2
+
+# 主卧湿度正常
+- alias: Bedroom Humidity Normal
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier7_humidity
+      below: 68
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_off
+      entity_id: switch.outlet2
+
+# 主卧湿度过低
+- alias: Bedroom Humidity Low
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier7_humidity
+      below: 52
+      for:
+        minutes: 10
+  action:
+    - service: fan.turn_on
+      entity_id: fan.purifier7
+    - service: fan.oscillate
+      data:
+        entity_id: fan.purifier7
+        oscillating: true
+
+# 儿童房湿度过低
+- alias: Kids Humidity Low
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier6_humidity
+      below: 52
+      for:
+        minutes: 10
+  action:
+    - service: fan.turn_on
+      entity_id: fan.purifier6
+    - service: fan.oscillate
+      data:
+        entity_id: fan.purifier6
+        oscillating: true
 
 # 客厅二氧化碳变化
 - alias: Parlor CO2 Changed
