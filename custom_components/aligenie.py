@@ -147,7 +147,7 @@ def discoveryDevice():
     for state in states:
         attributes = state.attributes
 
-        if attributes.get('hidden'):
+        if attributes.get('hidden') or attributes.get('hagenie_hidden'):
             continue
 
         friendly_name = attributes.get('friendly_name')
@@ -340,10 +340,11 @@ def guessDeviceType(entity_id, attributes):
     if domain in EXCLUDE_DOMAINS:
         return None
 
-    # Guess from entity_id
-    for deviceType in DEVICE_TYPES:
-        if deviceType in entity_id:
-            return deviceType
+    # Guess from entity name
+    # entity_name = entity_id[entity_id.find('.')+1:]
+    # for deviceType in DEVICE_TYPES:
+    #     if deviceType in entity_name:
+    #         return deviceType
 
     # Map from domain
     return INCLUDE_DOMAINS[domain] if domain in INCLUDE_DOMAINS else None

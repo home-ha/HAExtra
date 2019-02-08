@@ -145,11 +145,9 @@ light.airer_light:
   icon: mdi:ceiling-light
 light.balcony_light:
   friendly_name: 阳台灯
-  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 light.diningroom_light:
   friendly_name: 餐厅灯
-  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 light.diningroom_light2:
   friendly_name: 餐厅灯2
@@ -157,15 +155,16 @@ light.diningroom_light2:
   icon: mdi:ceiling-light
 light.diningroom_spotlight:
   friendly_name: 餐厅筒灯
+  hagenie_hidden: true
   icon: mdi:spotlight
 light.gateway_light_34ce0090901a:
   friendly_name: 壁灯
 light.hallway_light:
   friendly_name: 玄关灯
-  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 light.hallway_spotlight:
   friendly_name: 玄关筒灯
+  hagenie_hidden: true
   icon: mdi:spotlight
 light.kids_light:
   friendly_name: 儿童房灯
@@ -174,7 +173,6 @@ light.lamp:
   icon: mdi:lamp
 light.parlor_light:
   friendly_name: 客厅灯
-  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 light.parlor_light2:
   friendly_name: 客厅灯2
@@ -182,13 +180,13 @@ light.parlor_light2:
   icon: mdi:ceiling-light
 light.parlor_spotlight:
   friendly_name: 客厅筒灯
+  hagenie_hidden: true
   icon: mdi:spotlight
 light.passage_backlight:
   friendly_name: 过道背景灯
   icon: mdi:spotlight-beam
 light.passage_light:
   friendly_name: 过道灯
-  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 light.passage_light2:
   friendly_name: 过道灯2
@@ -196,10 +194,10 @@ light.passage_light2:
   icon: mdi:ceiling-light
 light.passage_spotlight:
   friendly_name: 过道筒灯
+  hagenie_hidden: true
   icon: mdi:spotlight
 light.study_light:
   friendly_name: 书房灯
-  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 light.study_light2:
   friendly_name: 书房灯2
@@ -211,7 +209,6 @@ light.study_light3:
   icon: mdi:ceiling-light
 light.washroom_light:
   friendly_name: 洗手间灯
-  hagenie_deviceName: 吸顶灯
   icon: mdi:ceiling-light
 media_player.apple_tv:
   friendly_name: 苹果电视

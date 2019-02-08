@@ -50,6 +50,9 @@ def haCall(cmd, data=None):
     log('HA ' + method + ' ' + url)
     if data:
         log(data)
+
+    #TODO: new HA, headers = {'Authorization': 'Bearer token', 'Content-Type': 'application/json'}
+
     if url.startswith('https'): # We need extra requests lib for HTTPS POST
         import requests
         result = requests.request(method, url, data=data, timeout=3).text
@@ -135,9 +138,9 @@ def guessDeviceType(entity_id, attributes):
         return None
 
     # Guess from entity_id
-    for deviceType in DEVICE_TYPES:
-        if deviceType in entity_id:
-            return deviceType
+    # for deviceType in DEVICE_TYPES:
+    #     if deviceType in entity_id:
+    #         return deviceType
 
     # Map from domain
     return INCLUDE_DOMAINS[domain] if domain in INCLUDE_DOMAINS else None

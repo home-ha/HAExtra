@@ -99,7 +99,7 @@ Parents:
 
 Kids:
   entities:
-    #- light.lamp
+    - light.lamp
     - light.kids_light
     - climate.daikin4
     #- fan.fan
