@@ -396,6 +396,12 @@
 				} else {
 					var service = off ? 'turn_on' : 'turn_off'
 				}
+				// Kavana: Respond right away
+				// var entity = findEntity(grid.id)
+				// if (entity) {
+				// 	entity.state = off ? 'on' : 'off'
+				// 	grid.innerHTML = makeEntity(entity)
+				// }
 				callService(service, { entity_id: grid.id }, grid)
 			}
 
