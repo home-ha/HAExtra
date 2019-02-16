@@ -48,7 +48,7 @@
   action:
     - service: hello_miai.send
       data:
-        message: 双击过道无线开关
+        message: 晾衣机将于今晚定时开启烘干功能
 
 # 过道无线开关长按
 - alias: Passage Switch Pressed
@@ -407,7 +407,7 @@
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.study_light2" %}light.study_light{% else %}light.study_light2{% endif %}'
+        entity_id: '{% if trigger.entity_id == "light.study_light2" %}light.study_light,light.study_light3{% elif trigger.entity_id == "light.study_light3" %}light.study_light,light.study_light2{% else %}light.study_light2,light.study_light3{% endif %}'
 
 # 阳台空气差
 - alias: Balcony Air Bad

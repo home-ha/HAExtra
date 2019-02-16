@@ -159,6 +159,7 @@ light.diningroom_spotlight:
   icon: mdi:spotlight
 light.gateway_light_34ce0090901a:
   friendly_name: 壁灯
+  hagenie_hidden: true
 light.hallway_light:
   friendly_name: 玄关灯
   icon: mdi:ceiling-light

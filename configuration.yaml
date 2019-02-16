@@ -12,6 +12,8 @@ logger:
   logs:
     custom_components.sensor.aircat: debug
 
+system_health:
+
 frontend:
 
 config:

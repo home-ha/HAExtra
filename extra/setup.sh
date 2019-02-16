@@ -123,9 +123,9 @@ hass
 echo .> /var/log/daemon.log; echo .>~/.homeassistant/home-assistant.log; systemctl restart homeassistant; tail -f /var/log/daemon.log
 
 # Upgrage
-systemctl stop homeassistant
-pip3 install --upgrade homeassistant
-systemctl start homeassistant
+sudo systemctl stop homeassistant
+sudo pip3 install --upgrade homeassistant
+sudo systemctl start homeassistant
 
 # Samba
 apt-get install samba

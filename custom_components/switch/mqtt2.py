@@ -32,7 +32,7 @@ class MqttSwitch2(MqttSwitch):
 
     def __init__(self, config, discovery_hash):
         """Initialize the MQTT switch."""
-        super().__init__(config, discovery_hash)
+        super().__init__(config, None, discovery_hash)
         self._attributes = None
         self._icon = None
 
