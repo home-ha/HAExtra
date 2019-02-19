@@ -30,6 +30,7 @@ Parlor:
     #- light.parlor_light2
     - light.parlor_spotlight
     - media_player.x9400e
+    - media_player.magic
     - climate.daikin2
     - climate.saswell
     #- fan.wall_fan

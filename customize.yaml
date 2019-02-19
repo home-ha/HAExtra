@@ -213,6 +213,8 @@ light.washroom_light:
   icon: mdi:ceiling-light
 media_player.apple_tv:
   friendly_name: 苹果电视
+media_player.magic:
+  friendly_name: 天猫魔盒
 media_player.x9300d:
   friendly_name: 主卧电视
   icon: mdi:play-circle-outline
