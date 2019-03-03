@@ -251,7 +251,7 @@ sensor.balcony_humidity:
   dash_click: location.reload()
   friendly_name: 阳台湿度
 sensor.balcony_pm25:
-  dash_click: !secret nodemcu2_url
+  dash_click: https://www.lewei50.com/u/g/34131
   friendly_name: 阳台颗粒物
   icon: mdi:blur
 sensor.balcony_temperature:
@@ -270,7 +270,7 @@ sensor.caiyun_weather:
   dash_name: ${temperature}℃ ${humidity}%
   friendly_name: 天气
 sensor.fresher_co2:
-  dash_click: !secret http_base_url
+  dash_click: /
   friendly_name: 客厅二氧化碳
   icon: mdi:periodic-table-co2
 sensor.fresher_humidity:
@@ -308,7 +308,7 @@ sensor.purifier7_hcho:
 sensor.purifier7_humidity:
   friendly_name: 主卧湿度
 sensor.purifier7_pm25:
-  dash_click: !secret nodemcu_url
+  dash_click: https://www.lewei50.com/u/g/33981
   friendly_name: 主卧颗粒物
   icon: mdi:blur
 sensor.purifier7_temperature:

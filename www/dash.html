@@ -508,7 +508,7 @@
 				var html = '<div class="entity ' + domain + '" id="' + entity_id + '"'
 				if (entity.attributes.hasOwnProperty('dash_click')) {
 					var dash_click = entity.attributes.dash_click
-					if (dash_click.startsWith('http')) {
+					if (dash_click.startsWith('http') || dash_click.startsWith('/')) {
 						dash_click = "location='" + dash_click + "'"
 					}
 					html += ' onclick="' + dash_click + '"'
@@ -609,9 +609,9 @@
 			_SENSOR_THRESHOLDS = {
 				pm25: [40, 70],
 				co2: [900, 1600],
-				humidity: [75, 85],
+				humidity: [72, 82],
 				hcho: [0.08, 0.2],
-				temperature: [32, 40]
+				temperature: [30, 38]
 			}
 
 			function stateOverflow(entity_id, value) {
