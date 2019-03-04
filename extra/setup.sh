@@ -81,7 +81,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-User=admin
+User=root
 ExecStart=/usr/local/bin/hass
 
 [Install]
@@ -113,8 +113,6 @@ systemctl start homeassistant
 
 # systemctl enable appdaemon
 # systemctl start appdaemon
-
-# Switch to admin
 
 # Debug
 hass

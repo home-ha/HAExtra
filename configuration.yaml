@@ -459,10 +459,6 @@ fan:
     payload_low_speed: '1'
     payload_medium_speed: '2'
     payload_high_speed: '3'
-    speeds:
-      - low
-      - medium
-      - high
   - platform: mqtt
     name: Purifier5
     state_topic: NodeMCU5/relay/0
@@ -476,10 +472,6 @@ fan:
     payload_low_speed: '1'
     payload_medium_speed: '5'
     payload_high_speed: '4'
-    speeds:
-      - low
-      - medium
-      - high
   - platform: mqtt
     name: Purifier6
     state_topic: NodeMCU6/relay/0
@@ -493,10 +485,6 @@ fan:
     payload_low_speed: '1'
     payload_medium_speed: '5'
     payload_high_speed: '6'
-    speeds:
-      - low
-      - medium
-      - high
   - platform: mqtt
     name: Purifier7
     state_topic: NodeMCU7/relay/0
@@ -510,10 +498,6 @@ fan:
     payload_low_speed: '1'
     payload_medium_speed: '5'
     payload_high_speed: '6'
-    speeds:
-      - low
-      - medium
-      - high
 #TODO
 # - platform: template
 #   fans:
