@@ -578,6 +578,9 @@
 				if (!off || attributes.dash_extra_forced) {
 					if (attributes.hasOwnProperty('dash_extra')) {
 						var extra = renderTemplate(attributes.dash_extra, state, attributes)
+						if (extra.length > 8) {
+							extra  = '<marquee scrollamount="3">' + extra + '</marquee>'
+						}
 					} else if (domain == 'climate' || domain == 'fan') {
 						var extra = ''
 						if (domain == 'climate') {
