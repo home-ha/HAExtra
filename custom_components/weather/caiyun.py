@@ -26,17 +26,17 @@ USER_AGENT = 'ColorfulCloudsPro/3.2.2 (iPhone; iOS 11.3; Scale/3.00)'
 DEVIEC_ID = '5F544F93-44F1-43C9-94B2-%012X' % random.randint(0, 0xffffffffffff)
 
 WEATHER_ICONS = {
-    'CLEAR_DAY': 'sunny', #晴（白天）
-    'CLEAR_NIGHT': 'clear-night', #晴（夜间）
-    'PARTLY_CLOUDY_DAY': 'partlycloudy', #白天多云
-    'PARTLY_CLOUDY_NIGHT': 'partlycloudy',  #夜间多云
-    'CLOUDY': 'cloudy', #阴
-    'RAIN': 'rainy', #雨
-    'SNOW': 'snowy', #雪
-    'WIND': 'windy', #大风
-    'FOG': 'fog', #雾
-    #'HAZE': #雾霾
-    'SLEET': 'snowy-rainy' #雨夹雪
+    'CLEAR_DAY': 'sunny',  # 晴（白天）
+    'CLEAR_NIGHT': 'clear-night',  # 晴（夜间）
+    'PARTLY_CLOUDY_DAY': 'partlycloudy',  # 白天多云
+    'PARTLY_CLOUDY_NIGHT': 'partlycloudy',  # 夜间多云
+    'CLOUDY': 'cloudy',  # 阴
+    'RAIN': 'rainy',  # 雨
+    'SNOW': 'snowy',  # 雪
+    'WIND': 'windy',  # 大风
+    'FOG': 'fog',  # 雾
+    # 'HAZE': #雾霾
+    'SLEET': 'snowy-rainy'  # 雨夹雪
     # 'HAIL': hail', #冰雹
     # 'LIGHTNING': 'lightning', #雷电
     # 'LIGHTNING-RAINY': 'lightning-rainy', #雷阵雨
@@ -136,7 +136,7 @@ class CaiYunWeather(WeatherEntity):
     def available(self):
         return bool(self._data)
 
-    #@Throttle(timedelta(minutes=20))
+    # @Throttle(timedelta(minutes=20))
     async def async_update(self):
         """Update Condition and Forecast."""
         data = {}
@@ -158,7 +158,7 @@ class CaiYunWeather(WeatherEntity):
             if realtime['status'] != 'ok':
                 raise
 
-            #https://open.caiyunapp.com/%E5%AE%9E%E5%86%B5%E5%A4%A9%E6%B0%94%E6%8E%A5%E5%8F%A3/v2.2
+            # https://open.caiyunapp.com/%E5%AE%9E%E5%86%B5%E5%A4%A9%E6%B0%94%E6%8E%A5%E5%8F%A3/v2.2
             skycon = realtime['skycon']
             data['condition'] = WEATHER_ICONS[skycon] if skycon in WEATHER_ICONS else 'exceptional'
             #data['dash_icon'] = 'mdi:weather-' + data['condition']
@@ -173,7 +173,8 @@ class CaiYunWeather(WeatherEntity):
             data['ozone'] = realtime.get('o3')
             data['visibility'] = realtime.get('visibility')
 
-            data['attribution'] = result['forecast_keypoint'] + ' (PM2.5=' + str(realtime.get('pm25')) + ')'
+            data['attribution'] = result['forecast_keypoint'] + \
+                ' (PM2.5=' + str(realtime.get('pm25')) + ')'
 
             forecasts = {}
             daily = result['daily']

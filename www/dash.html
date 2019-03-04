@@ -36,6 +36,10 @@
 				background-color: #00bcd4;
 			}
 
+			.weather {
+				background-color: #3f51b5;
+			}
+
 			.binary_sensor {
 				background-color: #03a9f4;
 			}
@@ -310,6 +314,7 @@
 
 			_DOMAIN_ICONS = {
 				sensor: 'flower',
+				weather: 'weather-partlycloudy',
 				binary_sensor: 'bullseye',
 				device_tracker: 'account',
 
@@ -512,7 +517,7 @@
 						dash_click = "location='" + dash_click + "'"
 					}
 					html += ' onclick="' + dash_click + '"'
-				} else if (domain != 'sensor' && domain != 'binary_sensor' && domain != 'device_tracker') {
+				} else if (domain != 'sensor' && domain != 'weather' && domain != 'binary_sensor' && domain != 'device_tracker') {
 					html += ' onclick="handleClick(this)"'
 				}
 				html += '>'
