@@ -196,7 +196,7 @@ class CaiYunWeather(WeatherEntity):
                         forecast[ATTR_FORECAST_WIND_SPEED] = v['avg']['speed']
                     elif key == 'precipitation':
                         forecast[ATTR_FORECAST_PRECIPITATION] = v['avg']
-            data['forecast'] = forecasts.values()
+            data['forecast'] = sorted(forecasts.values(), key=lambda k: k[ATTR_FORECAST_TIME])
 
         except:
             import traceback

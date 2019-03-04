@@ -257,16 +257,9 @@ sensor.balcony_pm25:
 sensor.balcony_temperature:
   dash_click: connect()
   friendly_name: 阳台温度
-sensor.caiyun_humidity:
-  friendly_name: 室外湿度
-sensor.caiyun_pm25:
-  dash_click: connect()
-  friendly_name: 室外颗粒物
-sensor.caiyun_temperature:
-  friendly_name: 室外气温
-sensor.caiyun_weather:
+weather.caiyun:
   dash_click: https://m.tianqi.com/hangzhou
-  dash_extra: 颗粒物 ${pm25}
+  dash_extra: attribution
   dash_name: ${temperature}℃ ${humidity}%
   friendly_name: 天气
 sensor.fresher_co2:

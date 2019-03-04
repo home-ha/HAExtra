@@ -107,6 +107,9 @@ homekit:
 #   name: Lightness
 #   availability_topic: NodeMCU3/status
 
+weather:
+  - platform: caiyun
+
 sensor:
   - platform: mqtt
     device_class: illuminance
@@ -180,8 +183,6 @@ sensor:
     name: Purifier7 CO2
     unit_of_measurement: ppm
     availability_topic: NodeMCU7/status
-  - platform: caiyun
-    monitored_conditions: ['weather']
   # - platform: phicomm
   #   name: AirCat
   #   username: !secret phicomm_username
@@ -414,8 +415,6 @@ shell_command:
 
 xiaomi_aqara:
   #interface: 192.168.2.40
-  #./mirobo --ip 192.168.1.41 --token 96a118283f45b0a4ce24ffde0e57c1f8 -d raw-command play_specify_fm '{"type":0,"id":1065,"url":"http://192.168.1.10/tmp/64.m3u8"}'
-  #./mirobo --ip 192.168.1.41 --token 96a118283f45b0a4ce24ffde0e57c1f8 -d raw-command volume_ctrl_fm '[5]'
   gateways:
     - mac: 34CE0090901A
       key: 3ECB50168D7F4AEB

@@ -139,10 +139,7 @@ Balcony:
 
 #Outside:
 #  entities:
-    - sensor.caiyun_weather
-    #- sensor.caiyun_temperature
-    #- sensor.caiyun_humidity
-    #- sensor.caiyun_pm25
+    - weather.caiyun
     - sun.sun
 
 Controls:
