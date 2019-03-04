@@ -569,7 +569,7 @@ climate:
   - platform: saswell
     username: !secret saswell_username
     password: !secret saswell_password
-  - platform: modbus
+  - platform: modbus2
     name: Daikin
     temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
     target_temperature: { registers: [4, 8, 12, 16] }

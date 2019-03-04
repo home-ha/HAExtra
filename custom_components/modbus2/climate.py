@@ -18,6 +18,8 @@ from homeassistant.components.climate import (
     PLATFORM_SCHEMA)
 from homeassistant.const import (
     CONF_NAME, CONF_SLAVE, CONF_OFFSET, CONF_STRUCTURE, ATTR_TEMPERATURE)
+from homeassistant.components.modbus import (
+    CONF_HUB, DEFAULT_HUB, DOMAIN as MODBUS_DOMAIN)
 from homeassistant.helpers.event import async_call_later
 import homeassistant.components.modbus as modbus
 import homeassistant.helpers.config_validation as cv
@@ -82,6 +84,7 @@ DEFAULT_SWING_LIST = ['Auto', '1', '2', '3', 'Off']
 
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
+    vol.Optional(CONF_HUB, default=DEFAULT_HUB): cv.string,
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Optional(CONF_OPERATION_LIST, default=DEFAULT_OPERATION_LIST):
         vol.All(cv.ensure_list, vol.Length(min=2)),
@@ -89,12 +92,26 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
         vol.All(cv.ensure_list, vol.Length(min=2)),
     vol.Optional(CONF_SWING_LIST, default=DEFAULT_SWING_LIST):
         vol.All(cv.ensure_list, vol.Length(min=2)),
+    vol.Optional(CONF_TEMPERATURE): dict,
+    vol.Optional(CONF_TARGET_TEMPERATURE): dict,
+    vol.Optional(CONF_HUMIDITY): dict,
+    vol.Optional(CONF_TARGET_HUMIDITY): dict,
+    vol.Optional(CONF_OPERATION): dict,
+    vol.Optional(CONF_FAN): dict,
+    vol.Optional(CONF_SWING): dict,
+    vol.Optional(CONF_HOLD): dict,
+    vol.Optional(CONF_AWAY): dict,
+    vol.Optional(CONF_AUX): dict,
+    vol.Optional(CONF_IS_ON): dict,
 })
 
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the Modbus Thermostat Platform."""
     name = config.get(CONF_NAME)
+    hub_name = config.get(CONF_HUB)
+    hub = hass.data[MODBUS_DOMAIN][hub_name]
+
 
     ModbusClimate._operation_list = config.get(CONF_OPERATION_LIST)
     ModbusClimate._fan_list = config.get(CONF_FAN_LIST)
@@ -152,14 +169,14 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     for index in range(100):
         if not has_valid_register(mods, index):
             break
-        devices.append(ModbusClimate(name, mods, index))
+        devices.append(ModbusClimate(hub, name, mods, index))
 
     if not devices:
         for prop in mods:
             if CONF_REGISTER not in mods[prop]:
                 _LOGGER.error("Invalid config %s/%s: no register", name, prop)
                 return
-        devices.append(ModbusClimate(name, mods))
+        devices.append(ModbusClimate(hub, name, mods))
 
     add_devices(devices, True)
 
@@ -169,8 +186,9 @@ class ModbusClimate(ClimateDevice):
 
     _exception = 0
 
-    def __init__(self, name, mods, index=-1):
+    def __init__(self, hub, name, mods, index=-1):
         """Initialize the climate device."""
+        self._hub = hub
         self._name = name + str(index + 1) if index != -1 else name
         self._index = index
         self._mods = mods
@@ -287,7 +305,7 @@ class ModbusClimate(ClimateDevice):
         import time
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(5)
-        s.connect((modbus.HUB._client.host, modbus.HUB._client.port))
+        s.connect((self._hub._client.host, self._hub._client.port))
         s.sendall(b'\x55\xAA\x55\x00\x25\x80\x03\xA8')
         s.close()
         time.sleep(1)
@@ -295,13 +313,13 @@ class ModbusClimate(ClimateDevice):
     def reconnect(self):
         from pymodbus.client.sync import ModbusTcpClient as ModbusClient
         from pymodbus.transaction import ModbusRtuFramer as ModbusFramer
-        modbus.HUB._client.close()
-        modbus.HUB._client = ModbusClient(
-            host=modbus.HUB._client.host,
-            port=modbus.HUB._client.port,
+        self._hub._client.close()
+        self._hub._client = ModbusClient(
+            host=self._hub._client.host,
+            port=self._hub._client.port,
             framer=ModbusFramer,
-            timeout=modbus.HUB._client.timeout)
-        modbus.HUB._client.connect()
+            timeout=self._hub._client.timeout)
+        self._hub._client.connect()
 
     def update(self):
         """Update state."""
@@ -313,14 +331,14 @@ class ModbusClimate(ClimateDevice):
 
             try:
                 if register_type == REGISTER_TYPE_COIL:
-                    result = modbus.HUB.read_coils(slave, register, count)
+                    result = self._hub.read_coils(slave, register, count)
                     value = bool(result.bits[0])
                 else:
                     if register_type == REGISTER_TYPE_INPUT:
-                        result = modbus.HUB.read_input_registers(slave,
+                        result = self._hub.read_input_registers(slave,
                                                                  register, count)
                     else:
-                        result = modbus.HUB.read_holding_registers(slave,
+                        result = self._hub.read_holding_registers(slave,
                                                                    register, count)
 
                     val = 0
@@ -339,10 +357,10 @@ class ModbusClimate(ClimateDevice):
                               ModbusClimate._exception, self._name, prop, register_type, slave, register)
                 if (ModbusClimate._exception < 5) or (ModbusClimate._exception % 10 == 0):
                     if (ModbusClimate._exception % 2 == 0):
-                        _LOGGER.error("Reset %s", modbus.HUB._client)
+                        _LOGGER.error("Reset %s", self._hub._client)
                         self.reset()
                     else:
-                        _LOGGER.error("Reconnect %s", modbus.HUB._client)
+                        _LOGGER.error("Reconnect %s", self._hub._client)
                     self.reconnect()
                 return
 
@@ -441,10 +459,10 @@ class ModbusClimate(ClimateDevice):
         #_LOGGER.info("Write %s: %s = %f", self.name, prop, value)
 
         if register_type == REGISTER_TYPE_COIL:
-            modbus.HUB.write_coil(slave, register, bool(value))
+            self._hub.write_coil(slave, register, bool(value))
         else:
             val = (value - offset) / scale
-            modbus.HUB.write_register(slave, register, int(val))
+            self._hub.write_register(slave, register, int(val))
 
         self._values[prop] = value
 
