@@ -174,7 +174,7 @@ class CaiYunWeather(WeatherEntity):
             data['visibility'] = realtime.get('visibility')
 
             data['attribution'] = result['forecast_keypoint'] + \
-                ' (PM2.5=' + str(realtime.get('pm25')) + ')'
+                ' | PM2.5=' + str(realtime.get('pm25'))
 
             forecasts = {}
             daily = result['daily']
