@@ -4,7 +4,7 @@ import logging
 import random
 import time
 import voluptuous as vol
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from homeassistant.components.weather import (
     ATTR_FORECAST_CONDITION, ATTR_FORECAST_PRECIPITATION, ATTR_FORECAST_TEMP,
@@ -173,7 +173,7 @@ class CaiYunWeather(WeatherEntity):
             data['ozone'] = realtime.get('o3')
             data['visibility'] = realtime.get('visibility')
 
-            data['attribution'] = result['forecast_keypoint'] + ' (PM2.5 ' + str(realtime.get('pm25')) + ')'
+            data['attribution'] = result['forecast_keypoint'] + ' (PM2.5=' + str(realtime.get('pm25')) + ')'
 
             forecasts = {}
             daily = result['daily']
@@ -182,8 +182,7 @@ class CaiYunWeather(WeatherEntity):
                     date = v['date']
                     forecast = forecasts.get(date)
                     if forecast is None:
-                        from datetime import datetime
-                        forecast = {'date': datetime.strptime(date, '%Y-%m-%d')}
+                        forecast = {ATTR_FORECAST_TIME: datetime.strptime(date, '%Y-%m-%d')}
                         forecasts[date] = forecast
                     if key == 'temperature':
                         forecast[ATTR_FORECAST_TEMP] = v['avg']
