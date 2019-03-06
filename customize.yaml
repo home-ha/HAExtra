@@ -248,20 +248,13 @@ sensor.aircat_pm25:
 sensor.aircat_temperature:
   friendly_name: 餐厅温度
 sensor.balcony_humidity:
-  dash_click: location.reload()
   friendly_name: 阳台湿度
 sensor.balcony_pm25:
   dash_click: https://www.lewei50.com/u/g/34131
   friendly_name: 阳台颗粒物
   icon: mdi:blur
 sensor.balcony_temperature:
-  dash_click: connect()
   friendly_name: 阳台温度
-weather.caiyun:
-  dash_click: https://m.tianqi.com/hangzhou
-  dash_extra: attribution
-  dash_name: ${temperature}℃ ${humidity}%
-  friendly_name: 天气
 sensor.fresher_co2:
   dash_click: /
   friendly_name: 客厅二氧化碳
@@ -269,6 +262,7 @@ sensor.fresher_co2:
 sensor.fresher_humidity:
   friendly_name: 客厅湿度
 sensor.fresher_pm25:
+  dash_click: connect()
   friendly_name: 客厅颗粒物
   icon: mdi:blur
 sensor.fresher_temperature:
@@ -292,6 +286,7 @@ sensor.purifier6_pm25:
 sensor.purifier6_temperature:
   friendly_name: 儿童房温度
 sensor.purifier7_co2:
+  dash_click: location.reload()
   dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
   friendly_name: 主卧二氧化碳
   icon: mdi:periodic-table-co2
@@ -362,5 +357,10 @@ vacuum.vacuum:
     ? "充电断开" : "${status}")'
   dash_extra_forced: true
   friendly_name: 扫地机
+weather.caiyun:
+  dash_click: https://m.tianqi.com/hangzhou
+  dash_extra: attribution
+  dash_name: ${temperature}℃ ${humidity}%
+  friendly_name: 天气
 zone.home:
   friendly_name: 我家

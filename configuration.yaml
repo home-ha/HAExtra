@@ -608,8 +608,6 @@ panel_iframe:
 
 aligenie:
 
-miai:
-
 hello_miai:
   miid: !secret miai_miid
   password: !secret miai_password
