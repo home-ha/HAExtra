@@ -1,6 +1,6 @@
 # Home Assistant Extras for Yonsm
 
-这是我个人的 Home Assistant 配置和扩展插件库，请酌情参考。
+这是我个人的 Home Assistant 配置和扩展插件库，请酌情参考。**注意，我升级到 0.88 了，目录结构有重大调整，请注意升级调整，或自行适配目录路径**
 
 # 一、[dash.html](www/dash.html) 操作面板
 
@@ -57,15 +57,15 @@ panel_iframe:
 
 # 二、[custom_components](custom_components) 插件
 
-# 1. [climate/modbus.py](custom_components/climate/modbus.py)
+# 1. [modbus/climate.py](custom_components/modbus2/climate.py)
 
-通用 ModBus 空调插件，详情请参考 [https://yonsm.github.io/modbus](https://yonsm.github.io/modbus)
+通用 ModBus 空调插件，比 HA 官方做的更通用、更好，详情请参考 [https://yonsm.github.io/modbus](https://yonsm.github.io/modbus)
 
-# 2. [climate/saswell.py](custom_components/climate/saswell.py)
+# 2. [saswell/climate.py](custom_components/saswell/climate.py)
 
 SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.io/saswell](https://yonsm.github.io/saswell)
 
-# 3. [cover/broadlink.py](custom_components/cover/broadlink.py)
+# 3. [broadlink/cover.py](custom_components/broadlink/cover.py)
 
 基于 broadlink 万能遥控器的窗帘插件（支持 RF），详情请参考 [https://bbs.hassbian.com/thread-1924-1-1.html](https://bbs.hassbian.com/thread-1924-1-1.html)
 
@@ -74,26 +74,24 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 -   依赖库升级到 `broadlink==0.9.0`，解决 N1 armbian HA 0.8x 下面 segment fault 的问题；
 -   `self._travel == 0` 改成 `self._travel <= 0` 避免相关 BUG。
 
-# 4. [sensor/caiyun.py](custom_components/sensor/caiyun.py)
+# 4. [caiyun/weather.py](custom_components/caiyun/weather.py)
 
-彩云天气插件，详情请参考[https://yonsm.github.io/caiyun](https://yonsm.github.io/caiyun)
+彩云天气的标准天气插件，支持15天预报。另外，[旧版 sensror](extra/sensor/caiyun.py) 已不再使用，详情请参考[https://yonsm.github.io/caiyun](https://yonsm.github.io/caiyun)
 
-# 5. [sensor/phicomm.py](custom_components/sensor/phicomm.py)
-
-基于斐讯在线云数据实现的斐讯悟空空间检测仪 M1 插件，详情请参考 [https://yonsm.github.io/phicomm](https://yonsm.github.io/phicomm)
-
-# 6. [sensor/aircat.py](custom_components/sensor/aircat.py)
+# 5. [aircat/sensor.py](custom_components/aircat/sensor.py)
 
 基于 DNS 拦截实现的斐讯悟空空间检测仪 M1 插件，详情请参考网友发的帖子 [https://bbs.hassbian.com/thread-4601-1-1.html](https://bbs.hassbian.com/thread-4601-1-1.html)
 
-# 6. [swicth/mqtt2.py](custom_components/swicth/mqtt2.py)
+另外，基于斐讯在线云数据实现的斐讯悟空空间检测仪 M1 插件 [extra/sensor/phicomm.py](extra/sensor/phicomm.py)，详情请参考 [https://yonsm.github.io/phicomm](https://yonsm.github.io/phicomm)
+
+# 6. [mqtt2/swicth.py](custom_components/mqtt2/swicth.py)
 
 基于 mqtt swicth 扩展的 MQTT 开关，支持以下功能：
 
 - 支持 icon_template 配置，可以使用 Jinja 脚本运算出不同的图标（参考我的 configuration.yaml 中的 mqtt2 Speaker）；
 - 支持 original_state attribute。
 
-# 7. [swicth/broadlink2.py](custom_components/swicth/broadlink2.py)
+# 7. [broadlink2/swicth.py](custom_components/swicth/broadlink2.py)
 
 解决 broadlink SP3 Mini 在 Python 3.5.3 环境中 int 类型判断的问题（否则一堆错误日志）。目前暂未使用，待优化（建议升级到 Python 3.6/3.7 或可以避免相关问题）。
 
