@@ -55,7 +55,7 @@ panel_iframe:
 
 更多个性化配置案例可以在我的 [customize.yaml](customize.yaml) 中搜索 `dash`，以上几种用法基本上都能找到案例。
 
-# 二、[custom_components](custom_components) 插件
+# 二、[custom_components](custom_components) 插件（注意：部分命名为 **2.py 是因为和 HA 官方的插件命名冲突或者派生而来）
 
 # 1. [modbus/climate.py](custom_components/modbus2/climate.py)
 
