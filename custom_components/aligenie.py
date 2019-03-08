@@ -198,7 +198,7 @@ def discoveryDevice():
             'zone': zone,
             'model': friendly_name,
             'brand': 'HomeAssistant',
-            'icon': 'https://home-assistant.io/demo/favicon-192x192.png',
+            'icon': 'https://home-assistant.io/images/favicon-192x192.png',
             'properties': [prop],
             'actions': ['TurnOn', 'TurnOff', 'Query', action] if action == 'QueryPowerState' else ['Query', action],
             # 'extensions':{'extension1':'','extension2':''}
@@ -312,6 +312,7 @@ DEVICE_TYPES = [
 INCLUDE_DOMAINS = {
     'climate': 'aircondition',
     'fan': 'fan',
+    'sensor': 'sensor',
     'light': 'light',
     'media_player': 'television',
     'remote': 'telecontroller',

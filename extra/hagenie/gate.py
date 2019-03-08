@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 # http://doc-bot.tmall.com/docs/doc.htm?treeId=393&articleId=107674&docType=1
@@ -25,37 +25,37 @@ if REQUEST_METHOD:
     #    log(sys.stdin.read())
 
 
+_haUrl = None
 _accessToken = None
 _checkAlias = False
 def validateToken(payload):
-    #return 'accessToken' in payload and payload['accessToken'] == '25ec6cb46565638b1d3f58c3230ce99742a23622'
     if 'accessToken' in payload:
-        global _accessToken
-        global _checkAlias
-        _accessToken = payload['accessToken']
-        if _accessToken.startswith('http') and (not 'xx.' in _accessToken):
-            parts = _accessToken.split('_')
+        accessToken = payload['accessToken']
+        if accessToken.startswith('http'):
+            global _haUrl
+            global _checkAlias
+            global _accessToken
+            parts = accessToken.split('_')
             _checkAlias = parts[1][-1:].isupper()   # Trick
-            _accessToken = parts[0] + '://' + parts[1] + ':' + parts[2] + '/api/%s'
-            if parts[3]:
-                _accessToken += '?api_password=' + parts[3]
-            #log('Rebuild accessToken: ' + _accessToken)
+            _haUrl = parts[0] + '://' + parts[1] + ':' + parts[2] + '/api/%s'
+            _accessToken = parts[3]
+            #log('HA URL: ' + _haUrl +  ', accessToken: ' + _accessToken)
             return True
     return False
 
 
 def haCall(cmd, data=None):
-    url = _accessToken % cmd
+    url = _haUrl % cmd
     method = 'POST' if data else 'GET'
     log('HA ' + method + ' ' + url)
     if data:
         log(data)
 
-    #TODO: new HA, headers = {'Authorization': 'Bearer token', 'Content-Type': 'application/json'}
+    headers = {'Authorization': 'Bearer ' + _accessToken, 'Content-Type': 'application/json'} if _accessToken else None
 
-    if url.startswith('https'): # We need extra requests lib for HTTPS POST
+    if url.startswith('https') or headers: # We need extra requests lib for HTTPS POST
         import requests
-        result = requests.request(method, url, data=data, timeout=3).text
+        result = requests.request(method, url, data=data, headers=headers, timeout=3).text
     else:
         result = urlopen(url, data=data, timeout=3).read()
 
@@ -112,6 +112,7 @@ DEVICE_TYPES = [
 INCLUDE_DOMAINS = {
     'climate': 'aircondition',
     'fan': 'fan',
+    'sensor': 'sensor',
     'light': 'light',
     'media_player': 'television',
     'remote': 'telecontroller',
@@ -136,11 +137,6 @@ def guessDeviceType(entity_id, attributes):
     domain = entity_id[:entity_id.find('.')]
     if domain in EXCLUDE_DOMAINS:
         return None
-
-    # Guess from entity_id
-    # for deviceType in DEVICE_TYPES:
-    #     if deviceType in entity_id:
-    #         return deviceType
 
     # Map from domain
     return INCLUDE_DOMAINS[domain] if domain in INCLUDE_DOMAINS else None
@@ -416,7 +412,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https_192.168.1.10_8123_'}
+            'payload':{'accessToken':'https_192.168.1.10_8123_token'}
             }
     _response = handleRequest(_request)
 except:
