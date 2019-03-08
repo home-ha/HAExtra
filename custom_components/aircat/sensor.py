@@ -1,10 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
-from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.entity import Entity
-from homeassistant.const import CONF_NAME, CONF_MAC, CONF_SENSORS, TEMP_CELSIUS
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-import voluptuous as vol
 import json
 import socket
 import select
@@ -166,6 +161,11 @@ Support for AirCat air sensor.
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.aircat/
 """
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.entity import Entity
+from homeassistant.const import CONF_NAME, CONF_MAC, CONF_SENSORS, TEMP_CELSIUS
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+import voluptuous as vol
 
 
 SENSOR_PM25 = 'value'
