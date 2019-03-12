@@ -679,6 +679,59 @@
     - service: fan.turn_off
       entity_id: fan.fresher
 
+# 主卧二氧化碳变化
+- alias: Bedroom CO2 Changed
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.fresher2_co2
+      above: 730 # 触发高档
+      for:
+        minutes: 10
+    - platform: numeric_state
+      entity_id: sensor.fresher2_co2
+      above: 680 # 触发中档
+      for:
+        minutes: 8
+    - platform: numeric_state
+      entity_id: sensor.fresher2_co2
+      above: 600 # 触发低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.fresher2_co2
+      below: 710 # 恢复中档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.fresher2_co2
+      below: 660 # 恢复低档
+      for:
+        minutes: 8
+  action:
+    - service: fan.turn_on
+      entity_id: fan.fresher2
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.fresher2
+        speed: '{% if (states("sensor.fresher2_co2") | int > 730) %}strong{% elif (states("sensor.fresher2_co2") | int > 680) %}middle{% else %}auto{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("sensor.fresher2_co2", "friendly_name") }}={{ states("sensor.fresher2_co2") }}'
+        message: '{{ state_attr("fan.fresher2", "friendly_name") }}⇒{{ state_attr("fan.fresher2", "speed") }}'
+
+# 主卧二氧化碳优
+- alias: Bedroom CO2 Excellent
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.fresher2_co2
+      below: 500 # 恢复关机
+      for:
+        minutes: 10
+  action:
+    - service: fan.turn_off
+      entity_id: fan.fresher2
+
 # 餐厅颗粒物变化
 - alias: Diningroom PM25 Changed
   trigger:

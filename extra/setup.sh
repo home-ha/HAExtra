@@ -36,6 +36,7 @@ apt-get update
 apt-get upgrade -y
 #apt-get autoclean
 #apt-get clean
+#apt autoremove
 
 # Mosquitto
 apt-get install mosquitto mosquitto-clients
@@ -57,6 +58,8 @@ apt-get install libavahi-compat-libdnssd-dev
 ##python3 -m pip install --upgrade pip # Logout after install
 #curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 #python3 get-pip.py --force-reinstall
+
+#curl https://bc.gongxinke.cn/downloads/install-python-latest | bash
 
 # For Armbian
 echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
