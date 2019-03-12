@@ -228,20 +228,20 @@ sensor:
       fresher2_temperature:
         device_class: temperature
         friendly_name: Fresher2 Temperature
-        value_template: '{{ states.fan.fresher.attributes.temperature }}'
+        value_template: '{{ states.fan.fresher2.attributes.temperature }}'
         unit_of_measurement: °C
       fresher2_humidity:
         device_class: humidity
         friendly_name: Fresher2 Humidity
-        value_template: '{{ states.fan.fresher.attributes.humidity }}'
+        value_template: '{{ states.fan.fresher2.attributes.humidity }}'
         unit_of_measurement: '%'
       fresher2_pm25:
         friendly_name: Fresher2 PM25
-        value_template: '{{ states.fan.fresher.attributes.aqi }}'
+        value_template: '{{ states.fan.fresher2.attributes.aqi }}'
         unit_of_measurement: 'μg/m³'
       fresher2_co2:
         friendly_name: Fresher2 CO2
-        value_template: '{{ states.fan.fresher.attributes.co2 }}'
+        value_template: '{{ states.fan.fresher2.attributes.co2 }}'
         unit_of_measurement: 'ppm'
 
 switch:
@@ -469,7 +469,7 @@ fan:
     name: Fresher2
     host: Fresher2
     model: zhimi.airfresh.va2
-    token: bb1ee8999ee6bc7ce075a424bca664c3
+    token: 17487f22521cf634c50b64f5f95c96cb
   - platform: mqtt
     name: Purifier4
     state_topic: NodeMCU4/relay/0
