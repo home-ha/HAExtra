@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# ============================== Basic Config ==============================
 #ssh pi@hassbian
 
 sudo passwd root
@@ -9,6 +10,7 @@ sudo mkdir /root/.ssh
 mkdir ~/.ssh
 sudo reboot
 
+# MacOS
 #ssh root@hassbian "mkdir ~/.ssh"
 #scp ~/.ssh/authorized_keys root@hassbian:~/.ssh/
 #scp ~/.ssh/id_rsa root@hassbian:~/.ssh/
@@ -19,7 +21,7 @@ sudo reboot
 #scp ~/.ssh/id_rsa admin@hassbian:~/.ssh/
 #scp ~/.ssh/config admin@hassbian:~/.ssh/
 
-#ssh admin@hassbian
+#ssh root@hassbian
 
 # Rename pi->admin
 usermod -l admin pi
@@ -31,12 +33,16 @@ echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 raspi-config # Hostname, WiFi, locales(en_US.UTF-8/zh_CN.GB18030/zh_CN.UTF-8), Timezone
 
-#
+# Armbian
+echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+
+# ============================== Home Assistant ==============================
 apt-get update
 apt-get upgrade -y
 #apt-get autoclean
 #apt-get clean
-#apt autoremove
+#apt autoremove -y
 
 # Mosquitto
 apt-get install mosquitto mosquitto-clients
@@ -48,33 +54,29 @@ apt-get install mosquitto mosquitto-clients
 #sleep 2
 #mosquitto_sub -v -t '#'
 
-# For HomeKit
+# HomeKit
 apt-get install libavahi-compat-libdnssd-dev
 
-# For Raspbian
+# Android
+apt-get install adb
+
+# Raspbian
 ##apt-get install python3 python3-pip
 
-# Install PIP 18
+# Armbian
+apt-get install python3-pip python3-dev libffi-dev python3-setuptools
+
+# PIP 18
 ##python3 -m pip install --upgrade pip # Logout after install
 #curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 #python3 get-pip.py --force-reinstall
 
+# Python 3.7+
 #curl https://bc.gongxinke.cn/downloads/install-python-latest | bash
-
-# For Armbian
-echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-apt-get install python3-pip python3-dev libffi-dev python3-setuptools
-#Fix 8.8.8.8 DNS rm /etc/resolvconf/resolv.conf.d/head && touch /etc/resolvconf/resolv.conf.d/head && rm /etc/resolvconf/resolv.conf.d/base && touch /etc/resolvconf/resolv.conf.d/base && systemctl restart network-manager.service
-#systemctl stop lircd.service lircd-setup.service lircd.socket lircd-uinput.service lircmd.service
-#apt remove -y lirc && apt autoremove -y
-
-apt-get install adb
 
 # Home Assistant
 pip3 install wheel
-pip3 install pymodbus
 pip3 install homeassistant
-#pip3 install pycryptodome #https://github.com/home-assistant/home-assistant/issues/12675
 
 # Auto start
 cat <<EOF > /etc/systemd/system/homeassistant.service
@@ -92,42 +94,24 @@ WantedBy=multi-user.target
 
 EOF
 
-
 systemctl --system daemon-reload
 systemctl enable homeassistant
 systemctl start homeassistant
 
-
-# Appdaemon
-# cat <<EOF > /etc/systemd/system/appdaemon.service
-# [Unit]
-# Description=App Daemon
-# After=network-online.target
-
-# [Service]
-# Type=simple
-# User=admin
-# ExecStart=/usr/local/bin/appdaemon
-
-# [Install]
-# WantedBy=multi-user.target
-
-# EOF
-
-# systemctl enable appdaemon
-# systemctl start appdaemon
+# Alias
+cat <<\EOF >> ~/.bashrc
+alias ls='ls $LS_OPTIONS'
+alias ll='ls $LS_OPTIONS -l'
+alias l='ls $LS_OPTIONS -lA'
+alias remqtt='systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
+alias upha='systemctl stop homeassistant; pip3 install homeassistant --upgrade; systemctl start homeassistant'
+alias reha='echo .> /var/log/daemon.log; echo .>~/.homeassistant/home-assistant.log; systemctl restart homeassistant; tail -f /var/log/daemon.log'
+EOF
 
 # Debug
 hass
 
-# Restart
-echo .> /var/log/daemon.log; echo .>~/.homeassistant/home-assistant.log; systemctl restart homeassistant; tail -f /var/log/daemon.log
-
-# Upgrage
-sudo systemctl stop homeassistant
-sudo pip3 install --upgrade homeassistant
-sudo systemctl start homeassistant
-
+# ============================== Samba ==============================
 # Samba
 apt-get install samba
 smbpasswd -a root
@@ -167,23 +151,13 @@ writable = yes
 EOF
 /etc/init.d/samba restart
 
-cat <<\EOF >> /root/.bashrc
-alias ls='ls $LS_OPTIONS'
-alias ll='ls $LS_OPTIONS -l'
-alias l='ls $LS_OPTIONS -lA'
-alias rmqtt='systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
-alias upha='systemctl stop homeassistant; pip3 install homeassistant --upgrade; systemctl start homeassistant'
-alias reha='systemctl restart homeassistant'
-EOF
-
+# Merlin?
 mkdir /media/sda1
 cat <<\EOF > /etc/fstab
 /dev/sda1 /media/sda1 hfsplus ro,sync,noexec,nodev,noatime,nodiratime 0 0
 EOF
 
-apt-get install samba
-
-
+# ============================== Deprecated Config ==============================
 # Global Customization file
 #homeassistant:
   #customize_glob: !include customize_glob.yaml
@@ -248,5 +222,3 @@ apt-get install samba
 #shell_command:
   #genie_power: 'adb connect Genie; adb -s Genie shell input keyevent 26'
   #genie_dashboard: 'adb connect Genie; adb -s Genie shell am start -n de.rhuber.homedash/org.wallpanelproject.android.WelcomeActivity'
-  #clear_mosquitto: 'systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
-  #upgrade_homeassistant: 'systemctl stop homeassistant; pip3 install homeassistant --upgrade; systemctl start homeassistant'

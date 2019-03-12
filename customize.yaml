@@ -260,6 +260,16 @@ sensor.balcony_pm25:
   icon: mdi:blur
 sensor.balcony_temperature:
   friendly_name: 阳台温度
+sensor.fresher2_co2:
+  friendly_name: 主卧新风二氧化碳
+  icon: mdi:periodic-table-co2
+sensor.fresher2_humidity:
+  friendly_name: 主卧新风湿度
+sensor.fresher2_pm25:
+  friendly_name: 主卧新风颗粒物
+  icon: mdi:blur
+sensor.fresher2_temperature:
+  friendly_name: 主卧新风温度
 sensor.fresher_co2:
   dash_click: connect()
   friendly_name: 客厅二氧化碳
@@ -271,16 +281,6 @@ sensor.fresher_pm25:
   icon: mdi:blur
 sensor.fresher_temperature:
   friendly_name: 客厅温度
-sensor.fresher2_co2:
-  friendly_name: 主卧新风二氧化碳
-  icon: mdi:periodic-table-co2
-sensor.fresher2_humidity:
-  friendly_name: 主卧新风湿度
-sensor.fresher2_pm25:
-  friendly_name: 主卧新风颗粒物
-  icon: mdi:blur
-sensor.fresher2_temperature:
-  friendly_name: 主卧新风温度
 sensor.illumination_34ce0090901a:
   friendly_name: 餐厅亮度
 sensor.purifier4_co2:
@@ -374,7 +374,7 @@ vacuum.vacuum:
 weather.caiyun:
   dash_click: https://m.tianqi.com/hangzhou
   dash_extra: attribution
-  dash_name: ${temperature}℃ ${humidity}%
+  dash_name: ${temperature}℃ ${humidity}% ${pm25}μg
   friendly_name: 天气
 zone.home:
   friendly_name: 我家
