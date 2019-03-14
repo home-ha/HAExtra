@@ -559,7 +559,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier5_humidity
-      below: 54
+      below: 52
       for:
         minutes: 10
   action:
@@ -599,7 +599,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier7_humidity
-      below: 54
+      below: 52
       for:
         minutes: 10
   action:
@@ -615,7 +615,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier6_humidity
-      below: 54
+      below: 52
       for:
         minutes: 10
   action:
@@ -710,14 +710,14 @@
   condition:
     - condition: time
       after: '7:30'
-      before: '21:59'
+      before: '21:29'
   action:
     - service: fan.turn_on
       entity_id: fan.fresher2
     - service: fan.set_speed
       data_template:
         entity_id: fan.fresher2
-        speed: '{% if (states("sensor.purifier7_co2") | int > 730) and is_state("sun.sun", "above_horizon") %}strong{% elif (states("sensor.purifier7_co2") | int > 680) %}middle{% else %}auto{% endif %}'
+        speed: '{% if (states("sensor.purifier7_co2") | int > 730) %}strong{% elif (states("sensor.purifier7_co2") | int > 680) %}middle{% else %}auto{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -735,7 +735,7 @@
   condition:
     - condition: time
       after: '7:30'
-      before: '21:59'
+      before: '21:29'
   action:
     - service: fan.turn_off
       entity_id: fan.fresher2
@@ -792,7 +792,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.aircat_humidity
-      above: 58
+      above: 52
   action:
     - service: fan.turn_off
       entity_id: fan.purifier5
@@ -849,7 +849,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.purifier7_humidity
-      above: 58
+      above: 52
   action:
     - service: fan.turn_off
       entity_id: fan.purifier7
@@ -963,7 +963,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.purifier6_humidity
-      above: 58
+      above: 52
   action:
     - service: fan.turn_off
       entity_id: fan.purifier6
@@ -1025,7 +1025,7 @@
 - alias: Sleeping Began
   trigger:
     - platform: time
-      at: '22:00:00'
+      at: '21:30:00'
   action:
     - service: fan.turn_on
       entity_id: fan.fresher2
