@@ -707,6 +707,10 @@
       below: 660 # 恢复低档
       for:
         minutes: 8
+  condition:
+    - condition: time
+      after: '7:30'
+      before: '21:59'
   action:
     - service: fan.turn_on
       entity_id: fan.fresher2
@@ -728,6 +732,10 @@
       below: 500 # 恢复关机
       for:
         minutes: 10
+  condition:
+    - condition: time
+      after: '7:30'
+      before: '21:59'
   action:
     - service: fan.turn_off
       entity_id: fan.fresher2
@@ -1013,26 +1021,61 @@
     - service: fan.turn_off
       entity_id: fan.purifier4
 
-# 卧室空调风量
-- alias: Bedroom Climate Fan
+# 睡眠自动化
+- alias: Sleeping Began
   trigger:
     - platform: time
-      at: '08:00:00'
-    - platform: time
       at: '22:00:00'
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.balcony_temperature
-      above: 18
   action:
-    - service: climate.set_fan_mode
-      data_template:
-        entity_id: climate.daikin3
-        fan_mode: '{% if is_state("sun.sun", "above_horizon") %}自动{% else %}一级{% endif %}'
-    - service: climate.set_fan_mode
-      data_template:
-        entity_id: climate.daikin4
-        fan_mode: '{% if is_state("sun.sun", "above_horizon") %}自动{% else %}一级{% endif %}'
+    - service: fan.turn_on
+      entity_id: fan.fresher2
+    - service: fan.set_speed
+      data:
+        entity_id: fan.fresher2
+        speed: auto
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher
+        brightness: 2
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher2
+        brightness: 2
+    # - service: climate.turn_off
+    #   entity_id: climate.daikin1
+    # - service: climate.turn_off
+    #   entity_id: climate.daikin2
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.daikin3
+    #     fan_mode: 一级
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.daikin4
+    #     fan_mode: 一级
+
+# 睡眠自动化
+- alias: Sleeping Ended
+  trigger:
+    - platform: time
+      at: '07:00:00'
+  action:
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher
+        brightness: 0
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher2
+        brightness: 0
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.daikin3
+    #     fan_mode: 自动
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.daikin4
+    #     fan_mode: 自动
 
 # # 主卧温度高
 # - alias: Bedroom Temperature High
