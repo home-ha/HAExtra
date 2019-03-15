@@ -724,6 +724,53 @@
         name: '{{ state_attr("sensor.purifier7_co2", "friendly_name") }}={{ states("sensor.purifier7_co2") }}'
         message: '{{ state_attr("fan.fresher2", "friendly_name") }}⇒{{ state_attr("fan.fresher2", "speed") }}'
 
+# 主卧二氧化碳变化
+- alias: Bedroom CO2 Changed On Sleeping
+  trigger:
+    - platform: time
+      at: '00:00:01'
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 1000 # 触发高档
+      for:
+        minutes: 10
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 800 # 触发中档
+      for:
+        minutes: 8
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 650 # 触发低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 900 # 恢复中档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 750 # 恢复低档
+      for:
+        minutes: 8
+  condition:
+    - condition: time
+      after: '0:00'
+      before: '7:29'
+  action:
+    - service: fan.turn_on
+      entity_id: fan.fresher2
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.fresher2
+        speed: '{% if (states("sensor.purifier7_co2") | int > 1000) %}strong{% elif (states("sensor.purifier7_co2") | int > 800) %}middle{% else %}auto{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("sensor.purifier7_co2", "friendly_name") }}={{ states("sensor.purifier7_co2") }}'
+        message: '{{ state_attr("fan.fresher2", "friendly_name") }}⇒{{ state_attr("fan.fresher2", "speed") }}'
+
 # 主卧二氧化碳优
 - alias: Bedroom CO2 Excellent
   trigger:
@@ -732,10 +779,6 @@
       below: 500 # 恢复关机
       for:
         minutes: 10
-  condition:
-    - condition: time
-      after: '7:30'
-      before: '21:29'
   action:
     - service: fan.turn_off
       entity_id: fan.fresher2
@@ -789,10 +832,10 @@
       below: 10
       for:
         minutes: 10
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.aircat_humidity
-      above: 52
+  # condition:
+  #   - condition: numeric_state
+  #     entity_id: sensor.aircat_humidity
+  #     above: 52
   action:
     - service: fan.turn_off
       entity_id: fan.purifier5
@@ -846,10 +889,10 @@
       below: 5
       for:
         minutes: 10
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.purifier7_humidity
-      above: 52
+  # condition:
+  #   - condition: numeric_state
+  #     entity_id: sensor.purifier7_humidity
+  #     above: 52
   action:
     - service: fan.turn_off
       entity_id: fan.purifier7
@@ -960,10 +1003,10 @@
       below: 5
       for:
         minutes: 10
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.purifier6_humidity
-      above: 52
+  # condition:
+  #   - condition: numeric_state
+  #     entity_id: sensor.purifier6_humidity
+  #     above: 52
   action:
     - service: fan.turn_off
       entity_id: fan.purifier6
