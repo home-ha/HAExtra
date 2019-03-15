@@ -139,9 +139,6 @@ Balcony:
     - sensor.balcony_temperature
     - sensor.balcony_humidity
     #- sensor.balcony_pm25
-
-#Outside:
-#  entities:
     - weather.caiyun
     - sun.sun
 
@@ -295,3 +292,5 @@ TBalcony:
     - sensor.balcony_temperature
     - sensor.balcony_humidity
     - sensor.balcony_pm25
+    - weather.caiyun
+    - sun.sun
