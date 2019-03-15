@@ -724,7 +724,7 @@
         name: '{{ state_attr("sensor.purifier7_co2", "friendly_name") }}={{ states("sensor.purifier7_co2") }}'
         message: '{{ state_attr("fan.fresher2", "friendly_name") }}⇒{{ state_attr("fan.fresher2", "speed") }}'
 
-# 主卧二氧化碳变化
+# 主卧睡眠时二氧化碳变化
 - alias: Bedroom CO2 Changed On Sleeping
   trigger:
     - platform: time
@@ -1070,8 +1070,8 @@
     - platform: time
       at: '21:30:00'
   action:
-    - service: fan.turn_on
-      entity_id: fan.fresher2
+    - service: cover.close_cover
+      entity_id: cover.study_cover
     - service: fan.set_speed
       data:
         entity_id: fan.fresher2
@@ -1103,6 +1103,8 @@
     - platform: time
       at: '07:00:00'
   action:
+    - service: cover.open_cover
+      entity_id: cover.study_cover
     - service: fan.xiaomi_miio_set_led_brightness
       data:
         entity_id: fan.fresher
