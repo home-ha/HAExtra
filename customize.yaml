@@ -130,6 +130,26 @@ group.passage:
   friendly_name: 过道
 group.study:
   friendly_name: 书房
+group.tbalcony:
+  friendly_name: 阳台
+group.tbedroom:
+  friendly_name: 主卧
+group.tdiningroom:
+  friendly_name: 餐厅
+group.thallway:
+  friendly_name: 玄关
+group.tkids:
+  friendly_name: 儿童房
+group.tparents:
+  friendly_name: 次卧
+group.tparlor:
+  friendly_name: 客厅
+group.tpassage:
+  friendly_name: 过道
+group.tstudy:
+  friendly_name: 书房
+group.twashroom:
+  friendly_name: 洗手间
 group.washroom:
   friendly_name: 洗手间
 input_boolean.wall_fan_direction:
