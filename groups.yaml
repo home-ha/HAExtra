@@ -44,7 +44,7 @@ Diningroom:
     - light.diningroom_light
     #- light.diningroom_light2
     - light.diningroom_spotlight
-    #- switch.outlet
+    - switch.outlet
     - light.gateway_light_34ce0090901a
     - fan.purifier5
     - climate.daikin1
