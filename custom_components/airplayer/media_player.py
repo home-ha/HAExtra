@@ -7,11 +7,12 @@ Developed by Charley
 import requests
 
 import homeassistant.util.dt as dt_util
-from homeassistant.components.media_player import (
+from homeassistant.components.media_player import MediaPlayerDevice, PLATFORM_SCHEMA
+from homeassistant.components.media_player.const import (
     SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PREVIOUS_TRACK, SUPPORT_SEEK,
     SUPPORT_PLAY_MEDIA, SUPPORT_VOLUME_MUTE, SUPPORT_VOLUME_SET, SUPPORT_STOP,
-    SUPPORT_TURN_OFF, SUPPORT_PLAY, SUPPORT_VOLUME_STEP, MediaPlayerDevice,
-    PLATFORM_SCHEMA, MEDIA_TYPE_MUSIC, MEDIA_TYPE_VIDEO,MEDIA_TYPE_URL,
+    SUPPORT_TURN_OFF, SUPPORT_PLAY, SUPPORT_VOLUME_STEP, 
+    MEDIA_TYPE_MUSIC, MEDIA_TYPE_VIDEO,MEDIA_TYPE_URL,
     MEDIA_TYPE_PLAYLIST)
 from homeassistant.const import (
     STATE_IDLE, STATE_OFF, STATE_PAUSED, STATE_PLAYING)

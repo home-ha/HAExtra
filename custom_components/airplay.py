@@ -122,7 +122,6 @@ class airplay:
                         "port":info.port
                     }
                 )
-                _LOGGER.error("devices: %s", devices)
             elif state_change is ServiceStateChange.Removed :
                 pass
 
