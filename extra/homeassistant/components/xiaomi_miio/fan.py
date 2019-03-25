@@ -250,13 +250,13 @@ AVAILABLE_ATTRIBUTES_AIRFRESH = {
     ATTR_EXTRA_FEATURES: 'extra_features',
 }
 
-OPERATION_MODES_AIRPURIFIER = ['Idle', 'Auto', 'Silent', 'Favorite']
-OPERATION_MODES_AIRPURIFIER_PRO = ['Auto', 'Silent', 'Favorite']
+OPERATION_MODES_AIRPURIFIER = ['off', 'Idle', 'Auto', 'Silent', 'Favorite']
+OPERATION_MODES_AIRPURIFIER_PRO = ['off', 'Auto', 'Silent', 'Favorite']
 OPERATION_MODES_AIRPURIFIER_PRO_V7 = OPERATION_MODES_AIRPURIFIER_PRO
-OPERATION_MODES_AIRPURIFIER_2S = ['Auto', 'Silent', 'Favorite']
-OPERATION_MODES_AIRPURIFIER_V3 = ['Idle', 'Auto', 'Silent', 'Favorite',
+OPERATION_MODES_AIRPURIFIER_2S = ['off', 'Auto', 'Silent', 'Favorite']
+OPERATION_MODES_AIRPURIFIER_V3 = ['off', 'Idle', 'Auto', 'Silent', 'Favorite',
                                   'Medium', 'High', 'Strong']
-OPERATION_MODES_AIRFRESH = ['Idle', 'Auto', 'Silent', 'Interval', 'Low',
+OPERATION_MODES_AIRFRESH = ['off', 'Auto', 'Silent', 'Interval', 'Low',
                             'Middle', 'Strong']
 
 SUCCESS = ['ok']
@@ -682,10 +682,14 @@ class XiaomiAirPurifier(XiaomiGenericDevice):
 
             return OperationMode(self._state_attrs[ATTR_MODE]).name
 
-        return 'Idle'
+        return 'off'
 
     async def async_set_speed(self, speed: str) -> None:
         """Set the speed of the fan."""
+        if speed == 'off':
+            await self.async_turn_off()
+            return
+
         if self.supported_features & SUPPORT_SET_SPEED == 0:
             return
 
@@ -962,10 +966,14 @@ class XiaomiAirFresh(XiaomiGenericDevice):
 
             return OperationMode(self._state_attrs[ATTR_MODE]).name
 
-        return 'Idle'
+        return 'off'
 
     async def async_set_speed(self, speed: str) -> None:
         """Set the speed of the fan."""
+        if speed == 'off':
+            await self.async_turn_off()
+            return
+
         if self.supported_features & SUPPORT_SET_SPEED == 0:
             return
 
