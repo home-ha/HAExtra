@@ -1,28 +1,26 @@
-
 import asyncio
-import binascii
 import logging
+import binascii
 import socket
-import os
-from base64 import b64decode
-
+import os.path
 import voluptuous as vol
+import homeassistant.helpers.config_validation as cv
 
-from homeassistant.components.cover import (
-    PLATFORM_SCHEMA, CoverDevice, SUPPORT_OPEN, SUPPORT_CLOSE)
+from homeassistant.components.cover import (CoverDevice, PLATFORM_SCHEMA, SUPPORT_OPEN, SUPPORT_CLOSE)
+from homeassistant.const import (CONF_NAME, CONF_HOST, CONF_MAC, CONF_TIMEOUT, STATE_OPEN, STATE_CLOSED)
 from homeassistant.helpers.event import track_utc_time_change
-
-from homeassistant.const import (
-    CONF_NAME, CONF_HOST, CONF_MAC, CONF_TIMEOUT, STATE_OPEN, STATE_CLOSED)
 from homeassistant.helpers.event import async_track_state_change
 from homeassistant.helpers.entity import async_generate_entity_id
-import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.core import callback
+from configparser import ConfigParser
+from base64 import b64encode, b64decode
 
 REQUIREMENTS = ['broadlink==0.9.0']
 
 _LOGGER = logging.getLogger(__name__)
 
+DEFAULT_NAME = 'Broadlink Cover'
 DEFAULT_TIMEOUT = 10
 
 CONF_COMMAND_OPEN = 'command_open'
@@ -33,12 +31,13 @@ CONF_TRAVEL_TIME = 'travel_time'
 CONF_COVERS = 'covers'
 
 COVERS_SCHEMA = vol.Schema({
-    vol.Optional(CONF_COMMAND_STOP, default=""): cv.string,
-    vol.Optional(CONF_COMMAND_OPEN, default=""): cv.string,
-    vol.Optional(CONF_COMMAND_CLOSE, default=""): cv.string,
-    vol.Optional(CONF_NAME): cv.string,
-    vol.Optional(CONF_TRAVEL_TIME, default=10): cv.positive_int,
-    vol.Optional(CONF_POS_SENSOR): cv.entity_id,
+    vol.Optional(CONF_COMMAND_STOP, default=None): cv.string,
+    vol.Optional(CONF_COMMAND_OPEN, default=None): cv.string,
+    vol.Optional(CONF_COMMAND_CLOSE, default=None): cv.string,
+    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
+    vol.Optional(CONF_TRAVEL_TIME, default=None): cv.positive_int,
+#    vol.Optional(CONF_POS_SENSOR, default=None): cv.entity_id,
+    vol.Optional(CONF_POS_SENSOR,): cv.entity_id,
 })
 
 
@@ -57,7 +56,7 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     ip_addr = config.get(CONF_HOST)
     mac_addr = binascii.unhexlify(
         config.get(CONF_MAC).encode().replace(b':', b''))
-    broadlink_device = broadlink.rm((ip_addr, 80), mac_addr, "")
+    broadlink_device = broadlink.rm((ip_addr, 80), mac_addr, None)
 
     covers = []
     for object_id, device_config in devices.items():
@@ -79,13 +78,13 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     try:
         broadlink_device.auth()
     except socket.timeout:
-        _LOGGER.error("Failed to connect to device")
+        _LOGGER.error("Failed to connect to Broadlink RM Device")
 
     async_add_devices(covers, True)
     return True
 
 
-class RMCover(CoverDevice):
+class RMCover(CoverDevice,RestoreEntity):
     """Representation of a cover."""
 
     # pylint: disable=no-self-use
@@ -96,7 +95,6 @@ class RMCover(CoverDevice):
         self.entity_id = async_generate_entity_id(
             'cover.{}', entity_id, hass=hass)
         self._name = name or entity_id
-        self._unique_id = entity_id
 
         if travel_time:
             self._position = 50
@@ -153,6 +151,14 @@ class RMCover(CoverDevice):
         self._async_update_pos(new_state)
         yield from self.async_update_ha_state()
 
+
+    @property
+    def device_state_attributes(self):
+        if self._device_class == 'window':
+            return {'homebridge_cover_type': 'rollershutter'}
+        else:
+            return {'homebridge_cover_type': 'garage_door'}
+
     @property
     def name(self):
         """Return the name of the cover."""
@@ -197,6 +203,11 @@ class RMCover(CoverDevice):
     def is_opening(self):
         """Return if the cover is opening."""
         return self._is_opening
+
+    @property
+    def device_class(self):
+        """Return the class of this device, from component DEVICE_CLASSES."""
+        return self._device_class
 
     def close_cover(self, **kwargs):
         """Close the cover."""
@@ -328,3 +339,10 @@ class RMCover(CoverDevice):
         if not auth and retry > 0:
             return self._auth(retry-1)
         return auth
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        last_state = await self.async_get_last_state()
+        
+        if last_state:
+            self._position = last_state.attributes['current_position']
