@@ -29,7 +29,7 @@ Parlor:
     #- light.parlor_light2
     - light.parlor_spotlight
     - media_player.x9400e
-    - media_player.magic
+    #- media_player.magic
     - climate.daikin2
     - climate.saswell
     #- fan.wall_fan
@@ -81,7 +81,7 @@ Washroom:
 
 Bedroom:
   entities:
-    - media_player.x9300d
+    #- media_player.x9300d
     - climate.daikin3
     - fan.fresher2
     - fan.purifier7
@@ -150,7 +150,7 @@ Controls:
     - group.all_switches
     - group.all_fans
     - group.all_vacuum_cleaners
-    - media_player.x9300d
+    #- media_player.x9300d
     - media_player.x9400e
     - climate.saswell
     - climate.saswell2
@@ -173,7 +173,7 @@ TParlor:
     #- light.parlor_light2
     - light.parlor_spotlight
     - media_player.x9400e
-    - media_player.magic
+    #- media_player.magic
     - climate.daikin2
     - climate.saswell
     #- fan.wall_fan

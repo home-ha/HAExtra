@@ -209,6 +209,7 @@ light.parlor_spotlight:
   icon: mdi:spotlight
 light.passage_backlight:
   friendly_name: 过道背景灯
+  hagenie_hidden: true
   icon: mdi:spotlight-beam
 light.passage_light:
   friendly_name: 过道灯
