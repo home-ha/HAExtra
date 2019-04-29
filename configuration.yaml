@@ -320,12 +320,13 @@ switch:
         turn_off:
           service: script.turn_off_projector
 
+yeelight:
+  devices:
+    Lamp:
+      name: Lamp
+      transition: 1000
+
 light:
-  - platform: yeelight
-    devices:
-      Lamp:
-        name: Lamp
-        transition: 1000
   - platform: mqtt
     name: Hallway Spotlight
     state_topic: Hassmart1/relay/0
