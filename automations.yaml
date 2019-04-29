@@ -105,6 +105,7 @@
     - service: hello_miai.send
       data:
         message: 过道灯自动感应功能已启用
+    - delay: '00:00:10'
     - service: automation.turn_off
       entity_id: automation.passage_light_reaction_enabler
 
@@ -1038,7 +1039,7 @@
 - alias: Sleeping Began
   trigger:
     - platform: time
-      at: '21:30:00'
+      at: '20:30:00'
   action:
     - service: cover.close_cover
       entity_id: cover.study_cover

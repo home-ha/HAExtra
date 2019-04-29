@@ -1,1 +1,0 @@
-"""The Broadlink cover component."""

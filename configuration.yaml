@@ -588,7 +588,7 @@ climate:
     fan_list: [自动, 一级, 二级, 三级, 四级, 五级]
 
 cover:
-  - platform: broadlink
+  - platform: broadlink2
     host: Remote
     mac: 34:EA:34:58:73:5D
     covers:
@@ -606,15 +606,15 @@ cover:
       #   command_close: ''
 
 media_player:
-  - platform: braviatv
-    host: X9300d
-    name: X9300d
+  # - platform: braviatv
+  #   host: X9300d
+  #   name: X9300d
   - platform: braviatv
     host: X9400e
     name: X9400e
-  - platform: dlna_dmr
-    url: http://Magic:7300/mdr/desc.xml
-    name: Magic
+  # - platform: dlna_dmr
+  #   url: http://Magic:7300/mdr/desc.xml
+  #   name: Magic
 
 panel_iframe:
   dash:

@@ -1,1 +1,1 @@
-"""The Broadlink2 switch component."""
+"""The Broadlink2 component."""
