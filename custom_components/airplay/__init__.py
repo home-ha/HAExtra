@@ -34,7 +34,7 @@ SCAN_INTERVAL = timedelta(seconds=10)
 
 REQUIREMENTS = ['zeroconf==0.20.0']
 DOMAIN = 'airplay'
-MEDIA_PLAYER_DOMAIN = 'airplayer'
+MEDIA_PLAYER_DOMAIN = 'airplay'
 
 @asyncio.coroutine
 def async_setup(hass, config):

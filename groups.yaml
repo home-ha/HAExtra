@@ -109,6 +109,7 @@ Kids:
     - climate.daikin4
     #- fan.fan
     - fan.purifier6
+    - switch.outlet2
     - sensor.purifier6_temperature
     - sensor.purifier6_humidity
     - sensor.purifier6_pm25
@@ -260,6 +261,7 @@ TKids:
     - climate.daikin4
     #- fan.fan
     - fan.purifier6
+    - switch.outlet2
     - sensor.purifier6_temperature
     - sensor.purifier6_humidity
     - sensor.purifier6_pm25

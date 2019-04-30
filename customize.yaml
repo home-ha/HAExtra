@@ -362,6 +362,10 @@ switch.outlet:
   friendly_name: 除湿机
   hagenie_deviceType: dehumidifier
   icon: mdi:power-socket-uk
+switch.outlet2:
+  friendly_name: 除湿器
+  hagenie_deviceType: dehumidifier
+  icon: mdi:power-socket-uk
 switch.projector:
   friendly_name: 投影仪
   hagenie_deviceName: 电视

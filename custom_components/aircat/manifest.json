@@ -1,8 +1,0 @@
-{
-  "domain": "aircat",
-  "name": "AirCat",
-  "documentation": "https://github.com/Yonsm/HAExtra",
-  "requirements": [],
-  "dependencies": [],
-  "codeowners": ["@Yonsm"]
-}

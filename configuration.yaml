@@ -80,6 +80,8 @@ homekit:
   entity_config:
     switch.outlet:
       type: outlet
+    switch.outlet2:
+      type: outlet
     media_player.x9300d:
       feature_list:
         - feature: on_off
@@ -276,11 +278,11 @@ switch:
     mac: 34:EA:34:B8:36:AC
     friendly_name: Outlet
     type: spmini2
-  # - platform: broadlink
-  #   host: Outlet2
-  #   mac: 78:0f:77:cc:cc:be
-  #   friendly_name: Outlet2
-  #   type: spmini2
+  - platform: broadlink
+    host: Outlet2
+    mac: 78:0f:77:cc:cc:be
+    friendly_name: Outlet2
+    type: spmini2
   - platform: broadlink
     friendly_name: Remote
     host: Remote

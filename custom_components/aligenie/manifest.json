@@ -1,8 +1,0 @@
-{
-  "domain": "aligenie",
-  "name": "AliGenie",
-  "documentation": "https://github.com/Yonsm/HAExtra",
-  "dependencies": ["http"],
-  "codeowners": ["Yonsm"],
-  "requirements": []
-}
