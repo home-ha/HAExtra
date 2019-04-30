@@ -261,7 +261,7 @@ def queryDevice(name, payload):
     else:
         state = hassState(deviceId)
         if state is not None or state.state != 'unavailable':
-            return {'name': 'powerstate', 'value': state.state}
+            return {'name':'powerstate', 'value':'off' if state.state == 'off' else 'on'}
     return errorResult('IOT_DEVICE_OFFLINE')
 
 
