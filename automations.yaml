@@ -6,7 +6,7 @@
   action:
     - condition: template
       value_template: '{{ states("input_text.miai") != "unknown" and states("input_text.miai") != "" }}'
-    - service: hello_miai.send
+    - service: miai.say
       data_template:
         message: '{{ states("input_text.miai") }}'
 
@@ -33,7 +33,7 @@
         entity_id: binary_sensor.switch_158d0001e59b33
         click_type: single
   action:
-    - service: hello_miai.send
+    - service: miai.say
       data_template:
         message: '阳台PM2.5为{{ states("sensor.balcony_pm25") }}，餐厅PM2.5为{{ states("sensor.aircat_pm25") }}，主卧PM2.5为{{ states("sensor.purifier7_pm25") }}。客厅二氧化碳浓度为{{ states("sensor.fresher_co2") }}，主卧二氧化碳浓度为{{ states("sensor.purifier7_co2") }}，儿童房二氧化碳浓度为{{ states("sensor.purifier6_co2") }}'
 
@@ -46,7 +46,7 @@
         entity_id: binary_sensor.switch_158d0001e59b33
         click_type: double
   action:
-    - service: hello_miai.send
+    - service: miai.say
       data:
         message: 晾衣机将于今晚定时开启烘干功能
 
@@ -71,7 +71,7 @@
       entity_id: automation.passage_light_off_night
     - service: automation.toggle
       entity_id: automation.passage_backlight_reaction
-    - service: hello_miai.send
+    - service: miai.say
       data_template:
         message: '过道灯自动感应功能已{% if is_state("automation.passage_backlight_reaction", "on") %}启用{% else %}暂停，所有灯光将在10秒后关闭{% endif %}'
     - condition: state
@@ -102,7 +102,7 @@
       entity_id: automation.passage_light_off_night
     - service: automation.turn_on
       entity_id: automation.passage_backlight_reaction
-    - service: hello_miai.send
+    - service: miai.say
       data:
         message: 过道灯自动感应功能已启用
     - delay: '00:00:10'
@@ -132,7 +132,7 @@
         entity_id: binary_sensor.switch_158d000201a73f
         click_type: double
   action:
-    - service: hello_miai.send
+    - service: miai.say
       data_template:
         message: '正在{% if is_state("switch.projector", "on") %}关闭{% else %}打开{% endif %}投影仪'
     - service: switch.toggle
@@ -432,7 +432,7 @@
       after: '06:00'
       before: '23:00'
   action:
-    - service: hello_miai.send
+    - service: miai.say
       data_template:
         message: '阳台PM2.5为{% set PM25 = states.sensor.balcony_pm25.state | int %}{{ PM25 }}，{% if PM25 < 20 %}空气很好{% elif PM25 < 40 %}空气不错{% elif PM25 < 60 %}空气一般{% elif PM25 < 80 %}空气不好{% else %}空气污染，请关好门窗{% endif %}'
 
@@ -464,7 +464,7 @@
           entity_id: sensor.fresher_co2
           above: 800
   action:
-    - service: hello_miai.send
+    - service: miai.say
       data:
         message: 外面空气很好，可以打开门窗
 
@@ -492,7 +492,7 @@
     - condition: time
       after: '06:00'
       before: '23:00'
-    - service: hello_miai.send
+    - service: miai.say
       data_template:
         message: '{% set PM25 = states.sensor.aircat_pm25.state | int %}{% if PM25 >= 40 %}PM2.5为{{ PM25 }}，空气不好。{% endif %}{% set CO2 = states.sensor.fresher_co2.state | int %}{% if CO2 >= 900 %}二氧化碳浓度为{{ CO2 }}，空气很闷。{% endif %}{% set HCHO = states.sensor.aircat_hcho.state | float %}{% if HCHO > 0.2 %}甲醛浓度为{{ HCHO }}，注意通风。{% endif %}'
 
@@ -556,20 +556,20 @@
       entity_id: switch.outlet
 
 # 餐厅湿度过低
-- alias: Diningroom Humidity Low
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.purifier5_humidity
-      below: 52
-      for:
-        minutes: 10
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier5
-    - service: fan.oscillate
-      data:
-        entity_id: fan.purifier5
-        oscillating: true
+# - alias: Diningroom Humidity Low
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.purifier5_humidity
+#       below: 52
+#       for:
+#         minutes: 10
+#   action:
+#     - service: fan.turn_on
+#       entity_id: fan.purifier5
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.purifier5
+#         oscillating: true
 
 # 主卧湿度过高
 - alias: Bedroom Humidity High
@@ -579,6 +579,10 @@
       above: 72
       for:
         minutes: 10
+  condition:
+    - condition: state
+      entity_id: sun.sun
+      state: below_horizon
   action:
     - service: switch.turn_on
       entity_id: switch.outlet2
@@ -596,36 +600,36 @@
       entity_id: switch.outlet2
 
 # 主卧湿度过低
-- alias: Bedroom Humidity Low
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.purifier7_humidity
-      below: 52
-      for:
-        minutes: 10
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier7
-    - service: fan.oscillate
-      data:
-        entity_id: fan.purifier7
-        oscillating: true
+# - alias: Bedroom Humidity Low
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.purifier7_humidity
+#       below: 52
+#       for:
+#         minutes: 10
+#   action:
+#     - service: fan.turn_on
+#       entity_id: fan.purifier7
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.purifier7
+#         oscillating: true
 
 # 儿童房湿度过低
-- alias: Kids Humidity Low
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.purifier6_humidity
-      below: 52
-      for:
-        minutes: 10
-  action:
-    - service: fan.turn_on
-      entity_id: fan.purifier6
-    - service: fan.oscillate
-      data:
-        entity_id: fan.purifier6
-        oscillating: true
+# - alias: Kids Humidity Low
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.purifier6_humidity
+#       below: 52
+#       for:
+#         minutes: 10
+#   action:
+#     - service: fan.turn_on
+#       entity_id: fan.purifier6
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.purifier6
+#         oscillating: true
 
 # 客厅二氧化碳变化
 - alias: Parlor CO2 Changed
@@ -1055,6 +1059,9 @@
       data:
         entity_id: fan.fresher2
         brightness: 2
+    - service: miai.set_vol
+      data:
+        vol: 25
     # - service: climate.turn_off
     #   entity_id: climate.daikin1
     # - service: climate.turn_off
@@ -1084,6 +1091,9 @@
       data:
         entity_id: fan.fresher2
         brightness: 0
+    - service: miai.set_vol
+      data:
+        vol: 60
     # - service: climate.set_fan_mode
     #   data:
     #     entity_id: climate.daikin3

@@ -295,7 +295,7 @@ DEFAULT_MIAI_NUM = '0'
 DEFAULT_MIAI_SPEED = 0.27
 DEFAULT_WAIT_TIME = 0
 
-DOMAIN = 'hello_miai'
+DOMAIN = 'miai'
 
 SERVICE_SCHEMA = vol.Schema({
 vol.Required(ATTR_MESSAGE): cv.string,
@@ -433,9 +433,9 @@ def setup(hass, config):
 
 
 
-    hass.services.register(DOMAIN, 'force_send', send_message,
+    hass.services.register(DOMAIN, 'speak', send_message,
                            schema=SERVICE_SCHEMA)
-    hass.services.register(DOMAIN, 'send', add_msg2queue,
+    hass.services.register(DOMAIN, 'say', add_msg2queue,
                            schema=SERVICE_SCHEMA_FOR_QUEUE)
     hass.services.register(DOMAIN, 'set_vol', player_set_volume,
                            schema=SERVICE_SCHEMA_FOR_SET_VOLUME)

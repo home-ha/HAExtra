@@ -398,6 +398,8 @@
 				var off = grid.children[1].className.startsWith('state off')
 				if (grid.className == 'entity cover') {
 					var service = off ? 'open_cover' : 'close_cover'
+				} else if (grid.className == 'entity vacuum') {
+					var service = off ? 'start' : 'return_to_base'
 				} else {
 					var service = off ? 'turn_on' : 'turn_off'
 				}
