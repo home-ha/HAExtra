@@ -243,41 +243,32 @@ class ModbusClimate(ClimateDevice):
         if not self.is_on:
             return 'off'
 
-        operation = self.get_value(CONF_OPERATION)
-        if operation is not None and operation < len(ModbusClimate._operation_list):
-            return ModbusClimate._operation_list[operation]
-        return None
+        return self.get_mode(ModbusClimate._operation_list, CONF_OPERATION)
 
     @property
     def operation_list(self):
         """Return the list of available operation modes."""
-        return ModbusClimate._operation_list
+        return self.get_modes_list(ModbusClimate._operation_list)
 
     @property
     def current_fan_mode(self):
         """Return the fan setting."""
-        fan = self.get_value(CONF_FAN)
-        if fan is not None and fan < len(ModbusClimate._fan_list):
-            return ModbusClimate._fan_list[fan]
-        return None
+        return self.get_mode(ModbusClimate._fan_list, CONF_FAN)
 
     @property
     def fan_list(self):
         """Return the list of available fan modes."""
-        return ModbusClimate._fan_list
+        return self.get_modes_list(ModbusClimate._fan_list)
 
     @property
     def current_swing_mode(self):
         """Return the swing setting."""
-        swing = self.get_value(CONF_SWING)
-        if swing is not None and swing < len(ModbusClimate._swing_list):
-            return ModbusClimate._swing_list[swing]
-        return None
+        return self.get_mode(ModbusClimate._swing_list, CONF_SWING)
 
     @property
     def swing_list(self):
         """List of available swing modes."""
-        return ModbusClimate._swing_list
+        return self.get_modes_list(ModbusClimate._swing_list)
 
     @property
     def current_hold_mode(self):
@@ -380,35 +371,23 @@ class ModbusClimate(ClimateDevice):
 
     def set_operation_mode(self, operation_mode):
         """Set new operation mode."""
-        try:
-            is_on = operation_mode != 'off'
-            self.set_value(CONF_IS_ON, is_on)
-            if is_on:
-                if operation_mode == 'auto':
-                    current = self.current_temperature
-                    target = self.target_temperature
-                    operation_mode = 'heat' \
-                        if current and target and current < target else 'cool'
-                index = self._operation_list.index(operation_mode)
-                self.set_value(CONF_OPERATION, index)
-        except ValueError:
-            _LOGGER.error("Invalid operation_mode: %s", operation_mode)
+        is_on = operation_mode != 'off'
+        self.set_value(CONF_IS_ON, is_on)
+        if is_on:
+            if operation_mode == 'auto':
+                current = self.current_temperature
+                target = self.target_temperature
+                operation_mode = 'heat' \
+                    if current and target and current < target else 'cool'
+            self.set_mode(self._operation_list, CONF_OPERATION, operation_mode)
 
     def set_fan_mode(self, fan_mode):
         """Set new fan mode."""
-        try:
-            index = self._fan_list.index(fan_mode)
-            self.set_value(CONF_FAN, index)
-        except ValueError:
-            _LOGGER.error("Invalid fan_mode: %s", fan_mode)
+        self.set_mode(self._fan_list, CONF_FAN, fan_mode)
 
     def set_swing_mode(self, swing_mode):
         """Set new swing mode."""
-        try:
-            index = self._swing_list.index(swing_mode)
-            self.set_value(CONF_SWING, index)
-        except ValueError:
-            _LOGGER.error("Invalid swing_mode: %s", swing_mode)
+        self.set_mode(self._swing_list, CONF_SWING, swing_mode)
 
     def set_hold_mode(self, hold_mode):
         """Set new hold mode."""
@@ -467,3 +446,30 @@ class ModbusClimate(ClimateDevice):
         self._values[prop] = value
 
         async_call_later(self.hass, 2, self.async_schedule_update_ha_state)
+
+    # [mode1, mode2, ...] or {mode1:value1, mode2:value2, ...}
+    # [cool, heat, ...] or {cool:2, heat:4, ...}
+    def get_modes_list(self, modes):
+        return modes.all_keys() if isinstance(modes, dict) else modes
+
+    def get_mode(self, modes, prop):
+        value = self.get_value(prop)
+        if value is not None:
+            if isinstance(modes, list):
+                if value < len(modes):
+                    return modes[key]
+            elif isinstance(modes, dict):
+                for k, v in modes.items():
+                    if v == value:
+                        return k
+        _LOGGER.error("Invalid value %s for %s", value, modes)
+        return None
+
+    def set_mode(self, modes, prop, mode):
+        if isinstance(modes, list):
+            if value in modes:
+                self.set_value(prop, modes.index(mode))
+        elif isinstance(modes, dict):
+                if value in modes:
+                    self.set_value(prop, modes[mode])
+        _LOGGER.error("Invalid mode %s for %s", mode, modes)
