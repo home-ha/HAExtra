@@ -457,7 +457,7 @@ class ModbusClimate(ClimateDevice):
         if value is not None:
             if isinstance(modes, list):
                 if value < len(modes):
-                    return modes[key]
+                    return modes[value]
             elif isinstance(modes, dict):
                 for k, v in modes.items():
                     if v == value:
