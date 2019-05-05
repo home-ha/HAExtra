@@ -3,6 +3,7 @@
 # ============================== Basic Config ==============================
 #ssh pi@hassbian
 
+# Raspberry Pi Only
 sudo passwd root
 sudo passwd --unlock root
 sudo nano /etc/ssh/sshd_config #PermitRootLogin yes
@@ -23,19 +24,20 @@ sudo reboot
 
 #ssh root@hassbian
 
-# Rename pi->admin
+# # Raspberry Pi Only: Rename pi->admin
 usermod -l admin pi
 groupmod -n admin pi
 mv /home/pi /home/admin
 usermod -d /home/admin admin
 passwd admin
-echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
 raspi-config # Hostname, WiFi, locales(en_US.UTF-8/zh_CN.GB18030/zh_CN.UTF-8), Timezone
 
-# Armbian
-echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+#
+echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+# Armbian
+armbian-config #Hostname, wifi,timezone
+#echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # ============================== Home Assistant ==============================
 apt-get update
@@ -59,6 +61,10 @@ apt-get install libavahi-compat-libdnssd-dev
 
 # Android
 apt-get install adb
+
+# Speedtest
+cd /usr/local/bin
+wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py; chmod +x speedtest; ./speedtest
 
 # Raspbian
 ##apt-get install python3 python3-pip
