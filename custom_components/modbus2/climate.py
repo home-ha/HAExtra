@@ -462,14 +462,15 @@ class ModbusClimate(ClimateDevice):
                 for k, v in modes.items():
                     if v == value:
                         return k
-        _LOGGER.error("Invalid value %s for %s", value, modes)
+        _LOGGER.error("Invalid value %s for %s", value, prop)
         return None
 
     def set_mode(self, modes, prop, mode):
-        if isinstance(modes, list):
-            if value in modes:
+        if mode in modes:
+            if isinstance(modes, list):
                 self.set_value(prop, modes.index(mode))
-        elif isinstance(modes, dict):
-                if value in modes:
-                    self.set_value(prop, modes[mode])
-        _LOGGER.error("Invalid mode %s for %s", mode, modes)
+                return
+            elif isinstance(modes, dict):
+                self.set_value(prop, modes[mode])
+                return
+        _LOGGER.error("Invalid mode %s for %s", mode, prop)
