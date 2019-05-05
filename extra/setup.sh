@@ -74,6 +74,10 @@ apt-get install python3-pip python3-dev libffi-dev python3-setuptools
 # Python 3.7+
 #curl https://bc.gongxinke.cn/downloads/install-python-latest | bash
 
+# Baidu TTS
+#apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+apt-get install libjpeg-dev zlib1g-dev
+
 # Home Assistant
 pip3 install wheel
 pip3 install homeassistant
