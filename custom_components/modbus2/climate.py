@@ -87,11 +87,11 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_HUB, default=DEFAULT_HUB): cv.string,
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Optional(CONF_OPERATION_LIST, default=DEFAULT_OPERATION_LIST):
-        vol.All(cv.ensure_list, vol.Length(min=2)),
+        vol.Any(list, dict),
     vol.Optional(CONF_FAN_LIST, default=DEFAULT_FAN_LIST):
-        vol.All(cv.ensure_list, vol.Length(min=2)),
+        vol.Any(list, dict),
     vol.Optional(CONF_SWING_LIST, default=DEFAULT_SWING_LIST):
-        vol.All(cv.ensure_list, vol.Length(min=2)),
+        vol.Any(list, dict),
     vol.Optional(CONF_TEMPERATURE): dict,
     vol.Optional(CONF_TARGET_TEMPERATURE): dict,
     vol.Optional(CONF_HUMIDITY): dict,
@@ -111,7 +111,6 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     name = config.get(CONF_NAME)
     hub_name = config.get(CONF_HUB)
     hub = hass.data[MODBUS_DOMAIN][hub_name]
-
 
     ModbusClimate._operation_list = config.get(CONF_OPERATION_LIST)
     ModbusClimate._fan_list = config.get(CONF_FAN_LIST)
@@ -450,7 +449,8 @@ class ModbusClimate(ClimateDevice):
     # [mode1, mode2, ...] or {mode1:value1, mode2:value2, ...}
     # [cool, heat, ...] or {cool:2, heat:4, ...}
     def get_modes_list(self, modes):
-        return modes.all_keys() if isinstance(modes, dict) else modes
+        # _LOGGER.debug("get_modes_list: %s", list(modes))
+        return list(modes) if isinstance(modes, dict) else modes
 
     def get_mode(self, modes, prop):
         value = self.get_value(prop)
@@ -461,6 +461,7 @@ class ModbusClimate(ClimateDevice):
             elif isinstance(modes, dict):
                 for k, v in modes.items():
                     if v == value:
+                        #_LOGGER.debug("get_mode: %s for %s", k, prop)
                         return k
         _LOGGER.error("Invalid value %s for %s", value, prop)
         return None
