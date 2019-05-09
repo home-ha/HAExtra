@@ -68,7 +68,7 @@ Passage:
     - light.passage_spotlight
     #- light.study_light2
     - light.passage_backlight
-    - switch.storage
+    - switch.station
     - binary_sensor.motion_sensor_158d0001d66ce9
     # - binary_sensor.lightness
     - input_text.miai
@@ -216,7 +216,7 @@ TPassage:
     - light.passage_spotlight
     #- light.study_light2
     - light.passage_backlight
-    - switch.storage
+    - switch.station
     - binary_sensor.motion_sensor_158d0001d66ce9
     # - binary_sensor.lightness
     - input_text.miai

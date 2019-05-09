@@ -379,7 +379,7 @@ switch.speaker:
   friendly_name: 音箱
   hagenie_deviceName: 机顶盒
   hagenie_deviceType: STB
-switch.storage:
+switch.station:
   friendly_name: 网络存储
   hagenie_deviceName: 网关
   hagenie_deviceType: gateway

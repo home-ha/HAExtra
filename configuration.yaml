@@ -250,12 +250,12 @@ sensor:
 switch:
   #TODO
   - platform: wake_on_lan
-    name: Storage
+    name: Station
     mac_address: 00-11-32-6B-75-F7
     #broadcast_address: 192.168.1.255
-    host: Storage
+    host: Station
     turn_off:
-      service: shell_command.turn_off_storage
+      service: shell_command.turn_off_station
   - platform: mqtt
     name: Washroom Fan
     state_topic: Hassmart6/relay/1
@@ -434,7 +434,7 @@ light:
     payload_off: 3528,1658,426,418,426,1292,380,462,382,1334,382,464,382,1338,380,462,382,1336,382,462,382,462,382,462,382,1336,382,462,382,1336,380,1336,382,464,382,1338,378,462,384,462,382,464,380,1336,382,1336,382,1336,382,462,382,1334,384,464,382,1336,382,462,382,1336,382,1336,382,464,382,462,382,464,382,464,380,462,382,462,382,464,382,464,380,464,382,464,382,464,380,1338,380,462,382,464,382,462,380,464,380,464,380,464,380,1334,382,464,380,464,380,464,380,464,382,1336,382,464,382,462,382,1334,382,464,382,464,382,464,380,1336,382,1336,382,464,382,1338,380,1,2,38
 
 shell_command:
-  turn_off_storage: 'ssh root@Storage shutdown -h now'
+  turn_off_station: 'ssh root@Station shutdown -h now'
 
 xiaomi_aqara:
   #interface: 192.168.2.40
