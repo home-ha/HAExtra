@@ -78,6 +78,7 @@ homekit:
       - binary_sensor.switch_158d0001e59b33
       - binary_sensor.switch_158d000201a73f
       - binary_sensor.lamp_nightlight
+      - sensor.fresher2_co2
   entity_config:
     switch.outlet:
       type: outlet
