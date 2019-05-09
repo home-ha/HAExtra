@@ -1050,7 +1050,7 @@
     - service: fan.set_speed
       data:
         entity_id: fan.fresher2
-        speed: auto
+        speed: silent
     - service: fan.xiaomi_miio_set_led_brightness
       data:
         entity_id: fan.fresher
