@@ -13,6 +13,8 @@ turn_on_projector:
       entity_id: switch.himedia
     - service: cover.close_cover
       entity_id: cover.study_cover
+    - service: switch.turn_on
+      entity_id: switch.station
     #- service: cover.close_cover
     #  entity_id: cover.airer
     - service: fan.turn_on
