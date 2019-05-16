@@ -673,7 +673,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fresher
-        speed: '{% if (states("sensor.fresher_co2") | int > 730) %}strong{% elif (states("sensor.fresher_co2") | int > 680) %}middle{% else %}auto{% endif %}'
+        speed: '{% if (states("sensor.fresher_co2") | int > 730) %}Strong{% elif (states("sensor.fresher_co2") | int > 680) %}Middle{% else %}Auto{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -718,7 +718,7 @@
   condition:
     - condition: time
       after: '7:30'
-      before: '21:29'
+      before: '20:29'
   action:
     - service_template: '{% if (states("sensor.purifier7_co2") | int > 500) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
       entity_id: fan.fresher2
@@ -728,7 +728,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fresher2
-        speed: '{% if (states("sensor.purifier7_co2") | int > 730) %}strong{% elif (states("sensor.purifier7_co2") | int > 680) %}middle{% else %}auto{% endif %}'
+        speed: '{% if (states("sensor.purifier7_co2") | int > 730) %}Strong{% elif (states("sensor.purifier7_co2") | int > 680) %}Middle{% else %}Auto{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -783,7 +783,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fresher2
-        speed: '{% if (states("sensor.purifier7_co2") | int > 1000) %}strong{% elif (states("sensor.purifier7_co2") | int > 750) %}middle{% else %}auto{% endif %}'
+        speed: '{% if (states("sensor.purifier7_co2") | int > 1000) %}Strong{% elif (states("sensor.purifier7_co2") | int > 750) %}Middle{% else %}Auto{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -891,6 +891,8 @@
 # 次卧颗粒物变化
 - alias: Parents PM25 Changed
   trigger:
+    - platform: time
+      at: '07:30:01'
     - platform: numeric_state
       entity_id: sensor.purifier_pm25
       above: 60
@@ -921,6 +923,10 @@
       below: 20
       for:
         minutes: 8
+  condition:
+    - condition: time
+      after: '7:30'
+      before: '20:29'
   action:
     - service_template: '{% if (states("sensor.purifier_pm25") | int > 20) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
       entity_id: fan.purifier
@@ -1050,7 +1056,7 @@
     - service: fan.set_speed
       data:
         entity_id: fan.fresher2
-        speed: silent
+        speed: Silent
     - service: fan.xiaomi_miio_set_led_brightness
       data:
         entity_id: fan.fresher
@@ -1059,6 +1065,10 @@
       data:
         entity_id: fan.fresher2
         brightness: 2
+    - service: fan.set_speed
+      data:
+        entity_id: fan.purifier
+        speed: Silent
     - service: miai.set_vol
       data:
         vol: 25
