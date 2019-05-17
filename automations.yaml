@@ -74,14 +74,14 @@
     - service: miai.say
       data_template:
         message: '过道灯自动感应功能已{% if is_state("automation.passage_backlight_reaction", "on") %}启用{% else %}暂停，所有灯光将在10秒后关闭{% endif %}'
+    - delay: '00:00:10'
     - condition: state
       entity_id: automation.passage_backlight_reaction
       state: 'off'
-    - delay: '00:00:10'
-    - service: homeassistant.turn_off
-      entity_id: group.all_lights
     - service: automation.turn_on
       entity_id: automation.passage_light_reaction_enabler
+    - service: homeassistant.turn_off
+      entity_id: group.all_lights
 
 # 过道灯自动响应恢复
 - alias: Passage Light Reaction Enabler
