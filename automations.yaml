@@ -783,7 +783,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fresher2
-        speed: '{% if (states("sensor.purifier7_co2") | int > 1000) %}Strong{% elif (states("sensor.purifier7_co2") | int > 750) %}Middle{% else %}Auto{% endif %}'
+        speed: '{% if (states("sensor.purifier7_co2") | int > 1000) %}Strong{% elif (states("sensor.purifier7_co2") | int > 750) %}Middle{% else %}Silent{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -1103,7 +1103,7 @@
         brightness: 0
     - service: miai.set_vol
       data:
-        vol: 60
+        vol: 50
     # - service: climate.set_fan_mode
     #   data:
     #     entity_id: climate.daikin3
