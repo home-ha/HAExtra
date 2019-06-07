@@ -1,5 +1,5 @@
 homeassistant:
-  name: 物联智能
+  name: 智能物联
   latitude: 30.23927
   longitude: 120.05633
   elevation: 32
@@ -11,6 +11,8 @@ logger:
   default: warning
   logs:
     custom_components.sensor.aircat: debug
+    #homeassistant.components.homekit: debug
+    #pyhap: debug
 
 system_health:
 
@@ -59,12 +61,12 @@ modbus:
   port: 8899
 
 homekit:
-  #ip_address: 192.168.1.40
   filter:
     exclude_domains:
       - script
       - automation
       - input_boolean
+      - fan
     exclude_entities:
       - switch.benq
       - switch.himedia
@@ -77,7 +79,6 @@ homekit:
       - light.passage_light2
       - binary_sensor.switch_158d0001e59b33
       - binary_sensor.switch_158d000201a73f
-      - binary_sensor.lamp_nightlight
       - sensor.fresher2_co2
   entity_config:
     switch.outlet:
@@ -328,7 +329,10 @@ yeelight:
   devices:
     Lamp:
       name: Lamp
-      transition: 1000
+      model: bslamp1
+    Light:
+      name: Light
+      model: mono1
 
 light:
   - platform: mqtt
@@ -461,11 +465,11 @@ fan:
   #   host: Purifier2
   #   model: zhimi.airpurifier.v6
   #   token: 40aaf8a828797657328319e0c6cf761a
-  #- platform: xiaomi_miio
-  #  name: Fan
-  #  host: Fan
-  #  model: zhimi.fan.v3
-  #  token: 62df0c2f98752f87aa3c6258bf862c9b
+  # - platform: xiaomi_miio
+  #   name: Fan
+  #   host: Fan
+  #   model: zhimi.fan.v3
+  #   token: 62df0c2f98752f87aa3c6258bf862c9b
   - platform: xiaomi_miio
     name: Fresher
     host: Fresher

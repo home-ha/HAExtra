@@ -121,7 +121,7 @@ class Thermostat(HomeAccessory):
         self._state_flag = True
         service = SERVICE_TURN_ON if value == 1 else SERVICE_TURN_OFF
         params = {ATTR_ENTITY_ID: self.entity_id}
-        self.hass.services.call(DOMAIN, service, params)
+        self.hass.services.call(DOMAIN_CLIMATE, service, params)
 
     def get_temperature_range(self):
         """Return min and max temperature range."""

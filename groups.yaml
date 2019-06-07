@@ -104,7 +104,7 @@ Parents:
 
 Kids:
   entities:
-    - light.lamp
+    - light.light
     - light.kids_light
     - climate.daikin4
     #- fan.fan
@@ -117,6 +117,7 @@ Kids:
 
 Study:
   entities:
+    - light.lamp
     - light.study_light
     #- light.airer_light
     - cover.study_cover

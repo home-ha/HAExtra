@@ -196,6 +196,9 @@ light.kids_light:
 light.lamp:
   friendly_name: 台灯
   icon: mdi:lamp
+light.light:
+  friendly_name: 阅读灯
+  icon: mdi:lamp
 light.parlor_light:
   friendly_name: 客厅灯
   icon: mdi:ceiling-light
