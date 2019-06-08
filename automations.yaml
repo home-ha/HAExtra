@@ -1072,18 +1072,18 @@
     - service: miai.set_vol
       data:
         vol: 25
-    # - service: climate.turn_off
-    #   entity_id: climate.daikin1
-    # - service: climate.turn_off
-    #   entity_id: climate.daikin2
-    # - service: climate.set_fan_mode
-    #   data:
-    #     entity_id: climate.daikin3
-    #     fan_mode: 一级
-    # - service: climate.set_fan_mode
-    #   data:
-    #     entity_id: climate.daikin4
-    #     fan_mode: 一级
+    - service: climate.turn_off
+      entity_id: climate.daikin1
+    - service: climate.turn_off
+      entity_id: climate.daikin2
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin3
+        fan_mode: 一级
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin4
+        fan_mode: 一级
 
 # 睡眠自动化
 - alias: Sleeping Ended
@@ -1104,14 +1104,14 @@
     - service: miai.set_vol
       data:
         vol: 50
-    # - service: climate.set_fan_mode
-    #   data:
-    #     entity_id: climate.daikin3
-    #     fan_mode: 自动
-    # - service: climate.set_fan_mode
-    #   data:
-    #     entity_id: climate.daikin4
-    #     fan_mode: 自动
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin3
+        fan_mode: 自动
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin4
+        fan_mode: 自动
 
 # # 主卧温度高
 # - alias: Bedroom Temperature High

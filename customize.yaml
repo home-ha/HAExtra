@@ -24,6 +24,8 @@ climate.daikin3:
   friendly_name: 主卧空调
 climate.daikin4:
   friendly_name: 儿童房空调
+climate.mitsubishi:
+  friendly_name: 书房空调
 climate.saswell:
   friendly_name: 客厅地暖
   hagenie_deviceName: 取暖器
@@ -351,16 +353,6 @@ sensor.study_lightness:
   friendly_name: 书房亮度
 sun.sun:
   friendly_name: 日照
-switch.benq:
-  friendly_name: 投影仪遥控
-  icon: mdi:projector
-switch.himedia:
-  friendly_name: 播放器遥控
-  icon: mdi:play-circle
-switch.mitsubishi:
-  friendly_name: 书房空调
-  hagenie_deviceType: aircondition
-  icon: mdi:air-conditioner
 switch.outlet:
   friendly_name: 除湿机
   hagenie_deviceType: dehumidifier

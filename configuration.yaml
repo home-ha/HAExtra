@@ -63,15 +63,11 @@ modbus:
 homekit:
   filter:
     exclude_domains:
+      - fan
       - script
       - automation
       - input_boolean
-      - fan
     exclude_entities:
-      - switch.benq
-      - switch.himedia
-      # - switch.study_power
-      - switch.projector_power
       - light.study_light2
       - light.study_light3
       - light.parlor_light2
@@ -79,6 +75,7 @@ homekit:
       - light.passage_light2
       - binary_sensor.switch_158d0001e59b33
       - binary_sensor.switch_158d000201a73f
+      - switch.projector_power
       - sensor.fresher2_co2
   entity_config:
     switch.outlet:
@@ -291,24 +288,6 @@ switch:
     host: Remote
     mac: 34:EA:34:58:73:5D
     type: rm2_pro_plus
-    switches:
-      mitsubishi:
-        friendly_name: Mitsubishi
-        command_on: 'JgBMAnE2DykPKQ8NDg4ODg4qDw0ODg8pDykPDQ0rDwwODg4qDyoODg4qDykODg4ODSsODg0ODioPDQ4ODg4ODg4ODg4ODg4ODg4ODg4ODQ8NDg4ODg4ODg4ODg4ODg4ODioODg4ODg4ODg0PDSoOKg4ODioPDQ4ODg4ODg4qDg4ODg4ODg4ODg0rDioODg4ODQ4OKw0ODioOKg4ODg4ODg4qDioODg4qDioOKg4qDg4ODg4ODioODg4ODg4ODg4ODg4ODg0PDQ4ODg4ODg4ODg4ODg4PDQ4ODg4PDQ8NDQ8PDBAMDg4QDA4OEAwQDBAoDg4ODg4ODw0ODg8NDQ8PDA4ODg4QDA4OEAwODhAMDg4PDQ8NDw0PKQ4ODygOKg4qDg4OKg4qDgACA284DSoOKg4ODg4ODg4qDg4ODg4qDioODg4qDg4ODg4qDioODg4qDioODg4ODioODg4ODioODg4ODg4ODg0ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODQ8NDg4ODisNDg4ODg4ODg4ODioOKg4ODioODg4ODg4ODg0rDQ4ODg4ODg4ODg4qDioODg4ODg4OKg4ODioOKg4ODg4PDQ0qDykPDQ8pDykPKQ8pDw0ODg4ODisPDQ0OEAwODg8NDg4PDQ4ODw0ODg8NDg4PDQ0PDwwODg4OEA0ODQ4ODw0ODg4ODw0ODhAMDQ8PDQ0qEQsODhAMDg4QDA4ODw0ODg8NDg4PDQ4ODw0NDhAMDg4PDQ8NDg4PKQ8NDioPKRAoEAwOKhAoEAANBQAAAAAAAAAAAAAAAA=='
-        command_off: 'JgBMAnI1EScQKBEKEA0QCxEoEAsRCxEnEScRCxAoEQsRCxEnEScSCg8qECcSChELEScRCxELECgRCxELEQsQCxELEQsRDBAMEAsRCxELEQsRCxELEQsRCxAMEAsRDBAMEAsRCxEMEAsRCxELEScRJxIJESgRCxELEAwQCw4rEAsQDRALEQsRCxAoEScRCxELEQsRJxELDykRJxAMEAwQDBAoECgQCxApECgQCxELDg4RCxELEQsRCxELEQsQDBAMEAsRDBALEQsRCxELEQsRCxELEQsQDBAMEAwQCxELEQsRCxELEQsRCxELEQsRCxAoEQsQDBAMEAwODhALEA0QCw4ODg4RCw4ODw0QDA4OEAwODg4ODg4QKBAMEAwNDhEnECgQDA4ODgACBXA3DykPKQ8NDQ4ODg4qDg4ODg4qDioPDQ4qDg4ODg4qDioODg4qDioODg4ODioODg4ODioODg4ODg4ODg0PDQ4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4NDw0PDQ4ODg4ODg4ODg4ODioOKg4ODioODg4ODg4ODg0rDg4NDg4ODg4ODg4qDioODg4ODg4OKg4ODioOKg4ODg4NDw0rDioODg0qDioODg4ODg4ODg4ODg4ODg8NDg4ODg4ODQ8NDw0ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg0PDQ4ODg4ODg4ODg4ODg4ODg4qDg4ODg4ODg4NDw0PDQ4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODQ8NKw4NDg4ODg4qDioODg4ODQANBQAAAAAAAAAAAAAAAA=='
-      benq:
-        friendly_name: BenQ
-        command_on: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
-        command_off: 'JgAgAQABJ5QSExITEhITEhMSEhMSExITEhITEhMSEhMSOBI3ExISExITEjcTNxI3ExITEhI4EhITNxITEhMSExI3EzcSExI3EwAF='
-      himedia:
-        friendly_name: HiMedia
-        command_on: 'JgBgAAABJ5QSExITExITExI4EhMSExITEjgSOBI4EjgTEhM4EjgSOBI4EhMSOBI4EjgTEhM4EhMSExI4EhMSExITEjgSExM3EwAFGQABJksSAAxWAAEnSxIADFYAASZLEgANBQAAAAAAAAAA'
-        command_off: 'JgBgAAABJ5QSExITExITExI4EhMSExITEjgSOBI4EjgTEhM4EjgSOBI4EhMSOBI4EjgTEhM4EhMSExI4EhMSExITEjgSExM3EwAFGQABJksSAAxWAAEnSxIADFYAASZLEgANBQAAAAAAAAAA'
-      # airer_light:
-      #   friendly_name: Airer Light
-      #   command_on: ''
-      #   command_off: ''
-
   #TODO
   # - platform: broadlink
   #   friendly_name: Remote2
@@ -583,6 +562,8 @@ fan:
 #         data:
 #           entity_id: input_boolean.wall_fan_direction
 
+smartir:
+
 climate:
   - platform: saswell
     username: !secret saswell_username
@@ -596,6 +577,13 @@ climate:
     is_on: { registers: [1, 2, 3, 4], register_type: coil }
     operation_list: ['off', cool, heat, dry, fan]
     fan_list: [自动, 一级, 二级, 三级, 四级, 五级]
+  - platform: smartir
+    name: Mitsubishi
+    device_code: 1120
+    controller_data: Remote
+    temperature_sensor: sensor.aircat2_temperature
+    humidity_sensor: sensor.aircat2_humidity
+    #power_sensor: binary_sensor.ac_power
 
 cover:
   - platform: broadlink2

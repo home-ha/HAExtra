@@ -124,7 +124,7 @@ Study:
     #- cover.airer
     - switch.projector
     - switch.speaker
-    - switch.mitsubishi
+    - climate.mitsubishi
     - vacuum.vacuum
     - fan.purifier4
     - sensor.aircat2_temperature
@@ -277,7 +277,7 @@ TStudy:
     #- cover.airer
     - switch.projector
     - switch.speaker
-    - switch.mitsubishi
+    - climate.mitsubishi
     - vacuum.vacuum
     - fan.purifier4
     - sensor.aircat2_temperature
