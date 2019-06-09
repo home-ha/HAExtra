@@ -1084,6 +1084,16 @@
       data:
         entity_id: climate.daikin4
         fan_mode: 一级
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin3
+        temperature: 26
+        operation_mode: cool
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin4
+        temperature: 26
+        operation_mode: cool
 
 # 睡眠自动化
 - alias: Sleeping Ended
@@ -1112,6 +1122,16 @@
       data:
         entity_id: climate.daikin4
         fan_mode: 自动
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin3
+        temperature: 24
+        operation_mode: cool
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin4
+        temperature: 24
+        operation_mode: cool
 
 # # 主卧温度高
 # - alias: Bedroom Temperature High
@@ -1184,8 +1204,9 @@
 # 书房亮度正常
 - alias: Study Lightness Normal
   trigger:
-    - platform: time
-      at: '16:00:00'
+    - platform: sun
+      event: sunset
+      offset: '-01:30:00'
   condition:
     - condition: state
       entity_id: cover.study_cover
