@@ -104,11 +104,12 @@ Parents:
 
 Kids:
   entities:
-    - light.light
+    - light.lamp2
     - light.kids_light
     - climate.daikin4
     #- fan.fan
     - fan.purifier6
+    - fan.fan
     - switch.outlet2
     - sensor.purifier6_temperature
     - sensor.purifier6_humidity
@@ -125,6 +126,7 @@ Study:
     - switch.projector
     - switch.speaker
     - climate.mitsubishi
+    - fan.fan2
     - vacuum.vacuum
     - fan.purifier4
     - sensor.aircat2_temperature
@@ -257,10 +259,10 @@ TParents:
 TKids:
   view: yes
   entities:
-    - light.lamp
+    - light.lamp2
     - light.kids_light
     - climate.daikin4
-    #- fan.fan
+    - fan.fan
     - fan.purifier6
     - switch.outlet2
     - sensor.purifier6_temperature
@@ -271,6 +273,7 @@ TKids:
 TStudy:
   view: yes
   entities:
+    - light.lamp
     - light.study_light
     #- light.airer_light
     - cover.study_cover
@@ -278,6 +281,7 @@ TStudy:
     - switch.projector
     - switch.speaker
     - climate.mitsubishi
+    - fan.fan2
     - vacuum.vacuum
     - fan.purifier4
     - sensor.aircat2_temperature

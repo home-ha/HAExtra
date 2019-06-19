@@ -43,8 +43,9 @@ cover.study_cover:
 customizer.customizer:
   friendly_name: 定制界面
 fan.fan:
-  dashboard_static_text_attribute: speed_level
-  friendly_name: 落地扇
+  friendly_name: 儿童房风扇
+fan.fan2:
+  friendly_name: 书房风扇
 fan.fresher:
   friendly_name: 客厅新风机
   hagenie_deviceType: VMC
@@ -196,10 +197,10 @@ light.hallway_spotlight:
 light.kids_light:
   friendly_name: 儿童房灯
 light.lamp:
-  friendly_name: 台灯
+  friendly_name: 书房台灯
   icon: mdi:lamp
-light.light:
-  friendly_name: 阅读灯
+light.lamp2:
+  friendly_name: 儿童房台灯
   icon: mdi:lamp
 light.parlor_light:
   friendly_name: 客厅灯
@@ -354,11 +355,11 @@ sensor.study_lightness:
 sun.sun:
   friendly_name: 日照
 switch.outlet:
-  friendly_name: 除湿机
+  friendly_name: 餐厅除湿机
   hagenie_deviceType: dehumidifier
   icon: mdi:power-socket-uk
 switch.outlet2:
-  friendly_name: 除湿器
+  friendly_name: 儿童房除湿机
   hagenie_deviceType: dehumidifier
   icon: mdi:power-socket-uk
 switch.projector:

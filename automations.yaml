@@ -582,7 +582,7 @@
   condition:
     - condition: state
       entity_id: sun.sun
-      state: below_horizon
+      state: above_horizon
   action:
     - service: switch.turn_on
       entity_id: switch.outlet2
@@ -595,6 +595,8 @@
       below: 68
       for:
         minutes: 10
+    - platform: time
+      at: '08:30:00'
   action:
     - service: switch.turn_off
       entity_id: switch.outlet2
