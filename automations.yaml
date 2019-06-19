@@ -1084,6 +1084,12 @@
       data:
         entity_id: climate.daikin4
         fan_mode: 一级
+
+- alias: Sleeping Deepin
+  trigger:
+    - platform: time
+      at: '00:00:01'
+  action:
     - service: climate.set_temperature
       data:
         entity_id: climate.daikin3
@@ -1133,52 +1139,61 @@
         temperature: 24
         operation_mode: cool
 
-# # 主卧温度高
-# - alias: Bedroom Temperature High
-#   initial_state: false
-#   trigger:
-#     - platform: numeric_state
-#       entity_id: sensor.purifier7_temperature
-#       above: 21.8
-#       for:
-#         minutes: 10
-#   condition:
-#     - condition: or
-#       conditions:
-#         - condition: time
-#           after: '00:00'
-#           before: '08:00'
-#         - condition: state
-#           entity_id: device_tracker.yphone
-#           state: 'home'
-#         - condition: state
-#           entity_id: device_tracker.zphone
-#           state: 'home'
-#   action:
-#     - service: climate.turn_on
-#       entity_id: climate.daikin3
-#     - service: climate.set_temperature
-#       data:
-#         entity_id: climate.daikin3
-#         temperature: 26
-#         operation_mode: cool
+# 主卧温度高
+- alias: Bedroom Temperature High
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier7_temperature
+      above: 22
+      for:
+        minutes: 10
+  condition:
+    - condition: time
+      after: '20:00'
+      before: '08:00'
+  action:
+    - service: climate.turn_on
+      entity_id: climate.daikin3
 
-# # 主卧温度低
-# - alias: Bedroom Temperature Low
-#   initial_state: false
-#   trigger:
-#     - platform: numeric_state
-#       entity_id: sensor.purifier7_temperature
-#       below: 21
-#       for:
-#         minutes: 5
-#   # condition:
-#   # - condition: numeric_state
-#   #   entity_id: sensor.balcony_temperature
-#   #   below: 32
-#   action:
-#     - service: climate.turn_off
-#       entity_id: climate.daikin3
+# 主卧温度低
+- alias: Bedroom Temperature Low
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier7_temperature
+      below: 21
+      for:
+        minutes: 5
+  action:
+    - service: climate.turn_off
+      entity_id: climate.daikin3
+
+# 儿童房温度高
+- alias: Kids Temperature High
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier6_temperature
+      above: 28
+      for:
+        minutes: 10
+  condition:
+    - condition: time
+      after: '20:00'
+      before: '08:00'
+  action:
+    - service: climate.turn_on
+      entity_id: climate.daikin4
+
+# 儿童房温度低
+- alias: Kids Temperature Low
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier6_temperature
+      below: 25
+      for:
+        minutes: 5
+  action:
+    - service: climate.turn_off
+      entity_id: climate.daikin4
 
 # 书房亮度太高
 - alias: Study Lightness High

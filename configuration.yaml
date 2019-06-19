@@ -190,7 +190,7 @@ sensor:
   #   username: !secret phicomm_username
   #   password: !secret phicomm_password
   - platform: aircat
-    mac: ['B0F893249132', 'B0F8931EA148']
+    mac: ['B0F8931EA148', 'B0F893249132']
   - platform: template
     sensors:
       purifier_temperature:
