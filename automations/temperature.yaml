@@ -247,7 +247,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fan
-        speed: '{% if (state_attr("fan.fan", "temperature") | int > 29) %}Level 3{% elif (state_attr("fan.fan", "temperature") | int > 26) %}Level 2{% else %}Level 1{% endif %}'
+        speed: '{% if (state_attr("fan.fan", "temperature") | int > 29) %}Level 3{% elif (state_attr("fan.fan", "temperature") | int > 23) %}Level 2{% else %}Level 1{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
