@@ -143,7 +143,7 @@ group.thallway:
   friendly_name: 玄关
 group.tkidsroom:
   friendly_name: 儿童房
-group.tparents:
+group.tparentsroom:
   friendly_name: 次卧
 group.tlivingroom:
   friendly_name: 客厅
