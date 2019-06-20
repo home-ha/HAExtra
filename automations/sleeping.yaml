@@ -96,12 +96,12 @@
     - service: climate.set_temperature
       data:
         entity_id: climate.daikin3
-        temperature: 24
+        temperature: 25
         operation_mode: cool
     - service: climate.set_temperature
       data:
         entity_id: climate.daikin4
-        temperature: 24
+        temperature: 25
         operation_mode: cool
     - service: fan.turn_off
       entity_id: fan.fan

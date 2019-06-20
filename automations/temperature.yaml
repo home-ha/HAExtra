@@ -1,62 +1,196 @@
 # 主卧温度高
-- alias: Bedroom Temperature High
-  trigger:
-    - platform: numeric_state
-      entity_id: climate.daikin3
-      value_template: '{{ state.attributes.current_temperature }}'
-      above: 28
-      for:
-        minutes: 10
-  condition:
-    - condition: time
-      after: '20:00'
-      before: '08:00'
-  action:
-    - service: climate.turn_on
-      entity_id: climate.daikin3
+# - alias: Bedroom Temperature High
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: climate.daikin3
+#       value_template: '{{ state.attributes.current_temperature }}'
+#       above: 28
+#       for:
+#         minutes: 10
+#   condition:
+#     - condition: time
+#       after: '20:00'
+#       before: '08:00'
+#   action:
+#     - service: climate.turn_on
+#       entity_id: climate.daikin3
 
-# 主卧温度低
-- alias: Bedroom Temperature Low
-  trigger:
-    - platform: numeric_state
-      entity_id: climate.daikin3
-      value_template: '{{ state.attributes.current_temperature }}'
-      below: 25
-      for:
-        minutes: 10
-  action:
-    - service: climate.turn_off
-      entity_id: climate.daikin3
+# # 主卧温度低
+# - alias: Bedroom Temperature Low
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: climate.daikin3
+#       value_template: '{{ state.attributes.current_temperature }}'
+#       below: 25
+#       for:
+#         minutes: 10
+#   action:
+#     - service: climate.turn_off
+#       entity_id: climate.daikin3
 
 # 儿童房温度高
-- alias: Kids Temperature High
+# - alias: Kids Temperature High
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: climate.daikin4
+#       value_template: '{{ state.attributes.current_temperature }}'
+#       above: 28
+#       for:
+#         minutes: 10
+#   condition:
+#     - condition: time
+#       after: '20:00'
+#       before: '08:00'
+#   action:
+#     - service: climate.turn_on
+#       entity_id: climate.daikin4
+
+# # 儿童房温度低
+# - alias: Kids Temperature Low
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: climate.daikin4
+#       value_template: '{{ state.attributes.current_temperature }}'
+#       below: 25
+#       for:
+#         minutes: 10
+#   action:
+#     - service: climate.turn_off
+#       entity_id: climate.daikin4
+
+# 主卧空调温度变化
+- alias: Climate3 Temperature Changed
   trigger:
+    - platform: time
+      at: '20:00:01'
     - platform: numeric_state
-      entity_id: climate.daikin4
+      entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
-      above: 28
+      above: 31 # 升至高档
       for:
-        minutes: 10
+        minutes: 5
+    - platform: numeric_state
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      above: 29 # 升至中档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      above: 27 # 升至低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      below: 30 # 降至中档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      below: 28 # 降至低档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      below: 25 # 降至关机
+      for:
+        minutes: 6
   condition:
     - condition: time
       after: '20:00'
       before: '08:00'
   action:
-    - service: climate.turn_on
-      entity_id: climate.daikin4
+    - service_template: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
+      entity_id: fan.fan
+    - condition: numeric_state
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      above: 25
+    - service: climate.set_temperature
+      data_template:
+        entity_id: climate.daikin3
+        temperature: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 31) %}23{% elif (state_attr("climate.daikin3", "current_temperature") | int > 29) %}24{% else %}25{% endif %}'
+        operation_mode: cool
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin3
+        fan_mode: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 31) %}三级{% elif (state_attr("climate.daikin3", "current_temperature") | int > 29) %}二级{% else %}一级{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("climate.daikin3", "friendly_name") }}={{ state_attr("climate.daikin3", "current_temperature") }}'
+        message: '{{ state_attr("climate.daikin3", "friendly_name") }}⇒{{ state_attr("climate.daikin3", "fan_mode") }}'
 
-# 儿童房温度低
-- alias: Kids Temperature Low
+# 儿童房空调温度变化
+- alias: Climate4 Temperature Changed
   trigger:
+    - platform: time
+      at: '20:00:01'
     - platform: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
-      below: 25
+      above: 31 # 升至高档
       for:
-        minutes: 10
-  action:
-    - service: climate.turn_off
+        minutes: 5
+    - platform: numeric_state
       entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
+      above: 29 # 升至中档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
+      above: 27 # 升至低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
+      below: 30 # 降至中档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
+      below: 28 # 降至低档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
+      below: 25 # 降至关机
+      for:
+        minutes: 6
+  condition:
+    - condition: time
+      after: '20:00'
+      before: '08:00'
+  action:
+    - service_template: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
+      entity_id: fan.fan
+    - condition: numeric_state
+      entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
+      above: 25
+    - service: climate.set_temperature
+      data_template:
+        entity_id: climate.daikin4
+        temperature: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 31) %}23{% elif (state_attr("climate.daikin4", "current_temperature") | int > 29) %}24{% else %}25{% endif %}'
+        operation_mode: cool
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin4
+        fan_mode: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 31) %}三级{% elif (state_attr("climate.daikin4", "current_temperature") | int > 29) %}二级{% else %}一级{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("climate.daikin4", "friendly_name") }}={{ state_attr("climate.daikin4", "current_temperature") }}'
+        message: '{{ state_attr("climate.daikin4", "friendly_name") }}⇒{{ state_attr("climate.daikin4", "fan_mode") }}'
 
 # 儿童房风扇温度变化
 - alias: Fan Temperature Changed
