@@ -104,7 +104,7 @@
       after: '20:00'
       before: '08:00'
   action:
-    - service_template: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
+    - service_template: '{% if (state_attr("climate.daikin3", "current_temperature") | float > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
       entity_id: climate.daikin3
     - condition: numeric_state
       entity_id: climate.daikin3
@@ -113,12 +113,12 @@
     - service: climate.set_temperature
       data_template:
         entity_id: climate.daikin3
-        temperature: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 31) %}23{% elif (state_attr("climate.daikin3", "current_temperature") | int > 29) %}24{% else %}25{% endif %}'
+        temperature: '{% if (state_attr("climate.daikin3", "current_temperature") | float > 31) %}23{% elif (state_attr("climate.daikin3", "current_temperature") | float > 29) %}24{% else %}25{% endif %}'
         operation_mode: cool
     - service: climate.set_fan_mode
       data_template:
         entity_id: climate.daikin3
-        fan_mode: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 31) %}三级{% elif (state_attr("climate.daikin3", "current_temperature") | int > 29) %}二级{% else %}一级{% endif %}'
+        fan_mode: '{% if (state_attr("climate.daikin3", "current_temperature") | float > 31) %}三级{% elif (state_attr("climate.daikin3", "current_temperature") | float > 29) %}二级{% else %}一级{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -171,7 +171,7 @@
       after: '20:00'
       before: '08:00'
   action:
-    - service_template: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
+    - service_template: '{% if (state_attr("climate.daikin4", "current_temperature") | float > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
       entity_id: climate.daikin4
     - condition: numeric_state
       entity_id: climate.daikin4
@@ -180,12 +180,12 @@
     - service: climate.set_temperature
       data_template:
         entity_id: climate.daikin4
-        temperature: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 31) %}23{% elif (state_attr("climate.daikin4", "current_temperature") | int > 29) %}24{% else %}25{% endif %}'
+        temperature: '{% if (state_attr("climate.daikin4", "current_temperature") | float > 31) %}23{% elif (state_attr("climate.daikin4", "current_temperature") | float > 29) %}24{% else %}25{% endif %}'
         operation_mode: cool
     - service: climate.set_fan_mode
       data_template:
         entity_id: climate.daikin4
-        fan_mode: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 31) %}三级{% elif (state_attr("climate.daikin4", "current_temperature") | int > 29) %}二级{% else %}一级{% endif %}'
+        fan_mode: '{% if (state_attr("climate.daikin4", "current_temperature") | float > 31) %}三级{% elif (state_attr("climate.daikin4", "current_temperature") | float > 29) %}二级{% else %}一级{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -238,7 +238,7 @@
       after: '20:00'
       before: '08:00'
   action:
-    - service_template: '{% if (state_attr("fan.fan", "temperature") | int > 25) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
+    - service_template: '{% if (state_attr("fan.fan", "temperature") | float > 22) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
       entity_id: fan.fan
     - condition: numeric_state
       entity_id: fan.fan
@@ -247,7 +247,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fan
-        speed: '{% if (state_attr("fan.fan", "temperature") | int > 29) %}Level 3{% elif (state_attr("fan.fan", "temperature") | int > 23) %}Level 2{% else %}Level 1{% endif %}'
+        speed: '{% if (state_attr("fan.fan", "temperature") | float > 29) %}Level 3{% elif (state_attr("fan.fan", "temperature") | float > 23) %}Level 2{% else %}Level 1{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -294,7 +294,7 @@
       after: '20:00'
       before: '08:00'
   action:
-    - service_template: '{% if (states("sensor.aircat2_temperature") | int > 23) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
+    - service_template: '{% if (states("sensor.aircat2_temperature") | float > 23) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
       entity_id: fan.fan2
     - condition: numeric_state
       entity_id: sensor.aircat2_temperature
@@ -302,7 +302,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fan2
-        speed: '{% if (states("sensor.aircat2_temperature") | int > 29) %}Level 3{% elif (states("sensor.aircat2_temperature") | int > 27) %}Level 2{% else %}Level 1{% endif %}'
+        speed: '{% if (states("sensor.aircat2_temperature") | float > 29) %}Level 3{% elif (states("sensor.aircat2_temperature") | float > 27) %}Level 2{% else %}Level 1{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
