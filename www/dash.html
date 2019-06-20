@@ -590,7 +590,7 @@
 						}
 
 						extra += '<select class="moder" onclick="event.stopPropagation()" onchange="handleMode(this)">'
-						var current = domain == 'climate' ? attributes.operation_mode : attributes.speed
+						var current = domain == 'climate' ? attributes.operation_mode : (attributes.speed_level || attributes.speed)
 						var mode_list = domain == 'climate' ? attributes.operation_list : attributes.speed_list
 						for (var i in mode_list) {
 							var mode = mode_list[i]
