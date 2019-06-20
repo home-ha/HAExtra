@@ -1,0 +1,109 @@
+# 准备睡眠
+- alias: Sleeping Preparing
+  trigger:
+    - platform: time
+      at: '20:30:00'
+  action:
+    - service: cover.close_cover
+      entity_id: cover.study_cover
+    - service: fan.set_speed
+      data:
+        entity_id: fan.fresher2
+        speed: Silent
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher
+        brightness: 2
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher2
+        brightness: 2
+    - service: fan.set_speed
+      data:
+        entity_id: fan.purifier
+        speed: Silent
+    - service: miai.set_vol
+      data:
+        vol: 25
+    - service: climate.turn_off
+      entity_id: climate.daikin1
+    - service: climate.turn_off
+      entity_id: climate.daikin2
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin3
+        fan_mode: 一级
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin4
+        fan_mode: 一级
+
+# 开始睡觉
+- alias: Sleeping Began
+  trigger:
+    - platform: time
+      at: '22:00:00'
+  action:
+    - service: logbook.log
+      data:
+        name: '开始睡觉'
+        message: '晚安！'
+
+# 进入深睡
+- alias: Sleeping Deepin
+  trigger:
+    - platform: time
+      at: '00:00:01'
+  action:
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin3
+        temperature: 26
+        operation_mode: cool
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin4
+        temperature: 26
+        operation_mode: cool
+
+# 结束睡眠
+- alias: Sleeping Ended
+  trigger:
+    - platform: time
+      at: '07:00:00'
+  action:
+    - service: cover.open_cover
+      entity_id: cover.study_cover
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher
+        brightness: 0
+    - service: fan.xiaomi_miio_set_led_brightness
+      data:
+        entity_id: fan.fresher2
+        brightness: 0
+    - service: miai.set_vol
+      data:
+        vol: 55
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin3
+        fan_mode: 自动
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.daikin4
+        fan_mode: 自动
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin3
+        temperature: 24
+        operation_mode: cool
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin4
+        temperature: 24
+        operation_mode: cool
+    - service: fan.turn_off
+      entity_id: fan.fan
+    - service: fan.turn_off
+      entity_id: fan.fan2

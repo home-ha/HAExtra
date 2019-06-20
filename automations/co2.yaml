@@ -1,0 +1,158 @@
+# 客厅二氧化碳变化
+- alias: Parlor CO2 Changed
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      above: 730 # 升至高档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      above: 680 # 升至中档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      above: 600 # 升至低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      below: 710 # 降至中档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      below: 660 # 降至低档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: sensor.fresher_co2
+      below: 500 # 降至关机
+      for:
+        minutes: 6
+  action:
+    - service_template: '{% if (states("sensor.fresher_co2") | int > 500) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
+      entity_id: fan.fresher
+    - condition: numeric_state
+      entity_id: sensor.fresher_co2
+      above: 500
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.fresher
+        speed: '{% if (states("sensor.fresher_co2") | int > 730) %}Strong{% elif (states("sensor.fresher_co2") | int > 680) %}Middle{% else %}Auto{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("sensor.fresher_co2", "friendly_name") }}={{ states("sensor.fresher_co2") }}'
+        message: '{{ state_attr("fan.fresher", "friendly_name") }}⇒{{ state_attr("fan.fresher", "speed") }}'
+
+# 主卧二氧化碳变化
+- alias: Bedroom CO2 Changed
+  trigger:
+    - platform: time
+      at: '07:30:01'
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 730 # 升至高档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 680 # 升至中档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 600 # 升至低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 710 # 降至中档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 660 # 降至低档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 500 # 降至关机
+      for:
+        minutes: 6
+  condition:
+    - condition: time
+      after: '7:30'
+      before: '20:29'
+  action:
+    - service_template: '{% if (states("sensor.purifier7_co2") | int > 500) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
+      entity_id: fan.fresher2
+    - condition: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 500
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.fresher2
+        speed: '{% if (states("sensor.purifier7_co2") | int > 730) %}Strong{% elif (states("sensor.purifier7_co2") | int > 680) %}Middle{% else %}Auto{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("sensor.purifier7_co2", "friendly_name") }}={{ states("sensor.purifier7_co2") }}'
+        message: '{{ state_attr("fan.fresher2", "friendly_name") }}⇒{{ state_attr("fan.fresher2", "speed") }}'
+
+# 主卧睡眠时二氧化碳变化
+- alias: Bedroom CO2 Changed On Sleeping
+  trigger:
+    - platform: time
+      at: '00:00:01'
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 1000 # 升至高档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 750 # 升至中档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 600 # 升至低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 900 # 降至中档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 720 # 降至低档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: sensor.purifier7_co2
+      below: 500 # 降至关机
+      for:
+        minutes: 6
+  condition:
+    - condition: time
+      after: '0:00'
+      before: '7:29'
+  action:
+    - service_template: '{% if (states("sensor.purifier7_co2") | int > 500) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
+      entity_id: fan.fresher2
+    - condition: numeric_state
+      entity_id: sensor.purifier7_co2
+      above: 500
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.fresher2
+        speed: '{% if (states("sensor.purifier7_co2") | int > 1000) %}Strong{% elif (states("sensor.purifier7_co2") | int > 750) %}Middle{% else %}Silent{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("sensor.purifier7_co2", "friendly_name") }}={{ states("sensor.purifier7_co2") }}'
+        message: '{{ state_attr("fan.fresher2", "friendly_name") }}⇒{{ state_attr("fan.fresher2", "speed") }}'

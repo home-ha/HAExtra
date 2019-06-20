@@ -1,0 +1,161 @@
+# 过道灯白天感应开
+- alias: Passage Light On Day
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      to: 'on'
+  action:
+    # - service: mqtt.publish
+    #   data:
+    #     topic: Genie/WAKE
+    #     payload: 'ON'
+    - condition: time
+      after: '06:00'
+      before: '18:00'
+    - condition: numeric_state
+      entity_id: sensor.illumination_34ce0090901a
+      below: 300
+    - service: light.turn_on
+      entity_id: light.passage_light
+
+# 过道灯白天感应关
+- alias: Passage Light Off Day
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      to: 'off'
+    - platform: state
+      entity_id: device_tracker.yphone
+      to: 'not_home'
+    - platform: state
+      entity_id: device_tracker.zphone
+      to: 'not_home'
+  condition:
+    - condition: time
+      after: '06:00'
+      before: '18:00'
+    - condition: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      state: 'off'
+    - condition: state
+      entity_id: device_tracker.yphone
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.zphone
+      state: 'not_home'
+    - condition: state
+      entity_id: media_player.x9400e
+      state: 'off'
+  action:
+    - service: light.turn_off
+      entity_id: light.passage_light
+
+# 过道灯白天变亮关
+- alias: Passage Light Off Brighten
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.illumination_34ce0090901a
+      above: 400
+      for:
+        minutes: 10
+  condition:
+    - condition: time
+      after: '06:00'
+      before: '18:00'
+  action:
+    - service: light.turn_off
+      entity_id: light.passage_light
+
+# 过道灯晚上感应开
+- alias: Passage Light On Night
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0001f3e5be
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: time
+      after: '18:00'
+      before: '21:30'
+  action:
+    - service: light.turn_on
+      entity_id: light.passage_light
+
+# 过道灯晚上感应关
+- alias: Passage Light Off Night
+  trigger:
+    - platform: time
+      at: '21:30:00'
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      to: 'off'
+  condition:
+    - condition: time
+      after: '21:29'
+      before: '23:59'
+    - condition: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.motion_sensor_158d0001f4a238
+      state: 'off'
+    - condition: state
+      entity_id: media_player.x9400e
+      state: 'off'
+  action:
+    - service: light.turn_off
+      entity_id: light.passage_light
+
+# 过道背景灯感应开关
+- alias: Passage Backlight Reaction
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: time
+      after: '21:30'
+      before: '06:00'
+    - condition: state
+      entity_id: light.passage_light
+      state: 'off'
+  # - condition: state
+  #   entity_id: light.passage_backlight
+  #   state: 'off'
+  action:
+    - service: light.turn_on
+      entity_id: light.passage_backlight
+    - wait_template: '{{ is_state("binary_sensor.motion_sensor_158d0001d66ce9", "off") }}'
+    - service: light.turn_off
+      entity_id: light.passage_backlight
+
+# 过道灯自动响应恢复
+- alias: Passage Light Reaction Enabler
+  initial_state: false
+  trigger:
+    - platform: time
+      at: '07:00:00'
+  action:
+    - service: automation.turn_on
+      entity_id: automation.passage_light_on_day
+    - service: automation.turn_on
+      entity_id: automation.passage_light_off_day
+    - service: automation.turn_on
+      entity_id: automation.passage_light_off_brighten
+    - service: automation.turn_on
+      entity_id: automation.passage_light_on_night
+    - service: automation.turn_on
+      entity_id: automation.passage_light_off_night
+    - service: automation.turn_on
+      entity_id: automation.passage_backlight_reaction
+    - service: miai.say
+      data:
+        message: 过道灯自动感应功能已启用
+    - delay: '00:00:10'
+    - service: automation.turn_off
+      entity_id: automation.passage_light_reaction_enabler

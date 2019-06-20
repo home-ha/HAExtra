@@ -1,0 +1,36 @@
+# 洗手间灯感应开
+- alias: Washroom Light On
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001f4a238
+      to: 'on'
+  condition:
+    # - condition: state
+    #   entity_id: light.washroom_light
+    #   state: 'off'
+    - condition: state
+      entity_id: sun.sun
+      state: below_horizon
+  action:
+    - service: light.turn_on
+      entity_id: light.washroom_light
+    - service: automation.turn_off
+      entity_id: automation.washroom_light_off
+    - service: automation.turn_on
+      entity_id: automation.washroom_light_off
+
+# 洗手间灯延迟关
+- alias: Washroom Light Off
+  initial_state: false
+  trigger:
+    - platform: time_pattern
+      minutes: '/3'
+  condition:
+    - condition: state
+      entity_id: binary_sensor.motion_sensor_158d0001f4a238
+      state: 'off'
+  action:
+    - service: light.turn_off
+      entity_id: light.washroom_light
+    - service: automation.turn_off
+      entity_id: automation.washroom_light_off

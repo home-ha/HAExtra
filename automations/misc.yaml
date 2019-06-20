@@ -1,0 +1,11 @@
+#  小爱音箱文本朗读
+- alias: MiAI Text To Speech
+  trigger:
+    - platform: state
+      entity_id: input_text.miai
+  action:
+    - condition: template
+      value_template: '{{ states("input_text.miai") != "unknown" and states("input_text.miai") != "" }}'
+    - service: miai.say
+      data_template:
+        message: '{{ states("input_text.miai") }}'
