@@ -1047,8 +1047,8 @@
 #         name: '{{ state_attr("sensor.aircat2_pm25", "friendly_name") }}={{ states("sensor.aircat2_pm25") }}'
 #         message: '{{ state_attr("fan.purifier4", "friendly_name") }}⇒{{ state_attr("fan.purifier4", "speed") }}'
 
-# 睡眠自动化
-- alias: Sleeping Began
+# 准备睡眠
+- alias: Sleeping Preparing
   trigger:
     - platform: time
       at: '20:30:00'
@@ -1087,6 +1087,18 @@
         entity_id: climate.daikin4
         fan_mode: 一级
 
+# 开始睡觉
+- alias: Sleeping Began
+  trigger:
+    - platform: time
+      at: '22:00:00'
+  action:
+    - service: logbook.log
+      data:
+        name: '开始睡觉'
+        message: '晚安！'
+
+# 进入深睡
 - alias: Sleeping Deepin
   trigger:
     - platform: time
@@ -1103,7 +1115,7 @@
         temperature: 26
         operation_mode: cool
 
-# 睡眠自动化
+# 结束睡眠
 - alias: Sleeping Ended
   trigger:
     - platform: time
@@ -1121,7 +1133,7 @@
         brightness: 0
     - service: miai.set_vol
       data:
-        vol: 50
+        vol: 55
     - service: climate.set_fan_mode
       data:
         entity_id: climate.daikin3
@@ -1140,13 +1152,18 @@
         entity_id: climate.daikin4
         temperature: 24
         operation_mode: cool
+    - service: fan.turn_off
+      entity_id: fan.fan
+    - service: fan.turn_off
+      entity_id: fan.fan2
 
 # 主卧温度高
 - alias: Bedroom Temperature High
   trigger:
     - platform: numeric_state
-      entity_id: sensor.purifier7_temperature
-      above: 22
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      above: 28
       for:
         minutes: 10
   condition:
@@ -1161,10 +1178,11 @@
 - alias: Bedroom Temperature Low
   trigger:
     - platform: numeric_state
-      entity_id: sensor.purifier7_temperature
-      below: 21
+      entity_id: climate.daikin3
+      value_template: '{{ state.attributes.current_temperature }}'
+      below: 25
       for:
-        minutes: 5
+        minutes: 10
   action:
     - service: climate.turn_off
       entity_id: climate.daikin3
@@ -1173,7 +1191,8 @@
 - alias: Kids Temperature High
   trigger:
     - platform: numeric_state
-      entity_id: sensor.purifier6_temperature
+      entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
       above: 28
       for:
         minutes: 10
@@ -1189,10 +1208,11 @@
 - alias: Kids Temperature Low
   trigger:
     - platform: numeric_state
-      entity_id: sensor.purifier6_temperature
+      entity_id: climate.daikin4
+      value_template: '{{ state.attributes.current_temperature }}'
       below: 25
       for:
-        minutes: 5
+        minutes: 10
   action:
     - service: climate.turn_off
       entity_id: climate.daikin4
@@ -1234,3 +1254,127 @@
   action:
     - service: cover.open_cover
       entity_id: cover.study_cover
+
+# 儿童房风扇温度变化
+- alias: Fan Temperature Changed
+  trigger:
+    - platform: time
+      at: '20:00:01'
+    - platform: numeric_state
+      entity_id: fan.fan
+      value_template: '{{ state.attributes.temperature }}'
+      above: 31 # 升至高档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: fan.fan
+      value_template: '{{ state.attributes.temperature }}'
+      above: 29 # 升至中档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: fan.fan
+      value_template: '{{ state.attributes.temperature }}'
+      above: 27 # 升至低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: fan.fan
+      value_template: '{{ state.attributes.temperature }}'
+      below: 30 # 降至中档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: fan.fan
+      value_template: '{{ state.attributes.temperature }}'
+      below: 28 # 降至低档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: fan.fan
+      value_template: '{{ state.attributes.temperature }}'
+      below: 25 # 降至关机
+      for:
+        minutes: 6
+  condition:
+    - condition: time
+      after: '20:00'
+      before: '08:00'
+  action:
+    - service_template: '{% if (state_attr("fan.fan", "temperature") | int > 25) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
+      entity_id: fan.fan
+    - condition: numeric_state
+      entity_id: fan.fan
+      value_template: '{{ state.attributes.temperature }}'
+      above: 25
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.fan
+        speed: '{% if (state_attr("fan.fan", "temperature") | int > 31) %}Level 3{% elif (state_attr("fan.fan", "temperature") | int > 29) %}Level 2{% else %}Level 1{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("fan.fan", "friendly_name") }}={{ state_attr("fan.fan", "temperature") }}'
+        message: '{{ state_attr("fan.fan", "friendly_name") }}⇒{{ state_attr("fan.fan", "speed") }}'
+
+# 书房风扇温度变化
+- alias: Fan2 Temperature Changed
+  trigger:
+    - platform: time
+      at: '20:00:01'
+    - platform: numeric_state
+      entity_id: fan.fan2
+      value_template: '{{ state.attributes.temperature }}'
+      above: 31 # 升至高档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: fan.fan2
+      value_template: '{{ state.attributes.temperature }}'
+      above: 29 # 升至中档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: fan.fan2
+      value_template: '{{ state.attributes.temperature }}'
+      above: 27 # 升至低档
+      for:
+        minutes: 6
+    - platform: numeric_state
+      entity_id: fan.fan2
+      value_template: '{{ state.attributes.temperature }}'
+      below: 30 # 降至中档
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: fan.fan2
+      value_template: '{{ state.attributes.temperature }}'
+      below: 28 # 降至低档
+      for:
+        minutes: 4
+    - platform: numeric_state
+      entity_id: fan.fan2
+      value_template: '{{ state.attributes.temperature }}'
+      below: 25 # 降至关机
+      for:
+        minutes: 6
+  condition:
+    - condition: time
+      after: '20:00'
+      before: '08:00'
+  action:
+    - service_template: '{% if (state_attr("fan.fan2", "temperature") | int > 25) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
+      entity_id: fan.fan2
+    - condition: numeric_state
+      entity_id: fan.fan2
+      value_template: '{{ state.attributes.temperature }}'
+      above: 25
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.fan2
+        speed: '{% if (state_attr("fan.fan2", "temperature") | int > 31) %}Level 3{% elif (state_attr("fan.fan2", "temperature") | int > 29) %}Level 2{% else %}Level 1{% endif %}'
+    - delay: 1
+    - service: logbook.log
+      data_template:
+        name: '{{ state_attr("fan.fan2", "friendly_name") }}={{ state_attr("fan.fan2", "temperature") }}'
+        message: '{{ state_attr("fan.fan2", "friendly_name") }}⇒{{ state_attr("fan.fan2", "speed") }}'
