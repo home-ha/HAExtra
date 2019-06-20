@@ -196,7 +196,7 @@
 - alias: Temperature Changed @Fan
   trigger:
     - platform: time
-      at: '20:00:01'
+      at: '20:30:01'
     - platform: numeric_state
       entity_id: fan.fan
       value_template: '{{ state.attributes.temperature }}'
@@ -258,7 +258,7 @@
 - alias: Temperature Changed @Fan2
   trigger:
     - platform: time
-      at: '20:00:01'
+      at: '20:30:01'
     - platform: numeric_state
       entity_id: sensor.aircat2_temperature
       above: 29 # 升至高档

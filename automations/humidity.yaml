@@ -27,7 +27,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier6_humidity
-      above: 74
+      above: 75
       for:
         minutes: 10
   condition:
@@ -43,11 +43,11 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier6_humidity
-      below: 70
+      below: 72
       for:
         minutes: 10
-    # - platform: time
-    #   at: '08:30:00'
+    - platform: time
+      at: '20:30:00'
   action:
     - service: switch.turn_off
       entity_id: switch.outlet2
