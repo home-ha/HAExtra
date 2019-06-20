@@ -1,5 +1,5 @@
 # 客厅二氧化碳变化
-- alias: CO2 Changed @Parlor
+- alias: CO2 Changed @Livingroom
   trigger:
     - platform: numeric_state
       entity_id: sensor.fresher_co2

@@ -29,7 +29,7 @@
 #       entity_id: climate.daikin3
 
 # 儿童房温度高
-# - alias: Temperature High @Kids
+# - alias: Temperature High @Kidsroom
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: climate.daikin4
@@ -46,7 +46,7 @@
 #       entity_id: climate.daikin4
 
 # # 儿童房温度低
-# - alias: Temperature Low @Kids
+# - alias: Temperature Low @Kidsroom
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: climate.daikin4
@@ -126,7 +126,7 @@
         message: '{{ state_attr("climate.daikin3", "friendly_name") }}⇒{{ state_attr("climate.daikin3", "fan_mode") }}'
 
 # 儿童房空调温度变化
-- alias: Temperature Changed @Kids
+- alias: Temperature Changed @Kidsroom
   trigger:
     - platform: time
       at: '20:00:01'

@@ -68,9 +68,9 @@ homekit:
       - automation
       - input_boolean
     exclude_entities:
-      - light.study_light2
-      - light.study_light3
-      - light.parlor_light2
+      - light.studyroom_light2
+      - light.studyroom_light3
+      - light.livingroom_light2
       - light.diningroom_light2
       - light.passage_light2
       - binary_sensor.switch_158d0001e59b33
@@ -116,7 +116,7 @@ sensor:
   - platform: mqtt
     device_class: illuminance
     state_topic: Sonoff3/lux
-    name: Study Lightness
+    name: Studyroom Lightness
     unit_of_measurement: lm
     availability_topic: Sonoff3/status
   - platform: mqtt
@@ -342,12 +342,12 @@ light:
     availability_topic: Hassmart2/status
 
   - platform: mqtt
-    name: Parlor Light
+    name: Livingroom Light
     state_topic: Hassmart3/relay/0
     command_topic: Hassmart3/relay/0/set
     availability_topic: Hassmart3/status
   - platform: mqtt
-    name: Parlor Spotlight
+    name: Livingroom Spotlight
     state_topic: Hassmart3/relay/1
     command_topic: Hassmart3/relay/1/set
     availability_topic: Hassmart3/status
@@ -358,7 +358,7 @@ light:
     availability_topic: Hassmart3/status
 
   - platform: mqtt
-    name: Parlor Light2
+    name: Livingroom Light2
     state_topic: Hassmart4/relay/0
     command_topic: Hassmart4/relay/0/set
     availability_topic: Hassmart4/status
@@ -374,12 +374,12 @@ light:
     command_topic: Hassmart5/relay/0/set
     availability_topic: Hassmart5/status
   - platform: mqtt
-    name: Study Light2
+    name: Studyroom Light2
     state_topic: Hassmart5/relay/1
     command_topic: Hassmart5/relay/1/set
     availability_topic: Hassmart5/status
   - platform: mqtt
-    name: Study Light3
+    name: Studyroom Light3
     state_topic: Hassmart5/relay/2
     command_topic: Hassmart5/relay/2/set
     availability_topic: Hassmart5/status
@@ -406,12 +406,12 @@ light:
   #   command_topic: Sonoff2/relay/0/set
   #   availability_topic: Sonoff2/status
   - platform: mqtt
-    name: Study Light
+    name: Studyroom Light
     state_topic: Sonoff3/relay/0
     command_topic: Sonoff3/relay/0/set
     availability_topic: Sonoff3/status
   - platform: mqtt
-    name: Kids Light
+    name: Kidsroom Light
     command_topic: NodeMCU6/irout/set
     availability_topic: NodeMCU6/status
     payload_on: 3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38
@@ -590,8 +590,8 @@ cover:
     host: Remote
     mac: 34:EA:34:58:73:5D
     covers:
-      study_cover:
-        name: Study Cover
+      studyroom_cover:
+        name: Studyroom Cover
         travel_time: 13
         command_open: 'sgD8AJ8wGAwNFxgMGAwYDAwYFwwYDQwYGAsNFw0XDRcYDAwYDBgNFxkMDBgYDBgMDBcNFw0XGQsNFxgMGAwMGAwYDBgXDQwYDBcNFxgMDRcMGAwXGAABIZ4xGQwNFxgMGAwYDAwXGAwYDQwXGAwNFw0XDBgYDAwYDBgMGBgMDBcYDBgMDRcMGAwYGAwMGBgMGAwMFw0XDRcYDA0XDBgMGBgMDBkMFw0XGAABIZ4xFwwNFxgMGAwYDAwYGAwYDAwYGAwMFw0XDRcYDAwYDBgNFxgMDBgYDRgMDBgMFw0YGAsNFxgMGAwMGAwYDBcYDQwYDBcNFxgMDBgMGAwYFwAF3AAAAAAAAAAAAAAAAA=='
         command_stop: 'sgD8AJ4xGAwMGBcMGAwYDAwYGAwYDAwYGAwMGAwZDBcYDAwYDBkLGBgMDBgYDBcNDBgMFw0YFw0MFxgMGAwMGAwYDBgXDQwYFw0MFxgMDRcYDAwYFwABIZ8xGAwMGBcNFw0XDQwXGAwYDQwYFwwNFwwYDBgXDQwYDBgMGBcMDRcYDBgMDBgMGAwYGAwMGBcNFwwNFwwYDBgZDAwYFw0MGBcNDBcYDAwYGAABIJ4xGAwMGBgMGAwXDQwXGAwYDQwYFwwNFwwYDBgYDAwYDRgMGBcNDBcYDBgMDBgMGAwYGAwMGBcNFw0MGAsYDBgYDAwYGAwMGBcNDBcYDAwYGAAF3AAAAAAAAAAAAAAAAA=='

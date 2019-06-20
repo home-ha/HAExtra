@@ -2,21 +2,21 @@
 - alias: Light Sync @Diningroom
   trigger:
     - platform: state
-      entity_id: light.diningroom_light2, light.diningroom_light
+      entity_id: light.dining_light2, light.dining_light
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.diningroom_light2" %}light.diningroom_light{% else %}light.diningroom_light2{% endif %}'
+        entity_id: '{% if trigger.entity_id == "light.dining_light2" %}light.dining_light{% else %}light.dining_light2{% endif %}'
 
 # 客厅灯开关同步
-- alias: Light Sync @Parlor
+- alias: Light Sync @Livingroom
   trigger:
     - platform: state
-      entity_id: light.parlor_light2, light.parlor_light
+      entity_id: light.living_light2, light.living_light
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.parlor_light2" %}light.parlor_light{% else %}light.parlor_light2{% endif %}'
+        entity_id: '{% if trigger.entity_id == "light.living_light2" %}light.living_light{% else %}light.living_light2{% endif %}'
 
 # 过道灯开关同步
 - alias: Light Sync @Passage
@@ -29,11 +29,11 @@
         entity_id: '{% if trigger.entity_id == "light.passage_light2" %}light.passage_light{% else %}light.passage_light2{% endif %}'
 
 # 书房灯开关同步
-- alias: Light Sync @Study
+- alias: Light Sync @Studyroom
   trigger:
     - platform: state
-      entity_id: light.study_light2, light.study_light3, light.study_light
+      entity_id: light.studyroom_light2, light.studyroom_light3, light.studyroom_light
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.study_light2" %}light.study_light,light.study_light3{% elif trigger.entity_id == "light.study_light3" %}light.study_light,light.study_light2{% else %}light.study_light2,light.study_light3{% endif %}'
+        entity_id: '{% if trigger.entity_id == "light.studyroom_light2" %}light.studyroom_light,light.studyroom_light3{% elif trigger.entity_id == "light.studyroom_light3" %}light.studyroom_light,light.studyroom_light2{% else %}light.studyroom_light2,light.studyroom_light3{% endif %}'

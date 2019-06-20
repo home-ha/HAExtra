@@ -10,7 +10,7 @@ default_view:
     - sensor.purifier7_pm25
     - sensor.purifier7_co2
     - sensor.fresher_co2
-    - group.parlor
+    - group.livingroom
     - group.diningroom
     #- group.kitchen
     - group.hallway
@@ -18,16 +18,16 @@ default_view:
     - group.washroom
     - group.bedroom
     - group.parents
-    - group.kids
-    - group.study
+    - group.kidsroom
+    - group.studyroom
     - group.balcony
     #- group.outside
 
-Parlor:
+Livingroom:
   entities:
-    - light.parlor_light
-    #- light.parlor_light2
-    - light.parlor_spotlight
+    - light.livingroom_light
+    #- light.livingroom_light2
+    - light.livingroom_spotlight
     - media_player.x9400e
     #- media_player.magic
     - climate.daikin2
@@ -66,7 +66,7 @@ Passage:
   entities:
     - light.passage_light
     - light.passage_spotlight
-    #- light.study_light2
+    #- light.studyroom_light2
     - light.passage_backlight
     - switch.station
     - binary_sensor.motion_sensor_158d0001d66ce9
@@ -95,17 +95,17 @@ Bedroom:
     - sensor.fresher2_pm25
     - sensor.fresher2_co2
 
-Parents:
+Parentsroom:
   entities:
     - fan.purifier
     - sensor.purifier_temperature
     - sensor.purifier_humidity
     - sensor.purifier_pm25
 
-Kids:
+Kidsroom:
   entities:
     - light.lamp2
-    - light.kids_light
+    - light.kidsroom_light
     - climate.daikin4
     #- fan.fan
     - fan.purifier6
@@ -116,12 +116,12 @@ Kids:
     - sensor.purifier6_pm25
     - sensor.purifier6_co2
 
-Study:
+Studyroom:
   entities:
     - light.lamp
-    - light.study_light
+    - light.studyroom_light
     #- light.airer_light
-    - cover.study_cover
+    - cover.studyroom_cover
     #- cover.airer
     - switch.projector
     - switch.speaker
@@ -134,7 +134,7 @@ Study:
     - sensor.aircat2_pm25
     - sensor.aircat2_hcho
     #- sensor.purifier4_co2
-    - sensor.study_lightness
+    - sensor.studyroom_lightness
 
 Balcony:
   entities:
@@ -170,12 +170,12 @@ Automations:
     - group.all_automations
     - group.all_scripts
 
-TParlor:
+TLivingroom:
   view: yes
   entities:
-    - light.parlor_light
-    #- light.parlor_light2
-    - light.parlor_spotlight
+    - light.livingroom_light
+    #- light.livingroom_light2
+    - light.livingroom_spotlight
     - media_player.x9400e
     #- media_player.magic
     - climate.daikin2
@@ -217,7 +217,7 @@ TPassage:
   entities:
     - light.passage_light
     - light.passage_spotlight
-    #- light.study_light2
+    #- light.studyroom_light2
     - light.passage_backlight
     - switch.station
     - binary_sensor.motion_sensor_158d0001d66ce9
@@ -248,7 +248,7 @@ TBedroom:
     - sensor.fresher2_pm25
     - sensor.fresher2_co2
 
-TParents:
+TParentsroom:
   view: yes
   entities:
     - fan.purifier
@@ -256,11 +256,11 @@ TParents:
     - sensor.purifier_humidity
     - sensor.purifier_pm25
 
-TKids:
+TKidsroom:
   view: yes
   entities:
     - light.lamp2
-    - light.kids_light
+    - light.kidsroom_light
     - climate.daikin4
     - fan.fan
     - fan.purifier6
@@ -270,13 +270,13 @@ TKids:
     - sensor.purifier6_pm25
     - sensor.purifier6_co2
 
-TStudy:
+TStudyroom:
   view: yes
   entities:
     - light.lamp
-    - light.study_light
+    - light.studyroom_light
     #- light.airer_light
-    - cover.study_cover
+    - cover.studyroom_cover
     #- cover.airer
     - switch.projector
     - switch.speaker
@@ -289,7 +289,7 @@ TStudy:
     - sensor.aircat2_pm25
     - sensor.aircat2_hcho
     #- sensor.purifier4_co2
-    - sensor.study_lightness
+    - sensor.studyroom_lightness
 
 TBalcony:
   view: yes

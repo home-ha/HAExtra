@@ -110,7 +110,7 @@
       entity_id: automation.passage_light_reaction_enabler
 
 # 书房无线开关单击
-- alias: Study Switch Clicked
+- alias: Studyroom Switch Clicked
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -124,7 +124,7 @@
         payload: toggle
 
 # 书房无线开关双击
-- alias: Study Switch DBClicked
+- alias: Studyroom Switch DBClicked
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -139,7 +139,7 @@
       entity_id: switch.projector
 
 # 书房无线开关长按
-- alias: Study Switch Pressed
+- alias: Studyroom Switch Pressed
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -381,14 +381,14 @@
         entity_id: '{% if trigger.entity_id == "light.diningroom_light2" %}light.diningroom_light{% else %}light.diningroom_light2{% endif %}'
 
 # 客厅灯开关同步
-- alias: Parlor Light Sync
+- alias: Livingroom Light Sync
   trigger:
     - platform: state
-      entity_id: light.parlor_light2, light.parlor_light
+      entity_id: light.livingroom_light2, light.livingroom_light
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.parlor_light2" %}light.parlor_light{% else %}light.parlor_light2{% endif %}'
+        entity_id: '{% if trigger.entity_id == "light.livingroom_light2" %}light.livingroom_light{% else %}light.livingroom_light2{% endif %}'
 
 # 过道灯开关同步
 - alias: Passage Light Sync
@@ -401,14 +401,14 @@
         entity_id: '{% if trigger.entity_id == "light.passage_light2" %}light.passage_light{% else %}light.passage_light2{% endif %}'
 
 # 书房灯开关同步
-- alias: Study Light Sync
+- alias: Studyroom Light Sync
   trigger:
     - platform: state
-      entity_id: light.study_light2, light.study_light3, light.study_light
+      entity_id: light.studyroom_light2, light.studyroom_light3, light.studyroom_light
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.study_light2" %}light.study_light,light.study_light3{% elif trigger.entity_id == "light.study_light3" %}light.study_light,light.study_light2{% else %}light.study_light2,light.study_light3{% endif %}'
+        entity_id: '{% if trigger.entity_id == "light.studyroom_light2" %}light.studyroom_light,light.studyroom_light3{% elif trigger.entity_id == "light.studyroom_light3" %}light.studyroom_light,light.studyroom_light2{% else %}light.studyroom_light2,light.studyroom_light3{% endif %}'
 
 # 阳台空气差
 - alias: Balcony Air Bad
@@ -618,7 +618,7 @@
 #         oscillating: true
 
 # 儿童房湿度过低
-# - alias: Kids Humidity Low
+# - alias: Kidsroom Humidity Low
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: sensor.purifier6_humidity
@@ -634,7 +634,7 @@
 #         oscillating: true
 
 # 客厅二氧化碳变化
-- alias: Parlor CO2 Changed
+- alias: Livingroom CO2 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.fresher_co2
@@ -891,7 +891,7 @@
         message: '{{ state_attr("fan.purifier7", "friendly_name") }}⇒{{ state_attr("fan.purifier7", "speed") }}'
 
 # 次卧颗粒物变化
-- alias: Parents PM25 Changed
+- alias: Parentsroom PM25 Changed
   trigger:
     - platform: time
       at: '07:30:01'
@@ -950,7 +950,7 @@
         message: '{{ state_attr("fan.purifier", "friendly_name") }}⇒{{ state_attr("fan.purifier", "speed") }} {{ state_attr("fan.purifier", "favorite_level") }}'
 
 # 儿童房颗粒物变化
-- alias: Kids PM25 Changed
+- alias: Kidsroom PM25 Changed
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier6_pm25
@@ -999,7 +999,7 @@
         message: '{{ state_attr("fan.purifier6", "friendly_name") }}⇒{{ state_attr("fan.purifier6", "speed") }}'
 
 # 书房颗粒物变化
-# - alias: Study PM25 Changed
+# - alias: Studyroom PM25 Changed
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: sensor.aircat2_pm25
@@ -1054,7 +1054,7 @@
       at: '20:30:00'
   action:
     - service: cover.close_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
     - service: fan.set_speed
       data:
         entity_id: fan.fresher2
@@ -1122,7 +1122,7 @@
       at: '07:00:00'
   action:
     - service: cover.open_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
     - service: fan.xiaomi_miio_set_led_brightness
       data:
         entity_id: fan.fresher
@@ -1188,7 +1188,7 @@
       entity_id: climate.daikin3
 
 # 儿童房温度高
-- alias: Kids Temperature High
+- alias: Kidsroom Temperature High
   trigger:
     - platform: numeric_state
       entity_id: climate.daikin4
@@ -1205,7 +1205,7 @@
       entity_id: climate.daikin4
 
 # 儿童房温度低
-- alias: Kids Temperature Low
+- alias: Kidsroom Temperature Low
   trigger:
     - platform: numeric_state
       entity_id: climate.daikin4
@@ -1218,42 +1218,42 @@
       entity_id: climate.daikin4
 
 # 书房亮度太高
-- alias: Study Lightness High
+- alias: Studyroom Lightness High
   trigger:
     - platform: time
       at: '12:30:00'
     - platform: numeric_state
-      entity_id: sensor.study_lightness
+      entity_id: sensor.studyroom_lightness
       above: 180
       for:
         minutes: 10
   condition:
     - condition: numeric_state
-      entity_id: sensor.study_lightness
+      entity_id: sensor.studyroom_lightness
       above: 180
     - condition: time
       after: '12:00'
       before: '16:00'
   action:
     - service: cover.close_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
 
 # 书房亮度正常
-- alias: Study Lightness Normal
+- alias: Studyroom Lightness Normal
   trigger:
     - platform: sun
       event: sunset
       offset: '-01:30:00'
   condition:
     - condition: state
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
       state: closed
     - condition: state
       entity_id: switch.projector
       state: 'off'
   action:
     - service: cover.open_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
 
 # 儿童房风扇温度变化
 - alias: Fan Temperature Changed

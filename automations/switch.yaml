@@ -58,7 +58,7 @@
       entity_id: group.all_lights
 
 # 书房无线开关单击
-- alias: Switch Clicked @Study
+- alias: Switch Clicked @Studyroom
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -72,7 +72,7 @@
         payload: toggle
 
 # 书房无线开关双击
-- alias: Switch DbClicked @Study
+- alias: Switch DbClicked @Studyroom
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -87,7 +87,7 @@
       entity_id: switch.projector
 
 # 书房无线开关长按
-- alias: Switch Pressed @Study
+- alias: Switch Pressed @Studyroom
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click

@@ -97,7 +97,7 @@
         message: '{{ state_attr("fan.purifier7", "friendly_name") }}⇒{{ state_attr("fan.purifier7", "speed") }}'
 
 # 次卧颗粒物变化
-- alias: PM25 Changed @Parents
+- alias: PM25 Changed @Parentsroom
   trigger:
     - platform: time
       at: '07:30:01'
@@ -156,7 +156,7 @@
         message: '{{ state_attr("fan.purifier", "friendly_name") }}⇒{{ state_attr("fan.purifier", "speed") }} {{ state_attr("fan.purifier", "favorite_level") }}'
 
 # 儿童房颗粒物变化
-- alias: PM25 Changed @Kids
+- alias: PM25 Changed @Kidsroom
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier6_pm25
@@ -205,7 +205,7 @@
         message: '{{ state_attr("fan.purifier6", "friendly_name") }}⇒{{ state_attr("fan.purifier6", "speed") }}'
 
 # 书房颗粒物变化
-# - alias: PM25 Changed @Study
+# - alias: PM25 Changed @Studyroom
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: sensor.aircat2_pm25

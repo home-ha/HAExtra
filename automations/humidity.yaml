@@ -85,7 +85,7 @@
 #         oscillating: true
 
 # 儿童房湿度过低
-# - alias: Humidity Low @Kids
+# - alias: Humidity Low @Kidsroom
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: sensor.purifier6_humidity

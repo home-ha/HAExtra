@@ -5,7 +5,7 @@
       at: '20:30:00'
   action:
     - service: cover.close_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
     - service: fan.set_speed
       data:
         entity_id: fan.fresher2
@@ -73,7 +73,7 @@
       at: '07:00:00'
   action:
     - service: cover.open_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
     - service: fan.xiaomi_miio_set_led_brightness
       data:
         entity_id: fan.fresher
