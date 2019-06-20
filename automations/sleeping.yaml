@@ -1,5 +1,5 @@
 # 准备睡眠
-- alias: Sleeping Preparing
+- alias: Sleeping Adeading
   trigger:
     - platform: time
       at: '20:30:00'
