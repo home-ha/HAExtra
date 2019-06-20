@@ -1,5 +1,5 @@
 # 入户门开启
-# - alias: Entrance Door Opened
+# - alias: Door Opened @Entrance
 # #   trigger:
 #     platform: state
 #     entity_id: binary_sensor.door_window_sensor_158d0001f3e5be
@@ -14,7 +14,7 @@
 
 
 # 阳台移门开合
-- alias: Balcony Door Toggled
+- alias: Door Toggled @Balcony
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
@@ -33,7 +33,7 @@
       entity_id: light.balcony_light
 
 # 阳台移门打开
-# - alias: Balcony Door Opened
+# - alias: Door Opened @Balcony
 #   trigger:
 #     - platform: state
 #       entity_id: binary_sensor.door_window_sensor_158d000228a52b

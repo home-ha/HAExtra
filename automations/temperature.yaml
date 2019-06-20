@@ -1,5 +1,5 @@
 # 主卧温度高
-# - alias: Bedroom Temperature High
+# - alias: Temperature High @Bedroom
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: climate.daikin3
@@ -16,7 +16,7 @@
 #       entity_id: climate.daikin3
 
 # # 主卧温度低
-# - alias: Bedroom Temperature Low
+# - alias: Temperature Low @Bedroom
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: climate.daikin3
@@ -29,7 +29,7 @@
 #       entity_id: climate.daikin3
 
 # 儿童房温度高
-# - alias: Kids Temperature High
+# - alias: Temperature High @Kids
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: climate.daikin4
@@ -46,7 +46,7 @@
 #       entity_id: climate.daikin4
 
 # # 儿童房温度低
-# - alias: Kids Temperature Low
+# - alias: Temperature Low @Kids
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: climate.daikin4
@@ -59,7 +59,7 @@
 #       entity_id: climate.daikin4
 
 # 主卧空调温度变化
-- alias: Climate3 Temperature Changed
+- alias: Temperature Changed @Bedroom
   trigger:
     - platform: time
       at: '20:00:01'
@@ -126,7 +126,7 @@
         message: '{{ state_attr("climate.daikin3", "friendly_name") }}⇒{{ state_attr("climate.daikin3", "fan_mode") }}'
 
 # 儿童房空调温度变化
-- alias: Climate4 Temperature Changed
+- alias: Temperature Changed @Kids
   trigger:
     - platform: time
       at: '20:00:01'
@@ -193,7 +193,7 @@
         message: '{{ state_attr("climate.daikin4", "friendly_name") }}⇒{{ state_attr("climate.daikin4", "fan_mode") }}'
 
 # 儿童房风扇温度变化
-- alias: Fan Temperature Changed
+- alias: Temperature Changed @Fan
   trigger:
     - platform: time
       at: '20:00:01'
@@ -255,7 +255,7 @@
         message: '{{ state_attr("fan.fan", "friendly_name") }}⇒{{ state_attr("fan.fan", "speed") }}'
 
 # 书房风扇温度变化
-- alias: Fan2 Temperature Changed
+- alias: Temperature Changed @Fan2
   trigger:
     - platform: time
       at: '20:00:01'

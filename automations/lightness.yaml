@@ -1,5 +1,5 @@
 # 书房亮度太高
-- alias: Study Lightness High
+- alias: Lightness High @Study
   trigger:
     - platform: time
       at: '12:30:00'
@@ -20,7 +20,7 @@
       entity_id: cover.study_cover
 
 # 书房亮度正常
-- alias: Study Lightness Normal
+- alias: Lightness Normal @Study
   trigger:
     - platform: sun
       event: sunset

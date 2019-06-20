@@ -1,5 +1,5 @@
 #过道无线开关单击
-- alias: Passage Switch Clicked
+- alias: Switch Clicked @Passage
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -12,7 +12,7 @@
         message: '阳台PM2.5为{{ states("sensor.balcony_pm25") }}，餐厅PM2.5为{{ states("sensor.aircat_pm25") }}，主卧PM2.5为{{ states("sensor.purifier7_pm25") }}。客厅二氧化碳浓度为{{ states("sensor.fresher_co2") }}，主卧二氧化碳浓度为{{ states("sensor.purifier7_co2") }}，儿童房二氧化碳浓度为{{ states("sensor.purifier6_co2") }}'
 
 # 过道无线开关双击
-- alias: Passage Switch DBClicked
+- alias: Switch DbClicked @Passage
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -25,7 +25,7 @@
         message: 晾衣机将于今晚定时开启烘干功能
 
 # 过道无线开关长按
-- alias: Passage Switch Pressed
+- alias: Switch Pressed @Passage
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -58,7 +58,7 @@
       entity_id: group.all_lights
 
 # 书房无线开关单击
-- alias: Study Switch Clicked
+- alias: Switch Clicked @Study
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -72,7 +72,7 @@
         payload: toggle
 
 # 书房无线开关双击
-- alias: Study Switch DBClicked
+- alias: Switch DbClicked @Study
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -87,7 +87,7 @@
       entity_id: switch.projector
 
 # 书房无线开关长按
-- alias: Study Switch Pressed
+- alias: Switch Pressed @Study
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click

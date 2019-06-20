@@ -1,5 +1,5 @@
 # 餐厅灯开关同步
-- alias: Diningroom Light Sync
+- alias: Light Sync @Diningroom
   trigger:
     - platform: state
       entity_id: light.diningroom_light2, light.diningroom_light
@@ -9,7 +9,7 @@
         entity_id: '{% if trigger.entity_id == "light.diningroom_light2" %}light.diningroom_light{% else %}light.diningroom_light2{% endif %}'
 
 # 客厅灯开关同步
-- alias: Parlor Light Sync
+- alias: Light Sync @Parlor
   trigger:
     - platform: state
       entity_id: light.parlor_light2, light.parlor_light
@@ -19,7 +19,7 @@
         entity_id: '{% if trigger.entity_id == "light.parlor_light2" %}light.parlor_light{% else %}light.parlor_light2{% endif %}'
 
 # 过道灯开关同步
-- alias: Passage Light Sync
+- alias: Light Sync @Passage
   trigger:
     - platform: state
       entity_id: light.passage_light2, light.passage_light
@@ -29,7 +29,7 @@
         entity_id: '{% if trigger.entity_id == "light.passage_light2" %}light.passage_light{% else %}light.passage_light2{% endif %}'
 
 # 书房灯开关同步
-- alias: Study Light Sync
+- alias: Light Sync @Study
   trigger:
     - platform: state
       entity_id: light.study_light2, light.study_light3, light.study_light

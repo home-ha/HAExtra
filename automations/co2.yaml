@@ -1,5 +1,5 @@
 # 客厅二氧化碳变化
-- alias: Parlor CO2 Changed
+- alias: CO2 Changed @Parlor
   trigger:
     - platform: numeric_state
       entity_id: sensor.fresher_co2
@@ -48,7 +48,7 @@
         message: '{{ state_attr("fan.fresher", "friendly_name") }}⇒{{ state_attr("fan.fresher", "speed") }}'
 
 # 主卧二氧化碳变化
-- alias: Bedroom CO2 Changed
+- alias: CO2 Changed @Bedroom
   trigger:
     - platform: time
       at: '07:30:01'
@@ -103,7 +103,7 @@
         message: '{{ state_attr("fan.fresher2", "friendly_name") }}⇒{{ state_attr("fan.fresher2", "speed") }}'
 
 # 主卧睡眠时二氧化碳变化
-- alias: Bedroom CO2 Changed On Sleeping
+- alias: CO2 Changed @Bedroom On Sleeping
   trigger:
     - platform: time
       at: '00:00:01'
