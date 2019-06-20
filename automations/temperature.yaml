@@ -105,7 +105,7 @@
       before: '08:00'
   action:
     - service_template: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
-      entity_id: fan.fan
+      entity_id: climate.daikin3
     - condition: numeric_state
       entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
@@ -116,7 +116,7 @@
         temperature: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 31) %}23{% elif (state_attr("climate.daikin3", "current_temperature") | int > 29) %}24{% else %}25{% endif %}'
         operation_mode: cool
     - service: climate.set_fan_mode
-      data:
+      data_template:
         entity_id: climate.daikin3
         fan_mode: '{% if (state_attr("climate.daikin3", "current_temperature") | int > 31) %}三级{% elif (state_attr("climate.daikin3", "current_temperature") | int > 29) %}二级{% else %}一级{% endif %}'
     - delay: 1
@@ -172,7 +172,7 @@
       before: '08:00'
   action:
     - service_template: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 25) %}climate.turn_on{% else %}climate.turn_off{% endif %}'
-      entity_id: fan.fan
+      entity_id: climate.daikin4
     - condition: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
@@ -183,7 +183,7 @@
         temperature: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 31) %}23{% elif (state_attr("climate.daikin4", "current_temperature") | int > 29) %}24{% else %}25{% endif %}'
         operation_mode: cool
     - service: climate.set_fan_mode
-      data:
+      data_template:
         entity_id: climate.daikin4
         fan_mode: '{% if (state_attr("climate.daikin4", "current_temperature") | int > 31) %}三级{% elif (state_attr("climate.daikin4", "current_temperature") | int > 29) %}二级{% else %}一级{% endif %}'
     - delay: 1
