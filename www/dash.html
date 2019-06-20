@@ -595,7 +595,7 @@
 						for (var i in mode_list) {
 							var mode = mode_list[i]
 							var key = mode.toLowerCase()
-							var text = _STATE_MAPS[key] || mode.replace('level', '档位')
+							var text = _STATE_MAPS[key] || mode.replace(/level/ig, '档位')
 							extra += '<option value="' + mode + '"' + (mode == current ? ' selected' : '') + '>' + text
 							if (mode == current && domain == 'climate') {
 								extra += ' ' + attributes.temperature
