@@ -66,31 +66,31 @@
     - platform: numeric_state
       entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
-      above: 31 # 升至高档
+      above: 32 # 升至高档
       for:
         minutes: 5
     - platform: numeric_state
       entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
-      above: 29 # 升至中档
+      above: 30 # 升至中档
       for:
         minutes: 4
     - platform: numeric_state
       entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
-      above: 27 # 升至低档
+      above: 28 # 升至低档
       for:
         minutes: 6
     - platform: numeric_state
       entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
-      below: 30 # 降至中档
+      below: 31 # 降至中档
       for:
         minutes: 5
     - platform: numeric_state
       entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
-      below: 28 # 降至低档
+      below: 29 # 降至低档
       for:
         minutes: 4
     - platform: numeric_state
@@ -113,12 +113,12 @@
     - service: climate.set_temperature
       data_template:
         entity_id: climate.daikin3
-        temperature: '{% if (state_attr("climate.daikin3", "current_temperature") | float > 31) %}23{% elif (state_attr("climate.daikin3", "current_temperature") | float > 29) %}24{% else %}25{% endif %}'
+        temperature: '{% if (state_attr("climate.daikin3", "current_temperature") | float > 32) %}23{% elif (state_attr("climate.daikin3", "current_temperature") | float > 30) %}24{% else %}25{% endif %}'
         operation_mode: cool
     - service: climate.set_fan_mode
       data_template:
         entity_id: climate.daikin3
-        fan_mode: '{% if (state_attr("climate.daikin3", "current_temperature") | float > 31) %}三级{% elif (state_attr("climate.daikin3", "current_temperature") | float > 29) %}二级{% else %}一级{% endif %}'
+        fan_mode: '{% if (state_attr("climate.daikin3", "current_temperature") | float > 32) %}三级{% elif (state_attr("climate.daikin3", "current_temperature") | float > 30) %}二级{% else %}一级{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
@@ -133,31 +133,31 @@
     - platform: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
-      above: 31 # 升至高档
+      above: 32 # 升至高档
       for:
         minutes: 5
     - platform: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
-      above: 29 # 升至中档
+      above: 30 # 升至中档
       for:
         minutes: 4
     - platform: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
-      above: 27 # 升至低档
+      above: 28 # 升至低档
       for:
         minutes: 6
     - platform: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
-      below: 30 # 降至中档
+      below: 31 # 降至中档
       for:
         minutes: 5
     - platform: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
-      below: 28 # 降至低档
+      below: 29 # 降至低档
       for:
         minutes: 4
     - platform: numeric_state
@@ -180,12 +180,12 @@
     - service: climate.set_temperature
       data_template:
         entity_id: climate.daikin4
-        temperature: '{% if (state_attr("climate.daikin4", "current_temperature") | float > 31) %}23{% elif (state_attr("climate.daikin4", "current_temperature") | float > 29) %}24{% else %}25{% endif %}'
+        temperature: '{% if (state_attr("climate.daikin4", "current_temperature") | float > 32) %}23{% elif (state_attr("climate.daikin4", "current_temperature") | float > 30) %}24{% else %}25{% endif %}'
         operation_mode: cool
     - service: climate.set_fan_mode
       data_template:
         entity_id: climate.daikin4
-        fan_mode: '{% if (state_attr("climate.daikin4", "current_temperature") | float > 31) %}三级{% elif (state_attr("climate.daikin4", "current_temperature") | float > 29) %}二级{% else %}一级{% endif %}'
+        fan_mode: '{% if (state_attr("climate.daikin4", "current_temperature") | float > 32) %}三级{% elif (state_attr("climate.daikin4", "current_temperature") | float > 30) %}二级{% else %}一级{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
