@@ -196,7 +196,7 @@
 - alias: Temperature Changed @Fan
   trigger:
     - platform: time
-      at: '20:30:01'
+      at: '21:00:01'
     - platform: numeric_state
       entity_id: sensor.fan_temperature
       above: 29 # 升至高档
@@ -229,17 +229,17 @@
         minutes: 6
   condition:
     - condition: time
-      after: '20:00'
+      after: '20:30'
       before: '08:00'
   action:
     - service_template: '{% if (states("sensor.fan_temperature") | float > 23) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-      entity_id: fan.fan2
+      entity_id: fan.fan
     - condition: numeric_state
       entity_id: sensor.fan_temperature
       above: 23
     - service: fan.set_speed
       data_template:
-        entity_id: fan.fan2
+        entity_id: fan.fan
         speed: '{% if (states("sensor.fan_temperature") | float > 29) %}Level 3{% elif (states("sensor.fan_temperature") | float > 25) %}Level 2{% else %}Level 1{% endif %}'
     - delay: 1
     - service: logbook.log
@@ -254,27 +254,27 @@
       at: '20:30:01'
     - platform: numeric_state
       entity_id: sensor.purifier6_temperature
-      above: 29 # 升至高档
+      above: 30 # 升至高档
       for:
         minutes: 5
     - platform: numeric_state
       entity_id: sensor.purifier6_temperature
-      above: 27 # 升至中档
+      above: 26 # 升至中档
       for:
         minutes: 4
     - platform: numeric_state
       entity_id: sensor.purifier6_temperature
-      above: 25 # 升至低档
+      above: 24 # 升至低档
       for:
         minutes: 6
     - platform: numeric_state
       entity_id: sensor.purifier6_temperature
-      below: 28 # 降至中档
+      below: 29 # 降至中档
       for:
         minutes: 5
     - platform: numeric_state
       entity_id: sensor.purifier6_temperature
-      below: 26 # 降至低档
+      below: 25 # 降至低档
       for:
         minutes: 4
     - platform: numeric_state
@@ -295,7 +295,7 @@
     - service: fan.set_speed
       data_template:
         entity_id: fan.fan2
-        speed: '{% if (states("sensor.purifier6_temperature") | float > 29) %}Level 3{% elif (states("sensor.purifier6_temperature") | float > 27) %}Level 2{% else %}Level 1{% endif %}'
+        speed: '{% if (states("sensor.purifier6_temperature") | float > 30) %}Level 3{% elif (states("sensor.purifier6_temperature") | float > 26) %}Level 2{% else %}Level 1{% endif %}'
     - delay: 1
     - service: logbook.log
       data_template:
