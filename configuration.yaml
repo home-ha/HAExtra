@@ -246,6 +246,12 @@ sensor:
         value_template: '{{ states.fan.fresher2.attributes.co2 }}'
         unit_of_measurement: 'ppm'
 
+      fan_temperature:
+        device_class: temperature
+        friendly_name: Fan Temperature
+        value_template: '{{ states.fan.fan.attributes.temperature }}'
+        unit_of_measurement: °C
+
 switch:
   #TODO
   - platform: wake_on_lan
@@ -581,7 +587,7 @@ climate:
     name: Mitsubishi
     device_code: 1120
     controller_data: Remote
-    temperature_sensor: sensor.aircat2_temperature
+    temperature_sensor: sensor.fan_temperature
     humidity_sensor: sensor.aircat2_humidity
     #power_sensor: binary_sensor.ac_power
 
