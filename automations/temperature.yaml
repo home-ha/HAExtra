@@ -62,7 +62,7 @@
 - alias: Temperature Changed @Bedroom
   trigger:
     - platform: time
-      at: '20:00:01'
+      at: '20:30:01'
     - platform: numeric_state
       entity_id: climate.daikin3
       value_template: '{{ state.attributes.current_temperature }}'
@@ -129,7 +129,7 @@
 - alias: Temperature Changed @Kidsroom
   trigger:
     - platform: time
-      at: '20:00:01'
+      at: '20:30:01'
     - platform: numeric_state
       entity_id: climate.daikin4
       value_template: '{{ state.attributes.current_temperature }}'
