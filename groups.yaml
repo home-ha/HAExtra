@@ -32,7 +32,7 @@ Livingroom:
     #- media_player.magic
     - climate.daikin2
     - climate.saswell
-    #- fan.wall_fan
+    - fan.wall_fan
     - fan.fresher
     - sensor.fresher_temperature
     - sensor.fresher_humidity
@@ -181,7 +181,7 @@ TLivingroom:
     #- media_player.magic
     - climate.daikin2
     - climate.saswell
-    #- fan.wall_fan
+    - fan.wall_fan
     - fan.fresher
     - sensor.fresher_temperature
     - sensor.fresher_humidity
