@@ -326,8 +326,7 @@
 				vacuum: 'robot-vacuum',
 
 				fan: 'fan',
-				climate: 'thermostat',
-				camera: 'camera' // @Kavana
+				climate: 'thermostat'
 			}
 
 			var _group_entity_ids = null
@@ -523,9 +522,6 @@
 				} else if (domain != 'sensor' && domain != 'weather' && domain != 'binary_sensor' && domain != 'device_tracker') {
 					html += ' onclick="handleClick(this)"'
 				}
-				if (domain == "camera") {
-					html += ' style="background:center/cover no-repeat url(' + entity.attributes.entity_picture + ');"'
-				} // @Kavana
 				html += '>'
 				html += makeEntity(entity)
 				html += '</div> '
@@ -562,7 +558,7 @@
 							html += '<span class="unit">' + unit + '</span>'
 						}
 					}
-				} else if (domain != 'camera') { // @Kavana
+				} else {
 					var icon = has_dash_icon ? renderTemplate(attributes.dash_icon, state, attributes) : attributes.icon
 					if (icon && icon.startsWith('mdi:')) {
 						icon = icon.slice(4)
@@ -623,9 +619,9 @@
 			_SENSOR_THRESHOLDS = {
 				pm25: [40, 70],
 				co2: [900, 1600],
-				humidity: [75, 85],
+				humidity: [72, 82],
 				hcho: [0.08, 0.2],
-				temperature: [32, 40]
+				temperature: [30, 38]
 			}
 
 			function stateOverflow(entity_id, value) {
