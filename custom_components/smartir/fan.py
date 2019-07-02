@@ -94,7 +94,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
 
         self._speed = SPEED_OFF
         self._direction = None
-        self._oscillate = None
+        self._oscillating = None
         self._last_on_speed = None
 
         self._support_flags = SUPPORT_SET_SPEED
@@ -106,7 +106,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
                 self._support_flags | SUPPORT_DIRECTION)
 
         if SERVICE_OSCILLATE in self._commands:
-            self._oscillate = False
+            self._oscillating = False
             self._support_flags = self._support_flags | SUPPORT_OSCILLATE
 
         self._temp_lock = asyncio.Lock()
@@ -173,14 +173,14 @@ class SmartIRFan(FanEntity, RestoreEntity):
     @property
     def oscillating(self):
         """Return the oscillation state."""
-        return self._oscillate
+        return self._oscillating
 
     async def async_oscillate(self, oscillating: bool):
         """Set oscillation."""
-        try:
-            await self._controller.send(self._commands[SERVICE_OSCILLATE])
-        except Exception as e:
-            _LOGGER.exception(e)
+        self._oscillating = oscillating
+        if not self._speed.lower() == SPEED_OFF:
+            await self.send_command(self._commands[SERVICE_OSCILLATE])
+        await self.async_update_ha_state()
 
     @property
     def direction(self):
@@ -230,18 +230,19 @@ class SmartIRFan(FanEntity, RestoreEntity):
 
     async def async_turn_on(self, speed: str = None, **kwargs):
         """Turn on the fan."""
-        command = self._commands['on']
-        if command:
-            if command == 'off':
-                command = self._commands['off']
-            try:
-                await self._controller.send(command)
-            except Exception as e:
-                _LOGGER.exception(e)
-            return
-
         if speed is None:
             speed = self._last_on_speed or self._speed_list[1]
+
+        command = self._commands['on']
+        if command is not None:
+            if command == 'off':
+                if self.state == STATE_ON:
+                    return
+                command = self._commands['off']
+            self._speed = speed
+            await self.send_command(command)
+            await self.async_update_ha_state()
+            return
 
         await self.async_set_speed(speed)
 
@@ -249,16 +250,21 @@ class SmartIRFan(FanEntity, RestoreEntity):
         """Turn off the fan."""
         await self.async_set_speed(SPEED_OFF)
 
-    async def send_command(self):
+    async def send_command(self, command=None):
         async with self._temp_lock:
             self._on_by_remote = False
-            speed = self._speed
-            direction = self._direction or 'default'
+            if command is None:
+                speed = self._speed
+                direction = self._direction or 'default'
 
-            if speed.lower() == SPEED_OFF:
-                command = self._commands['off']
+                if speed.lower() == SPEED_OFF:
+                    command = self._commands['off']
+                    _LOGGER.debug("Send command: SPEED_OFF")
+                else:
+                    command = self._commands[direction][speed]
+                    _LOGGER.debug("Send command: %s-%s", direction, speed)
             else:
-                command = self._commands[direction][speed]
+                _LOGGER.debug("Send command: %s", command)
 
             try:
                 await self._controller.send(command)
