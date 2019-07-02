@@ -233,3 +233,70 @@ EOF
 #shell_command:
   #genie_power: 'adb connect Genie; adb -s Genie shell input keyevent 26'
   #genie_dashboard: 'adb connect Genie; adb -s Genie shell am start -n de.rhuber.homedash/org.wallpanelproject.android.WelcomeActivity'
+
+
+# fan:
+#   - platform: template
+#     fans:
+#       wall_fan:
+#         friendly_name: "Wall Fan"
+#         value_template: "{{ states('input_boolean.wall_fan_state') }}"
+#         speed_template: "{{ states('input_select.wall_fan_speed') }}"
+#         direction_template: "{% if is_state('input_boolean.wall_fan_direction', 'on') %}forward{% else %}reverse{% endif %}"
+#         oscillating_template: "{% if is_state('input_boolean.wall_fan_osc', 'on') %}True{% else %}False{% endif %}"
+#         turn_on:
+#         - condition: template
+#           value_template: "{{ is_state('input_boolean.wall_fan_state', 'off') }}"
+#         - service: broadlink.send
+#           data:
+#             host: Remote2
+#             packet: 'JgDCACkOKg4OKCoOKQ4OKQ4pDioOKQ4pDikp6SkOKg0OKSoOKQ4OKQ4pDikOKQ8pDSop6CoOKQ4OKSkOKg4OKQ4pDikOKQ4pDikq6CoOKQ4OKSkOKQ4PKQ4pDikOKQ4pDikq6ykOKg0OKSoNKg4OKQ4pDikOKQ4qDSop7CoNKg4OKSkOKQ4OKQ4qDSoOKQ4pDikq6ykOKg4OKSkOKg0PKQ0qDikOKQ4pDikq6ykOKg4OKSkOKQ4PKQ4pDikOKQ4pDikqAA0FAAAAAAAA'
+#         - service: input_boolean.turn_on
+#           data:
+#             entity_id: input_boolean.wall_fan_state
+#         turn_off:
+#         - condition: template
+#           value_template: "{{ is_state('input_boolean.wall_fan_state', 'on') }}"
+#         - service: broadlink.send
+#           data:
+#             host: Remote2
+#             packet: 'JgDCACkOKg4OKCoOKQ4OKQ4pDioOKQ4pDikp6SkOKg0OKSoOKQ4OKQ4pDikOKQ8pDSop6CoOKQ4OKSkOKg4OKQ4pDikOKQ4pDikq6CoOKQ4OKSkOKQ4PKQ4pDikOKQ4pDikq6ykOKg0OKSoNKg4OKQ4pDikOKQ4qDSop7CoNKg4OKSkOKQ4OKQ4qDSoOKQ4pDikq6ykOKg4OKSkOKg0PKQ0qDikOKQ4pDikq6ykOKg4OKSkOKQ4PKQ4pDikOKQ4pDikqAA0FAAAAAAAA'
+#         - service: input_boolean.turn_off
+#           data:
+#             entity_id: input_boolean.wall_fan_state
+#         set_speed:
+#         - condition: template
+#           value_template: "{{ not is_state('input_select.wall_fan_speed', speed) }}"
+#         - service: broadlink.send
+#           data:
+#             host: Remote2
+#             packet: 'JgDCACkOKg4OKSoNKg4qDg4pDikOKQ4qKQ4q6SoOKQ4OKSoOKg4pDg4pDioOKQ4pKg4q6SoOKQ4OKSoOKg0qDg4pDioOKQ4pKg4q6SoOKQ4OKSoOKg0qDg4pDioOKQ4pKg4q6yoOKQ4OKSoOKg0qDg4pDioNKg4pKg4p7CkOKg0PKSkOKg4pDg4pDioOKQ4pKg4p6yoNKg4OKSkOKg4pDg4pDioOKQ4pKQ4q6yoNKg4OKSkOKg4pDg4pDikOKg4pKQ4qAA0FAAAAAAAA'
+#         - service: input_select.select_next
+#           data:
+#             entity_id: input_select.wall_fan_speed
+#         set_oscillating:
+#         - service: broadlink.send
+#           data:
+#             host: Remote2
+#             packet: 'JgDqACkOKg0PKSkOKQ4OKQ4qKQ4OKQ4pDikPAAEDKg4pDg4pKQ4qDg4pDikpDg8pDikOKQ4AAQQpDioODikpDikODykOKSkODikOKQ4qDgABBCkOKQ4OKSoNKg4OKQ4pKg4OKQ4pDikOAAEHKg0qDg4pKQ4pDg4pDykpDg4pDikOKQ4AAQgqDSoODikpDioODikOKSkODikPKQ4pDgABByoNKg4OKSkOKg4OKQ4pKg0OKQ4qDikOAAEHKQ4qDQ8oKg4pDg4pDykpDg4pDikOKQ4AAQcqDikODikpDioODikOKSkODykOKQ4pDgANBQAAAAAAAAAAAAAAAAAA'
+#         - service: input_boolean.toggle
+#           data:
+#             entity_id: input_boolean.wall_fan_osc
+#         set_direction:
+#         - service: broadlink.send
+#           data_template:
+#             host: Remote2
+#             packet: "{% if direction == 'forward' %}'JgDyACwLLAwQJywLLAwsCxApDigQJw8oLAwr5ywMLAsQJywMLAssDBAnECcQKA8oKQ4s5ywMKwwQJyoOLAssDBAnDykQJw8oLAwr6CsMLAwQJywLLAwsCxEnECcPKA8pKwws6SwMLAsRJysMLAwrDBAoECcQJxAnLAws6SwLLAwQJywMKwwsDBAnECcQJxAoKQ4s6SsMLAsRJysMLAwrDBAnECcRJxAnKQ4s6SsMLAsQJywMKwwsDBAnDygQJxAoKwwr6isMLAsQKCsMKwwsDBAnECcQJxAnLAwr6iwLLAwQKCoMLAwrDBAnECcQKA4pKQ4sAA0FAAAAAAAA'{% else %}'JgDqACkOKQ8NKikPKQ4qDg0qDSoOKigPKQ8NAAEGKA8pDw0qKQ8oDykPDSoNKw0qKQ8oDw0AAQcoDykPDSoqDigPKQ8NKg8pECcrDSgPDQABBisNKQ8NKikOKQ8pDw8oECcQKCsMKw0PAAEFLAwqDQ8pKwwrDSoNDykQJxAnKw0qDQ8AAQYrDCsNECcrDCsNKg0PKRAnECcsDCoNDwABBSwMKA8NKiwMKA8pDw0qECcQJywMKA8NAAEIKg0pDg4qKg0pDygPDSoQJxAoKwwpDg8AAQYsDCoNDygsDCoNKg0PKRAnECcrDCsNDwANBQAAAAAAAAAAAAAAAAAA'{% endif %}"
+#         - service: input_boolean.toggle
+#           data:
+#             entity_id: input_boolean.wall_fan_direction
+
+
+# input_boolean:
+#   wall_fan_state:
+#   wall_fan_osc:
+#   wall_fan_direction:
+
+# input_select:
+#   wall_fan_speed:
+#     options: [low, medium, high]
