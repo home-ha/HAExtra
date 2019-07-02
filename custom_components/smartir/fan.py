@@ -233,16 +233,16 @@ class SmartIRFan(FanEntity, RestoreEntity):
         if speed is None:
             speed = self._last_on_speed or self._speed_list[1]
 
-        command = self._commands['on']
-        if command is not None:
-            if command == 'off':
-                if self.state == STATE_ON:
-                    return
-                command = self._commands['off']
-            self._speed = speed
-            await self.send_command(command)
-            await self.async_update_ha_state()
-            return
+            command = self._commands['on']
+            if command is not None:
+                if command == 'off':
+                    if self.state == STATE_ON:
+                        return
+                    command = self._commands['off']
+                self._speed = speed
+                await self.send_command(command)
+                await self.async_update_ha_state()
+                return
 
         await self.async_set_speed(speed)
 
