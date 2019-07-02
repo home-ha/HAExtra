@@ -233,6 +233,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
         if speed is None:
             speed = self._last_on_speed or self._speed_list[1]
 
+        if speed is None or self.state == STATE_OFF:
             command = self._commands['on']
             if command is not None:
                 if command == 'off':
