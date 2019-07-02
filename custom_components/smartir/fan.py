@@ -6,10 +6,10 @@ import os.path
 import voluptuous as vol
 
 from homeassistant.components.fan import (
-    FanEntity, PLATFORM_SCHEMA, ATTR_SPEED, 
-    SPEED_OFF, SPEED_LOW, SPEED_MEDIUM, SPEED_HIGH, 
-    DIRECTION_REVERSE, DIRECTION_FORWARD,
-    SUPPORT_SET_SPEED, SUPPORT_DIRECTION)
+    FanEntity, PLATFORM_SCHEMA, ATTR_SPEED,
+    SPEED_OFF, SPEED_LOW, SPEED_MEDIUM, SPEED_HIGH,
+    DIRECTION_REVERSE, DIRECTION_FORWARD, SERVICE_OSCILLATE,
+    SUPPORT_SET_SPEED, SUPPORT_DIRECTION, SUPPORT_OSCILLATE)
 from homeassistant.const import (
     CONF_NAME, STATE_OFF, STATE_ON, STATE_UNKNOWN)
 from homeassistant.core import callback
@@ -91,9 +91,10 @@ class SmartIRFan(FanEntity, RestoreEntity):
         self._commands_encoding = device_data['commandsEncoding']
         self._speed_list = [SPEED_OFF] + device_data['speed']
         self._commands = device_data['commands']
-        
+
         self._speed = SPEED_OFF
         self._direction = None
+        self._oscillate = None
         self._last_on_speed = None
 
         self._support_flags = SUPPORT_SET_SPEED
@@ -104,27 +105,31 @@ class SmartIRFan(FanEntity, RestoreEntity):
             self._support_flags = (
                 self._support_flags | SUPPORT_DIRECTION)
 
+        if SERVICE_OSCILLATE in self._commands:
+            self._oscillate = False
+            self._support_flags = self._support_flags | SUPPORT_OSCILLATE
+
         self._temp_lock = asyncio.Lock()
         self._on_by_remote = False
 
         #Init the IR/RF controller
         self._controller = Controller(
             self.hass,
-            self._supported_controller, 
+            self._supported_controller,
             self._commands_encoding,
             self._controller_data)
 
     async def async_added_to_hass(self):
         """Run when entity about to be added."""
         await super().async_added_to_hass()
-    
+
         last_state = await self.async_get_last_state()
 
         if last_state is not None:
             if 'speed' in last_state.attributes:
                 self._speed = last_state.attributes['speed']
 
-            #If _direction has a value the direction controls appears 
+            #If _direction has a value the direction controls appears
             #in UI even if SUPPORT_DIRECTION is not provided in the flags
             if ('direction' in last_state.attributes and \
                 self._support_flags & SUPPORT_DIRECTION):
@@ -134,7 +139,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
                 self._last_on_speed = last_state.attributes['last_on_speed']
 
             if self._power_sensor:
-                async_track_state_change(self.hass, self._power_sensor, 
+                async_track_state_change(self.hass, self._power_sensor,
                                          self._async_power_sensor_changed)
 
     @property
@@ -168,7 +173,14 @@ class SmartIRFan(FanEntity, RestoreEntity):
     @property
     def oscillating(self):
         """Return the oscillation state."""
-        return None
+        return self._oscillate
+
+    async def async_oscillate(self, oscillating: bool):
+        """Set oscillation."""
+        try:
+            await self._controller.send(self._commands[SERVICE_OSCILLATE])
+        except Exception as e:
+            _LOGGER.exception(e)
 
     @property
     def direction(self):
@@ -218,6 +230,16 @@ class SmartIRFan(FanEntity, RestoreEntity):
 
     async def async_turn_on(self, speed: str = None, **kwargs):
         """Turn on the fan."""
+        command = self._commands['on']
+        if command:
+            if command == 'off':
+                command = self._commands['off']
+            try:
+                await self._controller.send(command)
+            except Exception as e:
+                _LOGGER.exception(e)
+            return
+
         if speed is None:
             speed = self._last_on_speed or self._speed_list[1]
 
@@ -236,7 +258,7 @@ class SmartIRFan(FanEntity, RestoreEntity):
             if speed.lower() == SPEED_OFF:
                 command = self._commands['off']
             else:
-                command = self._commands[direction][speed] 
+                command = self._commands[direction][speed]
 
             try:
                 await self._controller.send(command)
