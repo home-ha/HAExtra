@@ -29,10 +29,11 @@ turn_on_projector:
         speed: auto
     - service: switch.turn_on
       entity_id: switch.speaker
-    #- service: light.turn_off
-    #  entity_id: light.airer_light
     - service: light.turn_off
-      entity_id: light.studyroom_light
+      entity_id:
+        - light.studyroom_light
+        - light.passage_light
+        #- light.airer_light
     - delay: 2
     - service: broadlink.send # BenQ On
       data:
@@ -70,8 +71,12 @@ turn_off_projector:
       data:
         host: Remote
         packet: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
-    - service_template: "{% if is_state('sun.sun', 'below_horizon') %}light.turn_on{% else %}light.turn_off{% endif %}"
-      entity_id: light.studyroom_light
+    - service: light.turn_on
+      entity_id: >
+        {% if is_state('sun.sun', 'below_horizon') %}
+          - light.studyroom_light
+          - light.passage_light
+        {% endif %}
     - service: climate.turn_off
       entity_id: climate.mitsubishi
     - delay: 250
