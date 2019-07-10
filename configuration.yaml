@@ -77,6 +77,8 @@ homekit:
       - binary_sensor.switch_158d000201a73f
       - switch.projector_power
       - sensor.fresher2_co2
+      - climate.saswell
+      - climate.saswell2
   entity_config:
     switch.outlet:
       type: outlet
