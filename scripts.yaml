@@ -10,35 +10,34 @@ turn_on_projector:
     - service: broadlink.send # BenQ On
       data:
         host: Remote
-        packet: 'JgAgAQABJ5QSExITEhITEhMSEhMSExITEhITEhMSEhMSOBI3ExISExITEjcTNxI3ExITEhI4EhITNxITEhMSExI3EzcSExI3EwAF='
+        packet: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
     - service: broadlink.send # HiMedia On
       data:
         host: Remote
         packet: 'JgBgAAABJ5QSExITExITExI4EhMSExITEjgSOBI4EjgTEhM4EjgSOBI4EhMSOBI4EjgTEhM4EhMSExI4EhMSExITEjgSExM3EwAFGQABJksSAAxWAAEnSxIADFYAASZLEgANBQAAAAAAAAAA'
     - service: cover.close_cover
       entity_id: cover.studyroom_cover
-    - service: switch.turn_on
-      entity_id: switch.station
     #- service: cover.close_cover
     #  entity_id: cover.airer
-    - service: fan.turn_on
-      entity_id: fan.purifier
-    - service: fan.set_speed
-      data:
-        entity_id: fan.purifier
-        speed: auto
-    - service: switch.turn_on
-      entity_id: switch.speaker
-    - service: light.turn_off
+    - service: homeassistant.turn_on
+      entity_id:
+        - fan.purifier
+        - switch.speaker
+        #- switch.station
+    - service: homeassistant.turn_off
       entity_id:
         - light.studyroom_light
         - light.passage_light
         #- light.airer_light
+    - service: fan.set_speed
+      data:
+        entity_id: fan.purifier
+        speed: auto
     - delay: 2
     - service: broadlink.send # BenQ On
       data:
         host: Remote
-        packet: 'JgAgAQABJ5QSExITEhITEhMSEhMSExITEhITEhMSEhMSOBI3ExISExITEjcTNxI3ExITEhI4EhITNxITEhMSExI3EzcSExI3EwAF='
+        packet: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
     - service: automation.turn_on
       entity_id: automation.studyroom_switch_dbclicked
     - condition: numeric_state
@@ -56,7 +55,7 @@ turn_off_projector:
     - service: broadlink.send # BenQ Off
       data:
         host: Remote
-        packet: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
+        packet: 'JgAgAQABJ5QSExITEhITEhMSEhMSExITEhITEhMSEhMSOBI3ExISExITEjcTNxI3ExITEhI4EhITNxITEhMSExI3EzcSExI3EwAF='
     - service: broadlink.send # HiMedia Off
       data:
         host: Remote
@@ -70,13 +69,11 @@ turn_off_projector:
     - service: broadlink.send # BenQ Off
       data:
         host: Remote
-        packet: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
-    - service: light.turn_on
-      entity_id: >
-        {% if is_state('sun.sun', 'below_horizon') %}
-          - light.studyroom_light
-          - light.passage_light
-        {% endif %}
+        packet: 'JgAgAQABJ5QSExITEhITEhMSEhMSExITEhITEhMSEhMSOBI3ExISExITEjcTNxI3ExITEhI4EhITNxITEhMSExI3EzcSExI3EwAF='
+    - service_template: "{% if is_state('sun.sun', 'below_horizon') %}light.turn_on{% else %}light.turn_off{% endif %}"
+      entity_id:
+        - light.studyroom_light
+        - light.passage_light
     - service: climate.turn_off
       entity_id: climate.mitsubishi
     - delay: 250
