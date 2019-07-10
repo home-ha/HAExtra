@@ -12,11 +12,11 @@
 - alias: Light Sync @Livingroom
   trigger:
     - platform: state
-      entity_id: light.living_light2, light.living_light
+      entity_id: light.livingroom_light2, light.livingroom_light
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.living_light2" %}light.living_light{% else %}light.living_light2{% endif %}'
+        entity_id: '{% if trigger.entity_id == "light.livingroom_light2" %}light.livingroom_light{% else %}light.livingroom_light2{% endif %}'
 
 # 过道灯开关同步
 - alias: Light Sync @Passage
