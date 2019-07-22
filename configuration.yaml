@@ -11,7 +11,7 @@ logger:
   default: warning
   logs:
     homeassistant.loader: error
-    custom_components.sensor.aircat: debug
+    custom_components.climate.saswell: debug
     #homeassistant.components.homekit: debug
     #pyhap: debug
 
