@@ -16,7 +16,7 @@ from homeassistant.core import callback
 from configparser import ConfigParser
 from base64 import b64encode, b64decode
 
-REQUIREMENTS = ['broadlink==0.9.0']
+REQUIREMENTS = ['broadlink==0.11.1']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -343,6 +343,6 @@ class RMCover(CoverDevice,RestoreEntity):
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
         last_state = await self.async_get_last_state()
-        
+
         if last_state:
             self._position = last_state.attributes['current_position']

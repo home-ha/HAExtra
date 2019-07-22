@@ -10,6 +10,7 @@ homeassistant:
 logger:
   default: warning
   logs:
+    homeassistant.loader: error
     custom_components.sensor.aircat: debug
     #homeassistant.components.homekit: debug
     #pyhap: debug
@@ -41,12 +42,12 @@ logbook:
 
 sun:
 
-tts:
+#tts:
   #- platform: google
-  - platform: baidu
-    app_id: !secret baidu_app_id
-    api_key: !secret baidu_api_key
-    secret_key: !secret baidu_secret_key
+  #- platform: baidu
+  #  app_id: !secret baidu_app_id
+  #  api_key: !secret baidu_api_key
+  #  secret_key: !secret baidu_secret_key
 
 group: !include groups.yaml
 automation: !include_dir_merge_list automations
@@ -63,7 +64,6 @@ modbus:
 homekit:
   filter:
     exclude_domains:
-      - fan
       - script
       - automation
       - input_boolean
