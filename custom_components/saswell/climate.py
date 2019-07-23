@@ -15,7 +15,8 @@ import voluptuous as vol
 from homeassistant.components.climate import ClimateDevice, PLATFORM_SCHEMA
 from homeassistant.components.climate.const import (SUPPORT_TARGET_TEMPERATURE,
     SUPPORT_PRESET_MODE, ATTR_HVAC_MODE, HVAC_MODE_HEAT, HVAC_MODE_OFF,
-    ATTR_PRESET_MODE, PRESET_HOME, PRESET_AWAY, ATTR_CURRENT_TEMPERATURE)
+    CURRENT_HVAC_HEAT, CURRENT_HVAC_OFF, ATTR_CURRENT_TEMPERATURE,
+    ATTR_PRESET_MODE, PRESET_HOME, PRESET_AWAY)
 from homeassistant.const import (
     ATTR_ID, CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SCAN_INTERVAL,
     ATTR_TEMPERATURE)
@@ -117,7 +118,7 @@ class SaswellClimate(ClimateDevice):
     @property
     def hvac_action(self):
         """Return current operation ie. heat, cool, idle."""
-        return self.hvac_mode
+        return CURRENT_HVAC_HEAT if self.hvac_mode == HVAC_MODE_HEAT else CURRENT_HVAC_OFF
 
     @property
     def hvac_mode(self):
