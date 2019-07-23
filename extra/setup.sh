@@ -62,15 +62,16 @@ apt-get install libavahi-compat-libdnssd-dev
 # Android
 apt-get install adb
 
-# Speedtest
-cd /usr/local/bin
-wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py; chmod +x speedtest; ./speedtest
-
 # Raspbian
 ##apt-get install python3 python3-pip
 
 # Armbian
 apt-get install python3-pip python3-dev libffi-dev python3-setuptools
+ln -sf /usr/bin/python3 /usr/bin/python
+
+# Speedtest
+cd /usr/local/bin
+wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py; chmod +x speedtest; ./speedtest
 
 # PIP 18
 ##python3 -m pip install --upgrade pip # Logout after install
