@@ -531,13 +531,13 @@ climate:
     password: !secret saswell_password
   - platform: modbus2
     name: Daikin
-    temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
+    fan_mode: { registers: [6, 10, 14, 18] }
+    fan_modes: { auto: 0, 一级: 1, 二级: 2, 三级: 3, 四级: 4, 五级: 5}
+    hvac_mode: { registers: [5, 9, 13, 17] }
+    hvac_modes: { 'off': 0, cool: 1, heat: 2, dry: 3, fan_only: 4 }
+    hvac_off: { registers: [1, 2, 3, 4], register_type: coil }
     target_temperature: { registers: [4, 8, 12, 16] }
-    operation: { registers: [5, 9, 13, 17] }
-    fan: { registers: [6, 10, 14, 18] }
-    is_on: { registers: [1, 2, 3, 4], register_type: coil }
-    operation_list: ['off', cool, heat, dry, fan]
-    fan_list: [自动, 一级, 二级, 三级, 四级, 五级]
+    temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
   - platform: smartir
     name: Mitsubishi
     device_code: 1120
