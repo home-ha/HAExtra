@@ -445,6 +445,7 @@ class ModbusClimate(ClimateDevice):
 
         self._values[prop] = value
 
+        self.async_write_ha_state()
         async_call_later(self.hass, 2, self.async_schedule_update_ha_state)
 
     def get_mode(self, modes, prop):
