@@ -429,7 +429,7 @@
 				var grid = extra.parentElement
 				var mode = moder.options[moder.selectedIndex].value
 				if (grid.className == 'entity climate') {
-					callService('set_operation_mode', { entity_id: grid.id, operation_mode: mode }, moder)
+					callService('set_hvac_mode', { entity_id: grid.id, operation_mode: mode }, moder)
 				} else {
 					callService('set_speed', { entity_id: grid.id, speed: mode }, moder)
 				}
@@ -477,6 +477,7 @@
 				heat: '制热',
 				dry: '除湿',
 				fan: '送风',
+				fan_only: '送风',
 
 				unknown: '未知',
 				unavailable: '不可用'
@@ -590,8 +591,8 @@
 						}
 
 						extra += '<select class="moder" onclick="event.stopPropagation()" onchange="handleMode(this)">'
-						var current = domain == 'climate' ? attributes.operation_mode : (attributes.speed_level || attributes.speed)
-						var mode_list = domain == 'climate' ? attributes.operation_list : attributes.speed_list
+						var current = domain == 'climate' ? state : (attributes.speed_level || attributes.speed)
+						var mode_list = domain == 'climate' ? attributes.hvac_modes : attributes.speed_list
 						for (var i in mode_list) {
 							var mode = mode_list[i]
 							var key = mode.toLowerCase()

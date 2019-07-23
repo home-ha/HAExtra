@@ -17,7 +17,7 @@ default_view:
     - group.passage
     - group.washroom
     - group.bedroom
-    - group.parents
+    - group.parentsroom
     - group.kidsroom
     - group.studyroom
     - group.balcony

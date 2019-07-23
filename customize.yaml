@@ -127,7 +127,7 @@ group.office:
 group.outside:
   friendly_name: 室外
   hagenie_zone: 门口
-group.parents:
+group.parentsroom:
   friendly_name: 次卧
 group.passage:
   friendly_name: 过道
