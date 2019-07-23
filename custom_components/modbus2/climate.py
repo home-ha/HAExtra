@@ -12,10 +12,13 @@ import voluptuous as vol
 
 from homeassistant.components.climate import ClimateDevice, PLATFORM_SCHEMA
 from homeassistant.components.climate.const import (
-    SUPPORT_TARGET_TEMPERATURE, SUPPORT_TARGET_HUMIDITY,
-    SUPPORT_OPERATION_MODE, SUPPORT_FAN_MODE, SUPPORT_SWING_MODE,
-    SUPPORT_HOLD_MODE, SUPPORT_AWAY_MODE, SUPPORT_AUX_HEAT, SUPPORT_ON_OFF,
-    SUPPORT_TARGET_HUMIDITY_HIGH, SUPPORT_TARGET_HUMIDITY_LOW)
+    SUPPORT_AUX_HEAT, SUPPORT_FAN_MODE, SUPPORT_PRESET_MODE, SUPPORT_SWING_MODE,
+    SUPPORT_TARGET_HUMIDITY, SUPPORT_TARGET_TEMPERATURE,
+    HVAC_MODE_OFF, HVAC_MODE_HEAT, HVAC_MODE_COOL, HVAC_MODE_HEAT_COOL,
+    HVAC_MODE_AUTO,  HVAC_MODE_DRY, HVAC_MODE_FAN_ONLY,
+    CURRENT_HVAC_OFF, CURRENT_HVAC_HEAT, CURRENT_HVAC_COOL, CURRENT_HVAC_IDLE,
+    CURRENT_HVAC_DRY, CURRENT_HVAC_FAN,
+)
 from homeassistant.const import (
     CONF_NAME, CONF_SLAVE, CONF_OFFSET, CONF_STRUCTURE, ATTR_TEMPERATURE)
 from homeassistant.components.modbus import (
@@ -28,29 +31,32 @@ _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ['modbus']
 
-CONF_TEMPERATURE = 'temperature'
-CONF_TARGET_TEMPERATURE = 'target_temperature'
-CONF_HUMIDITY = 'humidity'
-CONF_TARGET_HUMIDITY = 'target_humidity'
-CONF_OPERATION = 'operation'
-CONF_FAN = 'fan'
-CONF_SWING = 'swing'
-CONF_HOLD = 'hold'
-CONF_AWAY = 'away'
-CONF_AUX = 'aux'
-CONF_IS_ON = 'is_on'
-
-CONF_OPERATION_LIST = 'operation_list'
-CONF_FAN_LIST = 'fan_list'
-CONF_SWING_LIST = 'swing_list'
-
+CONF_AUX_HEAT_OFF_VALUE = 'aux_heat_off_value'
+CONF_AUX_HEAT_ON_VALUE = 'aux_heat_on_value'
 CONF_COUNT = 'count'
 CONF_DATA_TYPE = 'data_type'
+CONF_FAN_MODES = 'fan_modes'
+CONF_HVAC_MODES = 'hvac_modes'
+CONF_HVAC_OFF_VALUE = 'hvac_off_value'
+CONF_HVAC_ON_VALUE = 'hvac_on_value'
+CONF_PRESET_MODES = 'preset_mode'
 CONF_REGISTER = 'register'
 CONF_REGISTER_TYPE = 'register_type'
 CONF_REGISTERS = 'registers'
 CONF_REVERSE_ORDER = 'reverse_order'
 CONF_SCALE = 'scale'
+CONF_SWING_MODES = 'swing_modes'
+
+REG_AUX_HEAT = 'aux_heat'
+REG_FAN_MODE = 'fan_mode'
+REG_HUMIDITY = 'humidity'
+REG_HVAC_MODE = 'hvac_mode'
+REG_HVAC_OFF = 'hvac_off'
+REG_PRESET_MODE = 'preset_mode'
+REG_SWING_MODE = 'swing_mode'
+REG_TARGET_HUMIDITY = 'target_humidity'
+REG_TARGET_TEMPERATURE = 'target_temperature'
+REG_TEMPERATURE = 'temperature'
 
 REGISTER_TYPE_HOLDING = 'holding'
 REGISTER_TYPE_INPUT = 'input'
@@ -62,47 +68,53 @@ DATA_TYPE_FLOAT = 'float'
 DATA_TYPE_CUSTOM = 'custom'
 
 SUPPORTED_FEATURES = {
-    CONF_TEMPERATURE: 0,
-    CONF_TARGET_TEMPERATURE: SUPPORT_TARGET_TEMPERATURE,
-    CONF_HUMIDITY: 0,
-    CONF_TARGET_HUMIDITY: (SUPPORT_TARGET_HUMIDITY |
-                           SUPPORT_TARGET_HUMIDITY_LOW |
-                           SUPPORT_TARGET_HUMIDITY_HIGH),
-    CONF_OPERATION: SUPPORT_OPERATION_MODE,
-    CONF_FAN: SUPPORT_FAN_MODE,
-    CONF_SWING: SUPPORT_SWING_MODE,
-    CONF_HOLD: SUPPORT_HOLD_MODE,
-    CONF_AWAY: SUPPORT_AWAY_MODE,
-    CONF_AUX: SUPPORT_AUX_HEAT,
-    CONF_IS_ON: SUPPORT_ON_OFF
+    REG_AUX_HEAT: SUPPORT_AUX_HEAT,
+    REG_FAN_MODE: SUPPORT_FAN_MODE,
+    REG_HUMIDITY: 0,
+    REG_HVAC_MODE: 0,
+    REG_HVAC_OFF: 0,
+    REG_PRESET_MODE: SUPPORT_PRESET_MODE,
+    REG_SWING_MODE: SUPPORT_SWING_MODE,
+    REG_TARGET_HUMIDITY: SUPPORT_TARGET_HUMIDITY,
+    REG_TARGET_TEMPERATURE: SUPPORT_TARGET_TEMPERATURE,
+    REG_TEMPERATURE: 0,
+}
+
+HVAC_ACTIONS = {
+    HVAC_MODE_OFF: CURRENT_HVAC_OFF,
+    HVAC_MODE_HEAT: CURRENT_HVAC_HEAT,
+    HVAC_MODE_COOL: CURRENT_HVAC_COOL,
+    HVAC_MODE_HEAT_COOL: CURRENT_HVAC_IDLE, #?
+    HVAC_MODE_AUTO: CURRENT_HVAC_IDLE, #?
+    HVAC_MODE_DRY: CURRENT_HVAC_DRY,
+    HVAC_MODE_FAN_ONLY: CURRENT_HVAC_FAN,
 }
 
 DEFAULT_NAME = 'Modbus'
-DEFAULT_OPERATION_LIST = ['heat', 'cool', 'auto', 'off']
-DEFAULT_FAN_LIST = ['On Low', 'On High', 'Auto Low', 'Auto High', 'Off']
-DEFAULT_SWING_LIST = ['Auto', '1', '2', '3', 'Off']
-
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_HUB, default=DEFAULT_HUB): cv.string,
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-    vol.Optional(CONF_OPERATION_LIST, default=DEFAULT_OPERATION_LIST):
-        vol.Any(list, dict),
-    vol.Optional(CONF_FAN_LIST, default=DEFAULT_FAN_LIST):
-        vol.Any(list, dict),
-    vol.Optional(CONF_SWING_LIST, default=DEFAULT_SWING_LIST):
-        vol.Any(list, dict),
-    vol.Optional(CONF_TEMPERATURE): dict,
-    vol.Optional(CONF_TARGET_TEMPERATURE): dict,
-    vol.Optional(CONF_HUMIDITY): dict,
-    vol.Optional(CONF_TARGET_HUMIDITY): dict,
-    vol.Optional(CONF_OPERATION): dict,
-    vol.Optional(CONF_FAN): dict,
-    vol.Optional(CONF_SWING): dict,
-    vol.Optional(CONF_HOLD): dict,
-    vol.Optional(CONF_AWAY): dict,
-    vol.Optional(CONF_AUX): dict,
-    vol.Optional(CONF_IS_ON): dict,
+
+    vol.Optional(CONF_FAN_MODES, default={}): dict,
+    vol.Optional(CONF_HVAC_MODES, default={}): dict,
+    vol.Optional(CONF_PRESET_MODES, default={}): dict,
+    vol.Optional(CONF_SWING_MODES, default={}): dict,
+    vol.Optional(CONF_AUX_HEAT_OFF_VALUE, default=0): int,
+    vol.Optional(CONF_AUX_HEAT_ON_VALUE, default=1): int,
+    vol.Optional(CONF_HVAC_OFF_VALUE, default=0): int,
+    vol.Optional(CONF_HVAC_ON_VALUE, default=1): int,
+
+    vol.Optional(REG_AUX_HEAT): dict,
+    vol.Optional(REG_FAN_MODE): dict,
+    vol.Optional(REG_HUMIDITY): dict,
+    vol.Optional(REG_HVAC_MODE): dict,
+    vol.Optional(REG_HVAC_OFF): dict,
+    vol.Optional(REG_PRESET_MODE): dict,
+    vol.Optional(REG_SWING_MODE): dict,
+    vol.Optional(REG_TARGET_HUMIDITY): dict,
+    vol.Optional(REG_TARGET_TEMPERATURE): dict,
+    vol.Optional(REG_TEMPERATURE): dict,
 })
 
 
@@ -112,10 +124,15 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     hub_name = config.get(CONF_HUB)
     hub = hass.data[MODBUS_DOMAIN][hub_name]
 
-    ModbusClimate._operation_list = config.get(CONF_OPERATION_LIST)
-    ModbusClimate._fan_list = config.get(CONF_FAN_LIST)
-    ModbusClimate._swing_list = config.get(CONF_SWING_LIST)
+    ModbusClimate._fan_modes = config.get(CONF_FAN_MODES)
+    ModbusClimate._hvac_modes = config.get(CONF_HVAC_MODES)
+    ModbusClimate._preset_modes = config.get(CONF_PRESET_MODES)
+    ModbusClimate._swing_modes = config.get(CONF_SWING_MODES)
     ModbusClimate._unit = hass.config.units.temperature_unit
+    ModbusClimate._hvac_off_value = config.get(CONF_HVAC_OFF_VALUE)
+    ModbusClimate._hvac_on_value = config.get(CONF_HVAC_ON_VALUE)
+    ModbusClimate._aux_heat_on_value = config.get(CONF_AUX_HEAT_ON_VALUE)
+    ModbusClimate._aux_heat_off_value = config.get(CONF_AUX_HEAT_OFF_VALUE)
 
     data_types = {DATA_TYPE_INT: {1: 'h', 2: 'i', 4: 'q'}}
     data_types[DATA_TYPE_UINT] = {1: 'H', 2: 'I', 4: 'Q'}
@@ -190,7 +207,7 @@ class ModbusClimate(ClimateDevice):
         self._hub = hub
         self._name = name + str(index + 1) if index != -1 else name
         self._index = index
-        self._mods = mods
+        self._regs = mods
         self._values = {}
 
     @property
@@ -202,7 +219,7 @@ class ModbusClimate(ClimateDevice):
     def supported_features(self):
         """Return the list of supported features."""
         features = 0
-        for prop in self._mods:
+        for prop in self._regs:
             features |= SUPPORTED_FEATURES[prop]
         return features
 
@@ -219,75 +236,74 @@ class ModbusClimate(ClimateDevice):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        return self.get_value(CONF_TEMPERATURE)
+        return self.get_value(REG_TEMPERATURE)
 
     @property
     def target_temperature(self):
         """Return the temperature we try to reach."""
-        return self.get_value(CONF_TARGET_TEMPERATURE)
+        return self.get_value(REG_TARGET_TEMPERATURE)
 
     @property
     def current_humidity(self):
         """Return the current humidity."""
-        return self.get_value(CONF_HUMIDITY)
+        return self.get_value(REG_HUMIDITY)
 
     @property
     def target_humidity(self):
         """Return the humidity we try to reach."""
-        return self.get_value(CONF_TARGET_HUMIDITY)
+        return self.get_value(REG_TARGET_HUMIDITY)
 
     @property
-    def current_operation(self):
+    def hvac_action(self):
         """Return current operation ie. heat, cool, idle."""
-        if not self.is_on:
-            return 'off'
-
-        return self.get_mode(ModbusClimate._operation_list, CONF_OPERATION)
+        return HVAC_ACTIONS[self.hvac_mode]
 
     @property
-    def operation_list(self):
+    def hvac_mode(self):
+        if REG_HVAC_OFF in self._regs:
+            if self.get_value(REG_HVAC_OFF) == ModbusClimate._hvac_off_value:
+                return HVAC_MODE_OFF
+        return self.get_mode(ModbusClimate._hvac_modes, REG_HVAC_MODE)
+
+    @property
+    def hvac_modes(self):
         """Return the list of available operation modes."""
-        return self.get_modes_list(ModbusClimate._operation_list)
+        return list(ModbusClimate._hvac_modes)
 
     @property
-    def current_fan_mode(self):
+    def fan_mode(self):
         """Return the fan setting."""
-        return self.get_mode(ModbusClimate._fan_list, CONF_FAN)
+        return self.get_mode(ModbusClimate._fan_modes, REG_FAN_MODE)
 
     @property
-    def fan_list(self):
+    def fan_modes(self):
         """Return the list of available fan modes."""
-        return self.get_modes_list(ModbusClimate._fan_list)
+        return list(ModbusClimate._fan_modes)
 
     @property
-    def current_swing_mode(self):
+    def swing_mode(self):
         """Return the swing setting."""
-        return self.get_mode(ModbusClimate._swing_list, CONF_SWING)
+        return self.get_mode(ModbusClimate._swing_modes, REG_SWING_MODE)
 
     @property
-    def swing_list(self):
+    def swing_modes(self):
         """List of available swing modes."""
-        return self.get_modes_list(ModbusClimate._swing_list)
+        return list(ModbusClimate._swing_modes)
 
     @property
-    def current_hold_mode(self):
-        """Return hold mode setting."""
-        return self.get_value(CONF_HOLD)
+    def preset_mode(self):
+        """Return preset mode setting."""
+        return self.get_value(REG_PRESET_MODE)
 
     @property
-    def is_away_mode_on(self):
-        """Return if away mode is on."""
-        return self.get_value(CONF_AWAY)
+    def preset_modes(self):
+        """List of available swing modes."""
+        return list(ModbusClimate._preset_modes)
 
     @property
-    def is_aux_heat_on(self):
+    def is_aux_heat(self):
         """Return true if aux heat is on."""
-        return self.get_value(CONF_AUX)
-
-    @property
-    def is_on(self):
-        """Return true if the device is on."""
-        return self.get_value(CONF_IS_ON)
+        return self.get_value(REG_AUX_HEAT) == ModbusClimate._aux_heat_on_value
 
     def reset(self):
         """Initialize USR module"""
@@ -313,8 +329,8 @@ class ModbusClimate(ClimateDevice):
 
     def update(self):
         """Update state."""
-        for prop in self._mods:
-            mod = self._mods[prop]
+        for prop in self._regs:
+            mod = self._regs[prop]
             register_type, slave, register, scale, offset = \
                 self.register_info(mod)
             count = mod[CONF_COUNT] if CONF_COUNT in mod else 1
@@ -362,59 +378,44 @@ class ModbusClimate(ClimateDevice):
         """Set new target temperatures."""
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is not None:
-            self.set_value(CONF_TARGET_TEMPERATURE, temperature)
+            self.set_value(REG_TARGET_TEMPERATURE, temperature)
 
     def set_humidity(self, humidity):
         """Set new target humidity."""
-        self.set_value(CONF_TARGET_HUMIDITY, humidity)
+        self.set_value(REG_TARGET_HUMIDITY, humidity)
 
-    def set_operation_mode(self, operation_mode):
-        """Set new operation mode."""
-        is_on = operation_mode != 'off'
-        self.set_value(CONF_IS_ON, is_on)
-        if is_on:
-            if operation_mode == 'auto':
-                current = self.current_temperature
-                target = self.target_temperature
-                operation_mode = 'heat' \
-                    if current and target and current < target else 'cool'
-            self.set_mode(self._operation_list, CONF_OPERATION, operation_mode)
+    def set_hvac_mode(self, hvac_mode): ##??
+        """Set new hvac mode."""
+        if REG_HVAC_OFF in self._regs:
+            self.set_value(REG_HVAC_OFF, ModbusClimate._hvac_off_value if hvac_mode == HVAC_MODE_OFF else ModbusClimate._hvac_on_value)
+            if hvac_mode == HVAC_MODE_OFF:
+                return
+        if hvac_mode == HVAC_MODE_AUTO:
+            current = self.current_temperature
+            target = self.target_temperature
+            hvac_mode = HVAC_MODE_HEAT \
+                if current and target and current < target else HVAC_MODE_COOL
+        self.set_mode(self._hvac_modes, REG_HVAC_MODE, hvac_mode)
 
     def set_fan_mode(self, fan_mode):
         """Set new fan mode."""
-        self.set_mode(self._fan_list, CONF_FAN, fan_mode)
+        self.set_mode(self._fan_modes, REG_FAN_MODE, fan_mode)
 
     def set_swing_mode(self, swing_mode):
         """Set new swing mode."""
-        self.set_mode(self._swing_list, CONF_SWING, swing_mode)
+        self.set_mode(self._swing_modes, REG_SWING_MODE, swing_mode)
 
-    def set_hold_mode(self, hold_mode):
+    def set_preset_mode(self, preset_mode):
         """Set new hold mode."""
-        self.set_value(CONF_HOLD, hold_mode)
-
-    def turn_away_mode_on(self):
-        """Turn away mode on."""
-        self.set_value(CONF_AWAY, True)
-
-    def turn_away_mode_off(self):
-        """Turn away mode off."""
-        self.set_value(CONF_AWAY, False)
+        self.set_value(REG_PRESET_MODE, preset_mode)
 
     def turn_aux_heat_on(self):
         """Turn auxiliary heater on."""
-        self.set_value(CONF_AUX, True)
+        self.set_value(REG_AUX_HEAT, ModbusClimate._aux_heat_on_value)
 
     def turn_aux_heat_off(self):
         """Turn auxiliary heater off."""
-        self.set_value(CONF_AUX, False)
-
-    def turn_on(self):
-        """Turn on."""
-        self.set_value(CONF_IS_ON, True)
-
-    def turn_off(self):
-        """Turn off."""
-        self.set_value(CONF_IS_ON, False)
+        self.set_value(REG_AUX_HEAT, ModbusClimate._aux_heat_off_value)
 
     def register_info(self, mod):
         """Get register info."""
@@ -432,7 +433,7 @@ class ModbusClimate(ClimateDevice):
 
     def set_value(self, prop, value):
         """Set property value."""
-        mod = self._mods[prop]
+        mod = self._regs[prop]
         register_type, slave, register, scale, offset = self.register_info(mod)
         #_LOGGER.info("Write %s: %s = %f", self.name, prop, value)
 
@@ -446,32 +447,18 @@ class ModbusClimate(ClimateDevice):
 
         async_call_later(self.hass, 2, self.async_schedule_update_ha_state)
 
-    # [mode1, mode2, ...] or {mode1:value1, mode2:value2, ...}
-    # [cool, heat, ...] or {cool:2, heat:4, ...}
-    def get_modes_list(self, modes):
-        # _LOGGER.debug("get_modes_list: %s", list(modes))
-        return list(modes) if isinstance(modes, dict) else modes
-
     def get_mode(self, modes, prop):
         value = self.get_value(prop)
         if value is not None:
-            if isinstance(modes, list):
-                if value < len(modes):
-                    return modes[value]
-            elif isinstance(modes, dict):
-                for k, v in modes.items():
-                    if v == value:
-                        #_LOGGER.debug("get_mode: %s for %s", k, prop)
-                        return k
+            for k, v in modes.items():
+                if v == value:
+                    #_LOGGER.debug("get_mode: %s for %s", k, prop)
+                    return k
         _LOGGER.error("Invalid value %s for %s", value, prop)
         return None
 
     def set_mode(self, modes, prop, mode):
         if mode in modes:
-            if isinstance(modes, list):
-                self.set_value(prop, modes.index(mode))
-                return
-            elif isinstance(modes, dict):
-                self.set_value(prop, modes[mode])
-                return
+            self.set_value(prop, modes[mode])
+            return
         _LOGGER.error("Invalid mode %s for %s", mode, prop)
