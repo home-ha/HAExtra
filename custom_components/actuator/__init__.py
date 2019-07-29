@@ -34,7 +34,7 @@ def actuate(call):
     now = datetime.datetime.now().hour
     sensor_id = call_data.get('sensor_id')
     sensor_attr = call_data.get('sensor_attr')
-    sensor_values = call_data.get('sensor_values_alt' if now > 2 and now < 7 and 'sensor_values_alt' in call_data else 'sensor_values')
+    sensor_values = call_data.get('sensor_values_alt' if now > 2 and now < 6 and 'sensor_values_alt' in call_data else 'sensor_values')
 
     entity_id = call_data.get('entity_id')
     entity_attr = call_data.get('entity_attr')
