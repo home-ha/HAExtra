@@ -34,17 +34,22 @@ def actuate(call):
 
     entity_id = call.data.get('entity_id')
     entity_attr = call.data.get('entity_attr')
-    service = call.data.get('service')
+    service = call.data.get('service') or 'set_' + entity_attr
     service_attr = call.data.get('service_attr')
     entity_values = call.data.get('entity_values')
     domain = entity_id[:entity_id.find('.')]
 
     sensor_state = _hass.states.get(sensor_id)
-    if sensor_state is None:
-        _LOGGER.error("No sensor state for %s", sensor_id)
+    try:
+        sensor_value = sensor_state.state if sensor_attr is None else sensor_state.attributes.get(sensor_attr)
+    except AttributeError:
+        _LOGGER.error("Sensor %s %s error", sensor_id, sensor_attr or '')
         return
-
-    sensor_value = float(sensor_state.state if sensor_attr is None else sensor_state.attributes.get(sensor_attr))
+    try:
+        sensor_value = float(sensor_value)
+    except ValueError:
+        _LOGGER.error("Sensor %s %s Value %s error", sensor_id, sensor_attr or '', sensor_value)
+        return
     _LOGGER.debug("%s %s= %s", sensor_id, sensor_attr or '', sensor_value)
 
     state = _hass.states.get(entity_id)
@@ -60,8 +65,8 @@ def actuate(call):
                 return
 
             data = {'entity_id': entity_id, service_attr or entity_attr: to_value}
-            _LOGGER.info('%s %s= %s > %s, %s %s', entity_id, entity_attr or '', current_value, to_value, service, data)
-            _hass.services.call(domain, service or 'set_' + entity_attr, data, True)
+            _LOGGER.info('%s %s= %s -> %s, %s %s', entity_id, entity_attr or '', current_value, to_value, service, data)
+            _hass.services.call(domain, service, data, True)
             return
         else:
             i = i - 1
@@ -70,5 +75,5 @@ def actuate(call):
         _LOGGER.debug('%s %s is already off', entity_id, entity_attr or '')
         return
 
-    _LOGGER.info('%s %s= %s > off', entity_id, entity_attr or '', state_value)
+    _LOGGER.info('%s %s= %s -> off', entity_id, entity_attr or '', state_value)
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
