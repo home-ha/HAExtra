@@ -1,254 +1,79 @@
 # 餐厅颗粒物变化
 - alias: PM25 Changed @Diningroom
   trigger:
-    - platform: numeric_state
+    - platform: state
       entity_id: sensor.aircat_pm25
-      above: 50
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      above: 20
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      above: 13
-      for:
-        minutes: 8
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      below: 30
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      below: 15
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.aircat_pm25
-      below: 10
-      for:
-        minutes: 8
   action:
-    - service_template: '{% if (states("sensor.aircat_pm25") | int > 10) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-      entity_id: fan.purifier5
-    - condition: numeric_state
-      entity_id: sensor.aircat_pm25
-      above: 10
-    - service: fan.set_speed
-      data_template:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.aircat_pm25
+        sensor_values: [10, 20, 50]
         entity_id: fan.purifier5
-        speed: '{% if (states("sensor.aircat_pm25") | int > 50) %}high{% elif (states("sensor.aircat_pm25") | int > 20) %}medium{% else %}low{% endif %}'
-    - delay: 1
-    - service: logbook.log
-      data_template:
-        name: '{{ state_attr("sensor.aircat_pm25", "friendly_name") }}={{ states("sensor.aircat_pm25") }}'
-        message: '{{ state_attr("fan.purifier5", "friendly_name") }}⇒{{ state_attr("fan.purifier5", "speed") }}'
+        entity_attr: speed
+        entity_values: [low, medium, high]
 
 # 主卧颗粒物变化
 - alias: PM25 Changed @Bedroom
   trigger:
-    - platform: numeric_state
+    - platform: state
       entity_id: sensor.purifier7_pm25
-      above: 50
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.purifier7_pm25
-      above: 20
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier7_pm25
-      above: 10
-      for:
-        minutes: 8
-    - platform: numeric_state
-      entity_id: sensor.purifier7_pm25
-      below: 35
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.purifier7_pm25
-      below: 15
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier7_pm25
-      below: 5
-      for:
-        minutes: 8
   action:
-    - service_template: '{% if (states("sensor.purifier7_pm25") | int > 5) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-      entity_id: fan.purifier7
-    - condition: numeric_state
-      entity_id: sensor.purifier7_pm25
-      above: 5
-    - service: fan.set_speed
-      data_template:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.purifier7_pm25
+        sensor_values: [5, 20, 50]
         entity_id: fan.purifier7
-        speed: '{% if (states("sensor.purifier7_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.purifier7_pm25") | int > 20) %}medium{% else %}low{% endif %}'
-    - delay: 1
-    - service: logbook.log
-      data_template:
-        name: '{{ state_attr("sensor.purifier7_pm25", "friendly_name") }}={{ states("sensor.purifier7_pm25") }}'
-        message: '{{ state_attr("fan.purifier7", "friendly_name") }}⇒{{ state_attr("fan.purifier7", "speed") }}'
+        entity_attr: speed
+        entity_values: [low, medium, high]
 
 # 次卧颗粒物变化
 - alias: PM25 Changed @Parentsroom
   trigger:
-    - platform: time
-      at: '07:30:01'
-    - platform: numeric_state
+    - platform: state
       entity_id: sensor.purifier_pm25
-      above: 60
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      above: 40
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      above: 25
-      for:
-        minutes: 8
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      below: 45
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      below: 32
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier_pm25
-      below: 20
-      for:
-        minutes: 8
-  condition:
-    - condition: time
-      after: '7:30'
-      before: '20:29'
   action:
-    - service_template: '{% if (states("sensor.purifier_pm25") | int > 20) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-      entity_id: fan.purifier
-    - condition: numeric_state
-      entity_id: sensor.purifier_pm25
-      above: 20
     - service: fan.set_speed
-      data_template:
+      data:
+      #data_template:
         entity_id: fan.purifier
-        speed: '{% if (states("sensor.purifier_pm25") | int > 35) and is_state("switch.projector", "off") %}favorite{% else %}auto{% endif %}'
-    - service: fan.xiaomi_miio_set_favorite_level
-      data_template:
-        entity_id: fan.purifier
-        level: '{% if (states("sensor.purifier_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}9{% else %}6{% endif %}'
-    - delay: 1
-    - service: logbook.log
-      data_template:
-        name: '{{ state_attr("sensor.purifier_pm25", "friendly_name") }}={{ states("sensor.purifier_pm25") }}'
-        message: '{{ state_attr("fan.purifier", "friendly_name") }}⇒{{ state_attr("fan.purifier", "speed") }} {{ state_attr("fan.purifier", "favorite_level") }}'
+        speed: favorite
+        #speed: '{% if (states("sensor.purifier_pm25") | int > 35) and is_state("switch.projector", "off") %}favorite{% else %}auto{% endif %}'
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.purifier_pm25
+        sensor_values: [15, 20, 35, 60, 80]
+        sensor_values_alt: [20, 30, 50, 80, 100]
+        entity_id: fan.purifier6
+        entity_attr: favorite_level
+        service: xiaomi_miio_set_favorite_level
+        service_attr: level
+        entity_values: [2, 3, 6, 9, 10]
 
 # 儿童房颗粒物变化
 - alias: PM25 Changed @Kidsroom
   trigger:
-    - platform: numeric_state
+    - platform: state
       entity_id: sensor.purifier6_pm25
-      above: 50
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.purifier6_pm25
-      above: 20
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier6_pm25
-      above: 10
-      for:
-        minutes: 8
-    - platform: numeric_state
-      entity_id: sensor.purifier6_pm25
-      below: 35
-      for:
-        minutes: 7
-    - platform: numeric_state
-      entity_id: sensor.purifier6_pm25
-      below: 15
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier6_pm25
-      below: 5
-      for:
-        minutes: 8
   action:
-    - service_template: '{% if (states("sensor.purifier6_pm25") | int > 5) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-      entity_id: fan.purifier6
-    - condition: numeric_state
-      entity_id: sensor.purifier6_pm25
-      above: 5
-    - service: fan.set_speed
-      data_template:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.purifier6_pm25
+        sensor_values: [5, 20, 50]
         entity_id: fan.purifier6
-        speed: '{% if (states("sensor.purifier6_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.purifier6_pm25") | int > 20) %}medium{% else %}low{% endif %}'
-    - delay: 1
-    - service: logbook.log
-      data_template:
-        name: '{{ state_attr("sensor.purifier6_pm25", "friendly_name") }}={{ states("sensor.purifier6_pm25") }}'
-        message: '{{ state_attr("fan.purifier6", "friendly_name") }}⇒{{ state_attr("fan.purifier6", "speed") }}'
+        entity_attr: speed
+        entity_values: [low, medium, high]
 
 # 书房颗粒物变化
-# - alias: PM25 Changed @Studyroom
-#   trigger:
-#     - platform: numeric_state
-#       entity_id: sensor.aircat2_pm25
-#       above: 50
-#       for:
-#         minutes: 7
-#     - platform: numeric_state
-#       entity_id: sensor.aircat2_pm25
-#       above: 20
-#       for:
-#         minutes: 6
-#     - platform: numeric_state
-#       entity_id: sensor.aircat2_pm25
-#       above: 13
-#       for:
-#         minutes: 8
-#     - platform: numeric_state
-#       entity_id: sensor.aircat2_pm25
-#       below: 30
-#       for:
-#         minutes: 7
-#     - platform: numeric_state
-#       entity_id: sensor.aircat2_pm25
-#       below: 15
-#       for:
-#         minutes: 6
-#     - platform: numeric_state
-#       entity_id: sensor.aircat2_pm25
-#       below: 10
-#       for:
-#         minutes: 8
-#   action:
-#     - service_template: '{% if (states("sensor.aircat2_pm25") | int > 10) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-#       entity_id: fan.purifier4
-#     - condition: numeric_state
-#       entity_id: sensor.aircat2_pm25
-#       above: 10
-#     - service: fan.set_speed
-#       data_template:
-#         entity_id: fan.purifier4
-#         speed: '{% if (states("sensor.aircat2_pm25") | int > 50) and is_state("sun.sun", "above_horizon") %}high{% elif (states("sensor.aircat2_pm25") | int > 30) %}medium{% else %}low{% endif %}'
-#     - delay: 1
-#     - service: logbook.log
-#       data_template:
-#         name: '{{ state_attr("sensor.aircat2_pm25", "friendly_name") }}={{ states("sensor.aircat2_pm25") }}'
-#         message: '{{ state_attr("fan.purifier4", "friendly_name") }}⇒{{ state_attr("fan.purifier4", "speed") }}'
+- alias: PM25 Changed @Studyroom
+  initial_state: false
+  trigger:
+    - platform: state
+      entity_id: sensor.aircat2_pm25
+  action:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.aircat2_pm25
+        sensor_values: [10, 20, 50]
+        entity_id: fan.purifier4
+        entity_attr: speed
+        entity_values: [low, medium, high]

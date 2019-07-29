@@ -1,51 +1,16 @@
 # 客厅二氧化碳变化
 - alias: CO2 Changed @Livingroom
   trigger:
-    - platform: numeric_state
+    - platform: state
       entity_id: sensor.fresher_co2
-      above: 730 # 升至高档
-      for:
-        minutes: 5
-    - platform: numeric_state
-      entity_id: sensor.fresher_co2
-      above: 680 # 升至中档
-      for:
-        minutes: 4
-    - platform: numeric_state
-      entity_id: sensor.fresher_co2
-      above: 600 # 升至低档
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.fresher_co2
-      below: 710 # 降至中档
-      for:
-        minutes: 5
-    - platform: numeric_state
-      entity_id: sensor.fresher_co2
-      below: 660 # 降至低档
-      for:
-        minutes: 4
-    - platform: numeric_state
-      entity_id: sensor.fresher_co2
-      below: 500 # 降至关机
-      for:
-        minutes: 6
   action:
-    - service_template: '{% if (states("sensor.fresher_co2") | int > 500) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-      entity_id: fan.fresher
-    - condition: numeric_state
-      entity_id: sensor.fresher_co2
-      above: 500
-    - service: fan.set_speed
-      data_template:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.fresher_co2
+        sensor_values: [500, 680, 730]
         entity_id: fan.fresher
-        speed: '{% if (states("sensor.fresher_co2") | int > 730) %}Strong{% elif (states("sensor.fresher_co2") | int > 680) %}Middle{% else %}Auto{% endif %}'
-    - delay: 1
-    - service: logbook.log
-      data_template:
-        name: '{{ state_attr("sensor.fresher_co2", "friendly_name") }}={{ states("sensor.fresher_co2") }}'
-        message: '{{ state_attr("fan.fresher", "friendly_name") }}⇒{{ state_attr("fan.fresher", "speed") }}'
+        entity_attr: speed
+        entity_values: [Auto, Middle, Strong]
 
 # 主卧二氧化碳变化
 - alias: CO2 Changed @Bedroom

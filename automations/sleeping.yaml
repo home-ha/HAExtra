@@ -29,14 +29,16 @@
       entity_id: climate.daikin1
     - service: climate.turn_off
       entity_id: climate.daikin2
-    - service: climate.set_fan_mode
+    - service: climate.set_temperature
       data:
         entity_id: climate.daikin3
-        fan_mode: 一级
-    - service: climate.set_fan_mode
+        temperature: 25
+        #hvac_mode: cool
+    - service: climate.set_temperature
       data:
         entity_id: climate.daikin4
-        fan_mode: 一级
+        temperature: 25
+        #hvac_mode: cool
 
 # 开始睡觉
 - alias: Sleeping Began
@@ -59,12 +61,12 @@
       data:
         entity_id: climate.daikin3
         temperature: 26
-        operation_mode: cool
+        #hvac_mode: cool
     - service: climate.set_temperature
       data:
         entity_id: climate.daikin4
         temperature: 26
-        operation_mode: cool
+        #hvac_mode: cool
 
 # 结束睡眠
 - alias: Sleeping Ended
@@ -93,16 +95,10 @@
       data:
         entity_id: climate.daikin4
         fan_mode: 自动
-    - service: climate.set_temperature
-      data:
-        entity_id: climate.daikin3
-        temperature: 25
-        operation_mode: cool
-    - service: climate.set_temperature
-      data:
-        entity_id: climate.daikin4
-        temperature: 25
-        operation_mode: cool
+    - service: climate.turn_off
+      entity_id: climate.daikin3
+    - service: climate.turn_off
+      entity_id: climate.daikin4
     - service: fan.turn_off
       entity_id: fan.fan
     - service: fan.turn_off
