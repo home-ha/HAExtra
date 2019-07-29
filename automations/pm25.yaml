@@ -32,22 +32,24 @@
     - platform: state
       entity_id: sensor.purifier_pm25
   action:
-    - service: fan.set_speed
-      data:
-      #data_template:
-        entity_id: fan.purifier
-        speed: favorite
-        #speed: '{% if (states("sensor.purifier_pm25") | int > 35) and is_state("switch.projector", "off") %}favorite{% else %}auto{% endif %}'
     - service: actuator.actuate
       data:
         sensor_id: sensor.purifier_pm25
-        sensor_values: [15, 20, 35, 60, 80]
-        alt_sensor_values: [20, 30, 50, 80, 100]
+        sensor_values: [35]
+        alt_sensor_values: [50]
+        entity_id: fan.purifier
+        entity_attr: speed
+        entity_values: [Auto, Favorite]
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.purifier_pm25
+        sensor_values: [20, 35, 60, 80]
+        alt_sensor_values: [30, 50, 80, 100]
         entity_id: fan.purifier
         entity_attr: favorite_level
         service: xiaomi_miio_set_favorite_level
         service_attr: level
-        entity_values: [2, 3, 6, 9, 10]
+        entity_values: [3, 6, 9, 10]
 
 # 儿童房颗粒物变化
 - alias: PM25 Changed @Kidsroom
