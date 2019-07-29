@@ -11,7 +11,7 @@ logger:
   default: warning
   logs:
     homeassistant.loader: error
-    custom_components.actuator: info
+    custom_components.actuator: debug
     #homeassistant.components.homekit: debug
     #pyhap: debug
 
