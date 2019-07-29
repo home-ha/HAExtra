@@ -30,6 +30,11 @@ scp ~/.ssh/authorized_keys root@hassbian:~/.ssh/
 scp ~/.ssh/id_rsa root@hassbian:~/.ssh/
 scp ~/.ssh/config root@hassbian:~/.ssh/
 
+ssh admin@hassbian "mkdir ~/.ssh"
+scp ~/.ssh/authorized_keys admin@hassbian:~/.ssh/
+scp ~/.ssh/id_rsa admin@hassbian:~/.ssh/
+scp ~/.ssh/config admin@hassbian:~/.ssh/
+
 ssh root@hassbian
 
 #
