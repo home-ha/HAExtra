@@ -35,8 +35,8 @@
     - service: actuator.actuate
       data:
         sensor_id: sensor.purifier_pm25
-        sensor_values: [35]
-        alt_sensor_values: [50]
+        sensor_values: [20, 35]
+        alt_sensor_values: [30, 50]
         entity_id: fan.purifier
         entity_attr: speed
         entity_values: [Auto, Favorite]
