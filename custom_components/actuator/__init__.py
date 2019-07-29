@@ -63,7 +63,7 @@ def actuate(call):
         return
 
     sensor_name = sensor_attributes.get('friendly_name')
-    sensor_log = sensor_name + '(' + sensor_id + ('' if sensor_attr is None else '~' + sensor_attr) + ')=' + sensor_value
+    sensor_log = sensor_name + '(' + sensor_id + ('' if sensor_attr is None else '~' + sensor_attr) + ')=' + str(sensor_value)
 
     state = _hass.states.get(entity_id)
     if state is None:
@@ -84,19 +84,19 @@ def actuate(call):
             to_value = entity_values[i]
             current_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
             if current_value == to_value:
-                _LOGGER.debug('%s, %s=%s, not changed', sensor_log, entity_desc, current_value)
+                _LOGGER.debug('%s, %s=%s not changed', sensor_log, entity_desc, current_value)
                 return
 
             data = {'entity_id': entity_id, service_attr or entity_attr: to_value}
-            _LOGGER.warn('%s, %s=%s, %s=>%s', sensor_log, entity_desc, current_value, service, to_value)
+            _LOGGER.warn('%s, %s=%s %s=>%s', sensor_log, entity_desc, current_value, service, to_value)
             _hass.services.call(domain, service, data, True)
             return
         else:
             i = i - 1
 
     if state_value == 'off':
-        _LOGGER.debug('%s, %s=%s, already off', sensor_log, entity_desc, state_value)
+        _LOGGER.debug('%s, %s(%s)=%s already off', sensor_log, friendly_name, entity_id, state_value)
         return
 
-    _LOGGER.debug('%s, %s=%s, =>off', sensor_log, entity_desc, state_value)
+    _LOGGER.debug('%s, %s(%s)=%s =>off', sensor_log, friendly_name, entity_id, state_value)
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
