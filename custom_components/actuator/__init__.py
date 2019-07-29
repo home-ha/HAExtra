@@ -64,6 +64,9 @@ def actuate(call):
     i = len(sensor_values) - 1
     while i >= 0:
         if sensor_value >= sensor_values[i]:
+            if state_value == 'off':
+                _hass.services.call(domain, 'turn_on', {'entity_id': entity_id}, True)
+
             to_value = entity_values[i]
             current_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
             if current_value == to_value:

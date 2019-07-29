@@ -247,57 +247,25 @@
         name: '{{ state_attr("sensor.fan_temperature", "friendly_name") }}={{ states("sensor.fan_temperature") }}'
         message: '{{ state_attr("fan.fan", "friendly_name") }}⇒{{ state_attr("fan.fan", "speed_level") }}'
 
-# 书房风扇温度变化
+# 儿童房风扇温度变化
 - alias: Temperature Changed @Fan2
   trigger:
     - platform: time
       at: '20:30:01'
-    - platform: numeric_state
+    - platform: state
       entity_id: sensor.purifier6_temperature
-      above: 30 # 升至高档
-      for:
-        minutes: 5
-    - platform: numeric_state
-      entity_id: sensor.purifier6_temperature
-      above: 26 # 升至中档
-      for:
-        minutes: 4
-    - platform: numeric_state
-      entity_id: sensor.purifier6_temperature
-      above: 24 # 升至低档
-      for:
-        minutes: 6
-    - platform: numeric_state
-      entity_id: sensor.purifier6_temperature
-      below: 29 # 降至中档
-      for:
-        minutes: 5
-    - platform: numeric_state
-      entity_id: sensor.purifier6_temperature
-      below: 25 # 降至低档
-      for:
-        minutes: 4
-    - platform: numeric_state
-      entity_id: sensor.purifier6_temperature
-      below: 23 # 降至关机
-      for:
-        minutes: 6
   condition:
     - condition: time
       after: '20:00'
-      before: '08:00'
+      before: '07:00'
   action:
-    - service_template: '{% if (states("sensor.purifier6_temperature") | float > 23) %}fan.turn_on{% else %}fan.turn_off{% endif %}'
-      entity_id: fan.fan2
-    - condition: numeric_state
-      entity_id: sensor.purifier6_temperature
-      above: 23
-    - service: fan.set_speed
-      data_template:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.purifier6_temperature
+        #sensor_attr: speed
+        sensor_values: [23, 26, 30]
+        sensor_values_alt: [25, 28, 32]
         entity_id: fan.fan2
-        speed: '{% if (states("sensor.purifier6_temperature") | float > 30) %}Level 3{% elif (states("sensor.purifier6_temperature") | float > 26) %}Level 2{% else %}Level 1{% endif %}'
-    - delay: 1
-    - service: logbook.log
-      data_template:
-        name: '{{ state_attr("sensor.purifier6_temperature", "friendly_name") }}={{ states("sensor.purifier6_temperature") }}'
-        message: '{{ state_attr("fan.fan2", "friendly_name") }}⇒{{ state_attr("fan.fan2", "speed_level") }}'
+        entity_attr: speed_level
+        service_attr: speed
+        entity_values: [Level 1, Level 2, Level 3]
