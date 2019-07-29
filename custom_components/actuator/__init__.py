@@ -35,7 +35,7 @@ def actuate(call):
     now = datetime.datetime.now().hour
     sensor_id = call_data.get('sensor_id')
     sensor_attr = call_data.get('sensor_attr')
-    alt_time_range = call_data.get('alt_time_range') or [2, 6]
+    alt_time_range = call_data.get('alt_time_range') or [20, 8]
     if alt_time_range[1] > alt_time_range[0]:
         alt_time = now > alt_time_range[0] and now < alt_time_range[1]
     else:
