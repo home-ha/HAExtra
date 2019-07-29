@@ -11,7 +11,7 @@ logger:
   default: warning
   logs:
     homeassistant.loader: error
-    custom_components.climate.saswell: debug
+    custom_components.actuator: info
     #homeassistant.components.homekit: debug
     #pyhap: debug
 
