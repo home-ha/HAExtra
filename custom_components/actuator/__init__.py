@@ -66,6 +66,10 @@ def actuate(call):
     sensor_log = sensor_name + '(' + sensor_id + ('' if sensor_attr is None else '~' + sensor_attr) + ')=' + sensor_value
 
     state = _hass.states.get(entity_id)
+    if state is None:
+        _LOGGER.error("Entity %s error", sensor_id)
+        return
+
     state_value = state.state
     state_attributes = state.attributes
     friendly_name = state_attributes.get('friendly_name')
