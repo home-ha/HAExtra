@@ -42,7 +42,7 @@
       data:
         sensor_id: sensor.purifier_pm25
         sensor_values: [15, 20, 35, 60, 80]
-        sensor_values_alt: [20, 30, 50, 80, 100]
+        alt_sensor_values: [20, 30, 50, 80, 100]
         entity_id: fan.purifier6
         entity_attr: favorite_level
         service: xiaomi_miio_set_favorite_level

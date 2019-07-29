@@ -13,7 +13,8 @@ ACTUATE_SCHEMA = vol.Schema({
     vol.Required('sensor_id'): cv.string,
     vol.Optional('sensor_attr'): cv.string,
     vol.Required('sensor_values'): list,
-    vol.Optional('sensor_values_alt'): list,
+    vol.Optional('alt_sensor_values'): list,
+    vol.Optional('alt_time_range'): list,
     vol.Required('entity_id'): cv.string,
     vol.Optional('entity_attr'): cv.string,
     vol.Optional('service'): cv.string,
@@ -34,7 +35,12 @@ def actuate(call):
     now = datetime.datetime.now().hour
     sensor_id = call_data.get('sensor_id')
     sensor_attr = call_data.get('sensor_attr')
-    sensor_values = call_data.get('sensor_values_alt' if now > 2 and now < 6 and 'sensor_values_alt' in call_data else 'sensor_values')
+    alt_time_range = call_data.get('alt_time_range') or [2, 6]
+    if alt_time_range[1] > alt_time_range[0]:
+        alt_time = now > alt_time_range[0] and now < alt_time_range[1]
+    else:
+        alt_time = now > alt_time_range[0] or now < alt_time_range[1]
+    sensor_values = call_data.get('sensor_values_alt' if alt_time and 'alt_sensor_values' in call_data else 'sensor_values')
 
     entity_id = call_data.get('entity_id')
     entity_attr = call_data.get('entity_attr')

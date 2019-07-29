@@ -10,9 +10,12 @@ actuate:
     sensor_values:
       description: Sensor value array
       example: '[23, 26, 30]'
-    sensor_values_alt:
-      description: Alternative sensor value array for deep night (2:00 am ~ 6:00 am)
+    alt_sensor_values:
+      description: Alternative sensor value array for special time range
       example: '[25, 28, 32]'
+    alt_time_range:
+      description: Alternative time range. Default is 20:00 am ~ 8:00 am
+      example: '[20, 8]'
     entity_id:
       description: Entity ID to Tune
       example: fan.ceiling_fan
