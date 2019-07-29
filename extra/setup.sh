@@ -1,15 +1,22 @@
 #!/bin/sh
 
 # ============================== Basic Config ==============================
-#ssh pi@hassbian
-
 # Raspberry Pi Only
-sudo passwd root
-sudo passwd --unlock root
-sudo nano /etc/ssh/sshd_config #PermitRootLogin yes
-sudo mkdir /root/.ssh
-mkdir ~/.ssh
-sudo reboot
+#ssh pi@hassbian
+# sudo passwd root
+# sudo passwd --unlock root
+# sudo nano /etc/ssh/sshd_config #PermitRootLogin yes
+# sudo mkdir /root/.ssh
+# mkdir ~/.ssh
+# sudo reboot
+# # Raspberry Pi Only: Rename pi->admin
+# usermod -l admin pi
+# groupmod -n admin pi
+# mv /home/pi /home/admin
+# usermod -d /home/admin admin
+# passwd admin
+# raspi-config # Hostname, WiFi, locales(en_US.UTF-8/zh_CN.GB18030/zh_CN.UTF-8), Timezone
+##apt-get install python3 python3-pip
 
 # MacOS
 #ssh root@hassbian "mkdir ~/.ssh"
@@ -17,53 +24,27 @@ sudo reboot
 #scp ~/.ssh/id_rsa root@hassbian:~/.ssh/
 #scp ~/.ssh/config root@hassbian:~/.ssh/
 
-#ssh admin@hassbian "mkdir ~/.ssh"
-#scp ~/.ssh/authorized_keys admin@hassbian:~/.ssh/
-#scp ~/.ssh/id_rsa admin@hassbian:~/.ssh/
-#scp ~/.ssh/config admin@hassbian:~/.ssh/
+# SSH
+ssh root@hassbian "mkdir ~/.ssh"
+scp ~/.ssh/authorized_keys root@hassbian:~/.ssh/
+scp ~/.ssh/id_rsa root@hassbian:~/.ssh/
+scp ~/.ssh/config root@hassbian:~/.ssh/
 
-#ssh root@hassbian
-
-# # Raspberry Pi Only: Rename pi->admin
-usermod -l admin pi
-groupmod -n admin pi
-mv /home/pi /home/admin
-usermod -d /home/admin admin
-passwd admin
-raspi-config # Hostname, WiFi, locales(en_US.UTF-8/zh_CN.GB18030/zh_CN.UTF-8), Timezone
+ssh root@hassbian
 
 #
 echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Armbian
-armbian-config #Hostname, wifi,timezone
+armbian-config #Hostname, wifi,timezone, apt-source
 #echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # ============================== Home Assistant ==============================
-apt-get update
-apt-get upgrade -y
+apt-get update && apt-get upgrade -y
 #apt-get autoclean
 #apt-get clean
 #apt autoremove -y
 
-# Mosquitto
-apt-get install mosquitto mosquitto-clients
-#echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
-#systemctl stop mosquitto
-#sleep 2
-#rm -rf /var/lib/mosquitto/mosquitto.db
-#systemctl start mosquitto
-#sleep 2
-#mosquitto_sub -v -t '#'
-
-# HomeKit
-apt-get install libavahi-compat-libdnssd-dev
-
-# Android
-apt-get install adb
-
-# Raspbian
-##apt-get install python3 python3-pip
+apt-get install mosquitto mosquitto-clients libavahi-compat-libdnssd-dev adb
 
 # Armbian
 apt-get install python3-pip python3-dev libffi-dev python3-setuptools
@@ -83,7 +64,7 @@ wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/s
 
 # Baidu TTS
 #apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
-apt-get install libjpeg-dev zlib1g-dev
+#apt-get install libjpeg-dev zlib1g-dev
 
 # Home Assistant
 pip3 install wheel
@@ -120,8 +101,29 @@ alias hassup='systemctl stop homeassistant; pip3 install homeassistant --upgrade
 alias hasslog='tail -f ~/.homeassistant/home-assistant.log'
 EOF
 
+exit 0
+
 # Debug
 hass
+
+# Mosquitto
+#echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
+#systemctl stop mosquitto
+#sleep 2
+#rm -rf /var/lib/mosquitto/mosquitto.db
+#systemctl start mosquitto
+#sleep 2
+#mosquitto_sub -v -t '#'
+
+# ============================== V2Ray ==============================
+
+curl https://install.direct/go.sh | sudo bash
+
+cat >> /etc/v2ray/config.json << "EOF"
+{
+
+}
+EOF
 
 # ============================== Samba ==============================
 # Samba
