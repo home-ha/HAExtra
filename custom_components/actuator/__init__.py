@@ -69,7 +69,7 @@ def actuate(call):
     state_value = state.state
     state_attributes = state.attributes
     friendly_name = state_attributes.get('friendly_name')
-    entity_desc = friendly_name + '(' + entity_id + ('' if entity_attr is None else '~' + entity_attr) + ')='
+    entity_desc = friendly_name + '(' + entity_id + ('' if entity_attr is None else '~' + entity_attr) + ')'
 
     i = len(sensor_values) - 1
     while i >= 0:
