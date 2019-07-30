@@ -263,7 +263,7 @@ class ModbusClimate(ClimateDevice):
         if REG_HVAC_OFF in self._regs:
             if self.get_value(REG_HVAC_OFF) == ModbusClimate._hvac_off_value:
                 return HVAC_MODE_OFF
-        return self.get_mode(ModbusClimate._hvac_modes, REG_HVAC_MODE)
+        return self.get_mode(ModbusClimate._hvac_modes, REG_HVAC_MODE) or HVAC_MODE_OFF
 
     @property
     def hvac_modes(self):
@@ -384,17 +384,18 @@ class ModbusClimate(ClimateDevice):
         """Set new target humidity."""
         self.set_value(REG_TARGET_HUMIDITY, humidity)
 
-    def set_hvac_mode(self, hvac_mode): ##??
+    def set_hvac_mode(self, hvac_mode):
         """Set new hvac mode."""
         if REG_HVAC_OFF in self._regs:
             self.set_value(REG_HVAC_OFF, ModbusClimate._hvac_off_value if hvac_mode == HVAC_MODE_OFF else ModbusClimate._hvac_on_value)
             if hvac_mode == HVAC_MODE_OFF:
                 return
-        if hvac_mode == HVAC_MODE_AUTO:
-            current = self.current_temperature
-            target = self.target_temperature
-            hvac_mode = HVAC_MODE_HEAT \
-                if current and target and current < target else HVAC_MODE_COOL
+        if hvac_mode == HVAC_MODE_AUTO and HVAC_MODE_AUTO not in ModbusClimate._hvac_modes: # Support HomeKit Auto Mode
+            _LOGGER.warn("Fix hvac mode from auto to cool")
+            hvac_mode = HVAC_MODE_COOL
+            # current = self.current_temperature
+            # target = self.target_temperature
+            # hvac_mode = HVAC_MODE_HEAT if current and target and current < target else HVAC_MODE_COOL
         self.set_mode(self._hvac_modes, REG_HVAC_MODE, hvac_mode)
 
     def set_fan_mode(self, fan_mode):
@@ -445,7 +446,7 @@ class ModbusClimate(ClimateDevice):
 
         self._values[prop] = value
 
-        self.async_write_ha_state()
+        #self.async_write_ha_state()
         async_call_later(self.hass, 2, self.async_schedule_update_ha_state)
 
     def get_mode(self, modes, prop):

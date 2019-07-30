@@ -72,7 +72,7 @@
 - alias: Sleeping Ended
   trigger:
     - platform: time
-      at: '07:00:00'
+      at: '07:20:00'
   action:
     - service: cover.open_cover
       entity_id: cover.studyroom_cover
@@ -99,6 +99,8 @@
       entity_id: climate.daikin3
     - service: climate.turn_off
       entity_id: climate.daikin4
+    - service: climate.turn_off
+      entity_id: climate.mitsubishi
     - service: fan.turn_off
       entity_id: fan.fan
     - service: fan.turn_off
