@@ -1,0 +1,44 @@
+# 客厅空调触发打开
+- alias: Climate Turn On @Livingroom
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+      to: 'on'
+  condition:
+    - condition: time
+      after: '08:00'
+      before: '21:00'
+    - condition: numeric_state
+      entity_id: sensor.fresher_temperature
+      above: 29
+    - condition: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      state: 'off'
+    - condition: state
+      entity_id: climate.daikin2
+      state: 'off'
+  action:
+    - service: climate.turn_on
+      entity_id: climate.daikin2
+
+# 客厅空调触发关闭
+- alias: Climate Turn Off @Livingroom
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      from: 'off'
+      to: 'on'
+      for:
+        minutes: 3
+    - platform: numeric_state
+      entity_id: sensor.fresher_temperature
+      below: 27
+  condition:
+    - condition: time
+      after: '08:00'
+      before: '21:00'
+  action:
+    - service: climate.turn_off
+      entity_id: climate.daikin2
+    - service: climate.turn_off
+      entity_id: climate.daikin1
