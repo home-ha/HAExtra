@@ -188,7 +188,6 @@
 		<script>
 			_ws = null // WebSocket handle
 			_wsid = 0 // WebSocket session id
-			_wsapi = null // WebSocket api url
 			_token = null // Access token or password
 			_call_entity_id = null // Processing entity_id
 			_entities = null // All entities
@@ -211,14 +210,18 @@
 				document.styleSheets[1].cssRules[0].style.width = width + 'px'
 				//alert('clientWidth:' + clientWidth + ' count:' + count + ' width:' + width);
 
+				connect()
+			}
+
+			function connect() {
 				// Parse api url
 				var params = location.search.split('@')
 				if (params.length > 1 && params[1].startsWith('ws')) {
-					_wsapi = params[1]
+					var wsapi = params[1]
 				} else {
-					_wsapi = (location.protocol == 'https:' ? 'wss://' : 'ws://') + location.host
+					var wsapi = (location.protocol == 'https:' ? 'wss://' : 'ws://') + location.host
 				}
-				_wsapi += '/api/websocket'
+				wsapi += '/api/websocket'
 
 				// Parse access token
 				_token = params[0].slice(1)
@@ -228,13 +231,9 @@
 					} catch (e) {}
 				}
 
-				connect()
-			}
-
-			function connect() {
 				floater('loading')
 
-				_ws = new WebSocket(_wsapi)
+				_ws = new WebSocket(wsapi)
 				_ws.onopen = handleOpen
 				_ws.onclose = handleClose
 				_ws.onmessage = handleMessage
@@ -302,8 +301,8 @@
 						}
 						break
 					case 'auth_invalid':
-						var error = '无效认证！请先<a href="javascript:location=\'' + location.protocol + '//' + location.host + '\'">登录首页</a>'
-						error += '，或指定密码和地址' + location.href.split('?')[0] + '?password@ws:host:8123'
+						var error = '无效认证！请先 <a href="javascript:location=\'' + location.protocol + '//' + location.host + '\'">登录首页</a> 并保存后 <a href="javascript:location.reload()">刷新</a>'
+						error += '<div style="font-size:8px; color:#999999; line-height: 16px">也可以指定长期访问令牌和地址，如：' + location.href.split('?')[0] + '?password@ws:host:8123</div>'
 						floater('error', error)
 						break
 					default:
