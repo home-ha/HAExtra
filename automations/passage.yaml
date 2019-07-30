@@ -1,4 +1,3 @@
-
 # 过道灯白天感应开
 - alias: Passage Light On Day
   trigger:

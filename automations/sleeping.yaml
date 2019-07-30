@@ -25,6 +25,13 @@
     - service: miai.set_vol
       data:
         vol: 25
+
+# 开始睡觉
+- alias: Sleeping Began
+  trigger:
+    - platform: time
+      at: '21:30:00'
+  action:
     - service: climate.turn_off
       entity_id: climate.daikin1
     - service: climate.turn_off
@@ -39,17 +46,6 @@
         entity_id: climate.daikin4
         temperature: 25
         #hvac_mode: cool
-
-# 开始睡觉
-- alias: Sleeping Began
-  trigger:
-    - platform: time
-      at: '22:00:00'
-  action:
-    - service: logbook.log
-      data:
-        name: '开始睡觉'
-        message: '晚安！'
 
 # 进入深睡
 - alias: Sleeping Deepin
