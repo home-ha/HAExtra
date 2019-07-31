@@ -257,7 +257,7 @@ async def async_get_integration(hass: 'HomeAssistant', domain: str)\
     # components to find the integration.
     integration = (await async_get_custom_components(hass)).get(domain)
     if integration is not None:
-        _LOGGER.warning(CUSTOM_WARNING, domain)
+        #_LOGGER.warning(CUSTOM_WARNING, domain)
         cache[domain] = integration
         event.set()
         return integration

@@ -47,7 +47,7 @@ def actuate(call):
         now = int(time.time())
         stamp = entity_id + '~' + service_attr
         if stamp in _stamps and now - _stamps[stamp] < ignore_interval:
-            _LOGGER.debug('%s ignored', stamp)
+            #_LOGGER.debug('%s ignored', stamp)
             return
         _stamps[stamp] = now
 
@@ -80,7 +80,10 @@ def actuate(call):
         return
 
     sensor_name = sensor_attributes.get('friendly_name')
-    sensor_log = sensor_name + '(' + sensor_id + ('' if sensor_attr is None else '~' + sensor_attr) + ')=' + str(sensor_value)
+    sensor_log = sensor_name
+    if sensor_attr:
+         sensor_log += '.' + sensor_attr
+    sensor_log += '=' + str(sensor_value)
 
     state = _hass.states.get(entity_id)
     if state is None:
@@ -94,32 +97,32 @@ def actuate(call):
     i = len(sensor_values) - 1
     while i >= 0:
         if sensor_number >= sensor_values[i]:
-            entity_desc = friendly_name
+            from_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
+            to_value = entity_values[i]
+
+            entity_log = friendly_name
+            if entity_attr:
+                entity_log += '~' + entity_attr
+            entity_log += '=' + str(from_value)
+
             if state_value == 'off':
-                entity_desc += '=>on'
+                entity_log += ' ->on'
                 _hass.services.call(domain, 'turn_on', {'entity_id': entity_id}, True)
 
-            entity_desc += '(' + entity_id
-            if entity_attr:
-                entity_desc += '~' + entity_attr
-            entity_desc += ')'
-
-            to_value = entity_values[i]
-            current_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
-            if current_value == to_value:
-                _LOGGER.debug('%s, %s=%s not changed', sensor_log, entity_desc, current_value)
+            if from_value == to_value:
+                _LOGGER.debug('%s, %s not changed', sensor_log, entity_log)
                 return
 
             data = {'entity_id': entity_id, service_attr or entity_attr: to_value}
-            _LOGGER.warn('%s, %s=%s %s=>%s', sensor_log, entity_desc, current_value, service, to_value)
+            _LOGGER.warn('%s, %s %s=>%s', sensor_log, entity_log, service, to_value)
             _hass.services.call(domain, service, data, True)
             return
         else:
             i = i - 1
 
     if state_value == 'off':
-        _LOGGER.debug('%s, %s(%s) already off', sensor_log, friendly_name, entity_id)
+        _LOGGER.debug('%s, %s already off', sensor_log, friendly_name)
         return
 
-    _LOGGER.warn('%s, %s(%s)=%s =>off', sensor_log, friendly_name, entity_id, state_value)
+    _LOGGER.warn('%s, %s=%s ->off', sensor_log, friendly_name, state_value)
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
