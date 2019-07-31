@@ -41,12 +41,12 @@ def actuate(call):
 
     ignore_interval = call_data.get('ignore_interval')
     if ignore_interval is None:
-        ignore_interval = 300
-    if ignore_interval:
+        ignore_interval = 180
+    if ignore_interval > 0:
         global _stamps
         now = int(time.time())
         stamp = entity_id + '~' + service_attr
-        if stamp in _stamps and now - _stamps[stamp] > ignore_interval:
+        if stamp in _stamps and now - _stamps[stamp] < ignore_interval:
             _LOGGER.debug('%s ignored', stamp)
             return
         _stamps[stamp] = now
