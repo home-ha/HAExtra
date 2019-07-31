@@ -45,7 +45,7 @@ def actuate(call):
     if ignore_interval > 0:
         global _stamps
         now = int(time.time())
-        stamp = entity_id + '~' + service_attr
+        stamp = entity_id + '.' + service_attr
         if stamp in _stamps and now - _stamps[stamp] < ignore_interval:
             #_LOGGER.debug('%s ignored', stamp)
             return
@@ -102,7 +102,7 @@ def actuate(call):
 
             entity_log = friendly_name
             if entity_attr:
-                entity_log += '~' + entity_attr
+                entity_log += '.' + entity_attr
             entity_log += '=' + str(from_value)
 
             if state_value == 'off':
