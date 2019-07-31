@@ -94,11 +94,16 @@ def actuate(call):
     i = len(sensor_values) - 1
     while i >= 0:
         if sensor_number >= sensor_values[i]:
+            entity_desc = friendly_name
             if state_value == 'off':
-                _LOGGER.warn('%s, %s(%s)=%s =>on', sensor_log, friendly_name, entity_id, state_value)
+                entity_desc += '=>on'
                 _hass.services.call(domain, 'turn_on', {'entity_id': entity_id}, True)
 
-            entity_desc = friendly_name + '(' + entity_id + ('' if entity_attr is None else '~' + entity_attr) + ')'
+            entity_desc += '(' + entity_id
+            if entity_attr:
+                entity_desc += '~' + entity_attr
+            entity_desc += ')'
+
             to_value = entity_values[i]
             current_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
             if current_value == to_value:

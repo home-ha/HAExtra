@@ -87,7 +87,7 @@ class AirCatData(object):
             except:
                 _LOGGER.error('%d Received invalid: %s', self._times, data)
         else:
-            _LOGGER.error('%d Received short payload: %s', self._times, data)
+            _LOGGER.debug('%d Received short payload: %s', self._times, data)
 
         response = self.response(data, payload, end)
         if response:
