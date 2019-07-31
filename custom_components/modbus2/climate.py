@@ -359,14 +359,14 @@ class ModbusClimate(ClimateDevice):
                     value = scale * val + offset
             except:
                 ModbusClimate._exception += 1
-                _LOGGER.error("Exception %d on %s/%s at %s/slave%s/register%s",
+                _LOGGER.debug("Exception %d on %s/%s at %s/slave%s/register%s",
                               ModbusClimate._exception, self._name, prop, register_type, slave, register)
                 if (ModbusClimate._exception < 5) or (ModbusClimate._exception % 10 == 0):
                     if (ModbusClimate._exception % 2 == 0):
-                        _LOGGER.error("Reset %s", self._hub._client)
+                        _LOGGER.warn("Reset %s", self._hub._client)
                         self.reset()
                     else:
-                        _LOGGER.error("Reconnect %s", self._hub._client)
+                        _LOGGER.warn("Reconnect %s", self._hub._client)
                     self.reconnect()
                 return
 
@@ -379,6 +379,10 @@ class ModbusClimate(ClimateDevice):
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is not None:
             self.set_value(REG_TARGET_TEMPERATURE, temperature)
+
+        # hvac_mode = kwargs.get('hvac_mode')
+        # if hvac_mode is not None:
+        #     self.set_hvac_mode(hvac_mode)
 
     def set_humidity(self, humidity):
         """Set new target humidity."""

@@ -58,7 +58,7 @@ class AirCatData(object):
         data = conn.recv(
             4096)  # If connection is closed, recv() will result a timeout exception and receive '' next time, so we can purge connection list
         if not data:
-            _LOGGER.error('Closed %s', conn)
+            _LOGGER.debug('Closed %s', conn)
             self._rlist.remove(conn)
             conn.close()
             return
