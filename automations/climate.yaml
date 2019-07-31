@@ -6,7 +6,7 @@
       to: 'on'
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
-      to: 'on'
+      to: 'off'
   condition:
     - condition: time
       after: '08:00'
