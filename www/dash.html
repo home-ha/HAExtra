@@ -428,7 +428,7 @@
 				var grid = extra.parentElement
 				var mode = moder.options[moder.selectedIndex].value
 				if (grid.className == 'entity climate') {
-					callService('set_hvac_mode', { entity_id: grid.id, operation_mode: mode }, moder)
+					callService('set_hvac_mode', { entity_id: grid.id, hvac_mode: mode }, moder)
 				} else {
 					callService('set_speed', { entity_id: grid.id, speed: mode }, moder)
 				}

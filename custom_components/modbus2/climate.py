@@ -390,8 +390,8 @@ class ModbusClimate(ClimateDevice):
             self.set_value(REG_HVAC_OFF, ModbusClimate._hvac_off_value if hvac_mode == HVAC_MODE_OFF else ModbusClimate._hvac_on_value)
             if hvac_mode == HVAC_MODE_OFF:
                 return
-        if hvac_mode == HVAC_MODE_AUTO and HVAC_MODE_AUTO not in ModbusClimate._hvac_modes: # Support HomeKit Auto Mode
-            _LOGGER.warn("Fix hvac mode from auto to cool")
+        if hvac_mode not in ModbusClimate._hvac_modes: # Support HomeKit Auto Mode
+            _LOGGER.warn("Fix hvac mode from %s to cool", hvac_mode)
             hvac_mode = HVAC_MODE_COOL
             # current = self.current_temperature
             # target = self.target_temperature
