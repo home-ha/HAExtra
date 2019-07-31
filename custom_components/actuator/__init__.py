@@ -1,5 +1,5 @@
 
-import datetime
+import time, datetime
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 
@@ -20,9 +20,11 @@ ACTUATE_SCHEMA = vol.Schema({
     vol.Optional('service'): cv.string,
     vol.Optional('service_attr'): cv.string,
     vol.Required('entity_values'): list,
+    vol.Optional('ignore_interval'): int,
 })
 
 _hass = None
+_stamps = {}
 
 def setup(hass, config):
     global _hass
@@ -32,20 +34,35 @@ def setup(hass, config):
 
 def actuate(call):
     call_data = call.data
-    now = datetime.datetime.now().hour
-    sensor_id = call_data.get('sensor_id')
-    sensor_attr = call_data.get('sensor_attr')
-    alt_time_range = call_data.get('alt_time_range') or [20, 8]
-    if alt_time_range[1] > alt_time_range[0]:
-        alt_time = now > alt_time_range[0] and now < alt_time_range[1]
-    else:
-        alt_time = now > alt_time_range[0] or now < alt_time_range[1]
-    sensor_values = call_data.get('alt_sensor_values' if alt_time and 'alt_sensor_values' in call_data else 'sensor_values')
 
     entity_id = call_data.get('entity_id')
     entity_attr = call_data.get('entity_attr')
-    service_attr = call_data.get('service_attr')
-    service = call_data.get('service') or 'set_' + (service_attr or entity_attr)
+    service_attr = call_data.get('service_attr') or entity_attr
+
+    ignore_interval = call_data.get('ignore_interval')
+    if ignore_interval is None:
+        ignore_interval = 300
+    if ignore_interval:
+        global _stamps
+        now = int(time.time())
+        stamp = entity_id + '~' + service_attr
+        if stamp in _stamps and now - _stamps[stamp] > ignore_interval:
+            _LOGGER.debug('%s ignored', stamp)
+            return
+        _stamps[stamp] = now
+
+    sensor_id = call_data.get('sensor_id')
+    sensor_attr = call_data.get('sensor_attr')
+    alt_time_range = call_data.get('alt_time_range') or [20, 8]
+
+    hour = datetime.datetime.now().hour
+    if alt_time_range[1] > alt_time_range[0]:
+        alt_time = hour > alt_time_range[0] and hour < alt_time_range[1]
+    else:
+        alt_time = hour > alt_time_range[0] or hour < alt_time_range[1]
+    sensor_values = call_data.get('alt_sensor_values' if alt_time and 'alt_sensor_values' in call_data else 'sensor_values')
+
+    service = call_data.get('service') or 'set_' + service_attr
     entity_values = call_data.get('entity_values')
     domain = entity_id[:entity_id.find('.')]
 
@@ -96,7 +113,7 @@ def actuate(call):
             i = i - 1
 
     if state_value == 'off':
-        _LOGGER.debug('%s, %s(%s)=%s not changed', sensor_log, friendly_name, entity_id, state_value)
+        _LOGGER.debug('%s, %s(%s) already off', sensor_log, friendly_name, entity_id)
         return
 
     _LOGGER.warn('%s, %s(%s)=%s =>off', sensor_log, friendly_name, entity_id, state_value)

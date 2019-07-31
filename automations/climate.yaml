@@ -29,14 +29,16 @@
       from: 'off'
       to: 'on'
       for:
-        minutes: 3
+        minutes: 5
     - platform: numeric_state
       entity_id: sensor.fresher_temperature
       below: 27
+      for:
+        minutes: 5
   condition:
     - condition: time
       after: '08:00'
-      before: '21:00'
+      before: '21:30'
   action:
     - service: climate.turn_off
       entity_id: climate.daikin2
