@@ -106,23 +106,23 @@ def actuate(call):
             entity_log += '=' + str(from_value)
 
             if state_value == 'off':
-                entity_log += ' ->on'
+                entity_log += ', ->on'
                 _hass.services.call(domain, 'turn_on', {'entity_id': entity_id}, True)
 
             if from_value == to_value:
-                _LOGGER.debug('%s, %s not changed', sensor_log, entity_log)
+                _LOGGER.debug('%s; %s', sensor_log, entity_log)
                 return
 
             data = {'entity_id': entity_id, service_attr or entity_attr: to_value}
-            _LOGGER.warn('%s, %s %s=>%s', sensor_log, entity_log, service, to_value)
+            _LOGGER.warn('%s; %s, %s=>%s', sensor_log, entity_log, service, to_value)
             _hass.services.call(domain, service, data, True)
             return
         else:
             i = i - 1
 
     if state_value == 'off':
-        _LOGGER.debug('%s, %s already off', sensor_log, friendly_name)
+        _LOGGER.debug('%s, %s=off', sensor_log, friendly_name)
         return
 
-    _LOGGER.warn('%s, %s=%s ->off', sensor_log, friendly_name, state_value)
+    _LOGGER.warn('%s, %s=%s, ->off', sensor_log, friendly_name, state_value)
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)

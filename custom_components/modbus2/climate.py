@@ -209,6 +209,7 @@ class ModbusClimate(ClimateDevice):
         self._index = index
         self._regs = mods
         self._values = {}
+        self._last_on_operation = None
 
     @property
     def name(self):
@@ -263,7 +264,10 @@ class ModbusClimate(ClimateDevice):
         if REG_HVAC_OFF in self._regs:
             if self.get_value(REG_HVAC_OFF) == ModbusClimate._hvac_off_value:
                 return HVAC_MODE_OFF
-        return self.get_mode(ModbusClimate._hvac_modes, REG_HVAC_MODE) or HVAC_MODE_OFF
+        hvac_mode = self.get_mode(ModbusClimate._hvac_modes, REG_HVAC_MODE) or HVAC_MODE_OFF
+        if hvac_mode != HVAC_MODE_OFF:
+            self._last_on_operation = hvac_mode
+        return hvac_mode
 
     @property
     def hvac_modes(self):
@@ -390,17 +394,30 @@ class ModbusClimate(ClimateDevice):
 
     def set_hvac_mode(self, hvac_mode):
         """Set new hvac mode."""
+        if not hvac_mode == HVAC_MODE_OFF:
+            self._last_on_operation = hvac_mode
+
         if REG_HVAC_OFF in self._regs:
             self.set_value(REG_HVAC_OFF, ModbusClimate._hvac_off_value if hvac_mode == HVAC_MODE_OFF else ModbusClimate._hvac_on_value)
             if hvac_mode == HVAC_MODE_OFF:
                 return
+
         if hvac_mode not in ModbusClimate._hvac_modes: # Support HomeKit Auto Mode
             _LOGGER.warn("Fix hvac mode from %s to cool", hvac_mode)
             hvac_mode = HVAC_MODE_COOL
             # current = self.current_temperature
             # target = self.target_temperature
             # hvac_mode = HVAC_MODE_HEAT if current and target and current < target else HVAC_MODE_COOL
+
         self.set_mode(self._hvac_modes, REG_HVAC_MODE, hvac_mode)
+
+        if hvac_mode == 'heat':
+            _LOGGER.warn("不合时宜的制热模式 %s", self._name)
+
+    def turn_on(self):
+        """Turn on."""
+        _LOGGER.warn("打开空调，沿用最近模式：%s", self._last_on_operation)
+        self.set_hvac_mode(self._last_on_operation or HVAC_MODE_COOL)
 
     def set_fan_mode(self, fan_mode):
         """Set new fan mode."""
@@ -451,7 +468,8 @@ class ModbusClimate(ClimateDevice):
         self._values[prop] = value
 
         #self.async_write_ha_state()
-        async_call_later(self.hass, 2, self.async_schedule_update_ha_state)
+        #async_call_later(self.hass, 2, self.async_schedule_update_ha_state)
+        self.schedule_update_ha_state(True)
 
     def get_mode(self, modes, prop):
         value = self.get_value(prop)

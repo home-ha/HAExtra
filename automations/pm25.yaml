@@ -22,7 +22,7 @@
       data:
         sensor_id: sensor.purifier7_pm25
         sensor_values: [10, 20, 50]
-        alt_sensor_values: [6, 30, 50]
+        alt_sensor_values: [7, 30, 50]
         entity_id: fan.purifier7
         entity_attr: speed
         entity_values: [low, medium, high]
@@ -62,7 +62,7 @@
       data:
         sensor_id: sensor.purifier6_pm25
         sensor_values: [10, 20, 50]
-        alt_sensor_values: [6, 30, 50]
+        alt_sensor_values: [7, 30, 50]
         entity_id: fan.purifier6
         entity_attr: speed
         entity_values: [low, medium, high]
