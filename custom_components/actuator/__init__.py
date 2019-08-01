@@ -44,7 +44,7 @@ def execute(params):
         sensor_attributes = sensor_state.attributes
         sensor_value = sensor_state.state if sensor_attr is None else sensor_attributes.get(sensor_attr)
         sensor_number = float(sensor_value)
-    except AttributeError:
+    except:
         _LOGGER.error("Sensor %s %s error", sensor_id, sensor_attr or '')
         return
 
@@ -101,7 +101,7 @@ def execute(params):
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
 
 class DelayExecutor(object):
-    
+
     def __init__(self, key, delay, params):
         self.key = key
         self.params = params
