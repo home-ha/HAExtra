@@ -197,60 +197,60 @@ sensor:
       purifier_temperature:
         device_class: temperature
         friendly_name: Purifier Temperature
-        value_template: '{{ states.fan.purifier.attributes.temperature }}'
+        value_template: '{{ state_attr("fan.purifier", "temperature") }}'
         unit_of_measurement: °C
       purifier_humidity:
         device_class: humidity
         friendly_name: Purifier Humidity
-        value_template: '{{ states.fan.purifier.attributes.humidity }}'
+        value_template: '{{ state_attr("fan.purifier", "humidity") }}'
         unit_of_measurement: '%'
       purifier_pm25:
         friendly_name: Purifier PM25
-        value_template: '{{ states.fan.purifier.attributes.aqi }}'
-        unit_of_measurement: 'μg/m³'
+        value_template: '{{ state_attr("fan.purifier", "aqi") }}'
+        unit_of_measurement: μg/m³
 
       fresher_temperature:
         device_class: temperature
         friendly_name: Fresher Temperature
-        value_template: '{{ states.fan.fresher.attributes.temperature }}'
+        value_template: '{{ state_attr("fan.fresher", "temperature") }}'
         unit_of_measurement: °C
       fresher_humidity:
         device_class: humidity
         friendly_name: Fresher Humidity
-        value_template: '{{ states.fan.fresher.attributes.humidity }}'
+        value_template: '{{ state_attr("fan.fresher", "humidity") }}'
         unit_of_measurement: '%'
       fresher_pm25:
         friendly_name: Fresher PM25
-        value_template: '{{ states.fan.fresher.attributes.aqi }}'
-        unit_of_measurement: 'μg/m³'
+        value_template: '{{ state_attr("fan.fresher", "aqi") }}'
+        unit_of_measurement: μg/m³
       fresher_co2:
         friendly_name: Fresher CO2
-        value_template: '{{ states.fan.fresher.attributes.co2 }}'
-        unit_of_measurement: 'ppm'
+        value_template: '{{ state_attr("fan.fresher", "co2") }}'
+        unit_of_measurement: ppm
 
       fresher2_temperature:
         device_class: temperature
         friendly_name: Fresher2 Temperature
-        value_template: '{{ states.fan.fresher2.attributes.temperature }}'
+        value_template: '{{ state_attr("fan.fresher2", "temperature") }}'
         unit_of_measurement: °C
       fresher2_humidity:
         device_class: humidity
         friendly_name: Fresher2 Humidity
-        value_template: '{{ states.fan.fresher2.attributes.humidity }}'
+        value_template: '{{ state_attr("fan.fresher2", "humidity") }}'
         unit_of_measurement: '%'
       fresher2_pm25:
         friendly_name: Fresher2 PM25
-        value_template: '{{ states.fan.fresher2.attributes.aqi }}'
-        unit_of_measurement: 'μg/m³'
+        value_template: '{{ state_attr("fan.fresher2", "aqi") }}'
+        unit_of_measurement: μg/m³
       fresher2_co2:
         friendly_name: Fresher2 CO2
-        value_template: '{{ states.fan.fresher2.attributes.co2 }}'
-        unit_of_measurement: 'ppm'
+        value_template: '{{ state_attr("fan.fresher2", "co2") }}'
+        unit_of_measurement: ppm
 
       fan_temperature:
         device_class: temperature
         friendly_name: Fan Temperature
-        value_template: '{{ states.fan.fan.attributes.temperature }}'
+        value_template: '{{ state_attr("fan.fresher2", "temperature") }}'
         unit_of_measurement: °C
 
 switch:
@@ -304,7 +304,7 @@ switch:
     switches:
       projector:
         friendly_name: Projector
-        value_template: "{{ is_state('switch.projector_power', 'on') }}"
+        value_template: '{{ is_state("switch.projector_power", "on") }}'
         turn_on:
           service: script.turn_on_projector
         turn_off:
@@ -474,7 +474,7 @@ fan:
     oscillation_command_topic: NodeMCU4/relay/1/set
     speed_state_topic: NodeMCU4/relay/0
     speed_command_topic: NodeMCU4/relay/0/set
-    state_value_template: "{% if value == '0' %}OFF{% else %}ON{% endif %}"
+    state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
     payload_low_speed: '1'
     payload_medium_speed: '2'
     payload_high_speed: '3'
@@ -487,7 +487,7 @@ fan:
     oscillation_command_topic: NodeMCU5/relay/1/set
     speed_state_topic: NodeMCU5/relay/0
     speed_command_topic: NodeMCU5/relay/0/set
-    state_value_template: "{% if value == '0' %}OFF{% else %}ON{% endif %}"
+    state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
     payload_low_speed: '1'
     payload_medium_speed: '5'
     payload_high_speed: '4'
@@ -500,7 +500,7 @@ fan:
     oscillation_command_topic: NodeMCU6/relay/1/set
     speed_state_topic: NodeMCU6/relay/0
     speed_command_topic: NodeMCU6/relay/0/set
-    state_value_template: "{% if value == '0' %}OFF{% else %}ON{% endif %}"
+    state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
     payload_low_speed: '1'
     payload_medium_speed: '5'
     payload_high_speed: '6'
@@ -513,7 +513,7 @@ fan:
     oscillation_command_topic: NodeMCU7/relay/1/set
     speed_state_topic: NodeMCU7/relay/0
     speed_command_topic: NodeMCU7/relay/0/set
-    state_value_template: "{% if value == '0' %}OFF{% else %}ON{% endif %}"
+    state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
     payload_low_speed: '1'
     payload_medium_speed: '5'
     payload_high_speed: '6'
