@@ -282,7 +282,7 @@ TStudyroom:
     - sensor.aircat2_humidity
     - sensor.aircat2_pm25
     - sensor.aircat2_hcho
-    #- sensor.purifier4_co2
+    - sensor.purifier4_co2
     - sensor.studyroom_lightness
 
 TBalcony:

@@ -300,7 +300,7 @@ sensor.fresher2_pm25:
   friendly_name: 主卧颗粒物
   icon: mdi:blur
 sensor.fresher2_temperature:
-  friendly_name: 主卧新风温度
+  friendly_name: 主卧温度
 sensor.fresher_co2:
   dash_click: connect()
   friendly_name: 客厅二氧化碳
@@ -331,9 +331,6 @@ sensor.purifier6_pm25:
   icon: mdi:blur
 sensor.purifier6_temperature:
   friendly_name: 儿童房温度
-sensor.purifier6_hcho:
-  friendly_name: 儿童房甲醛
-  icon: mdi:biohazard
 sensor.purifier_humidity:
   friendly_name: 次卧湿度
   icon: mdi:water-percent
