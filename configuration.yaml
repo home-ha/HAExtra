@@ -233,19 +233,19 @@ sensor:
 
       purifier_mode:
         friendly_name: 次卧净化器模式
-        value_template: '{{ state_attr("fan.purifier", "speed") }}'
+        value_template: '{% if is_state("fan.purifier", "off") %}off{% else %}{{ state_attr("fan.purifier", "speed") }}{% endif %}'
       purifier4_mode:
         friendly_name: 书房净化器模式
-        value_template: '{{ state_attr("fan.purifier4", "speed") }}'
+        value_template: '{% if is_state("fan.purifier4", "off") %}off{% else %}{{ state_attr("fan.purifier4", "speed") }}{% endif %}'
       purifier5_mode:
         friendly_name: 餐厅净化器模式
-        value_template: '{{ state_attr("fan.purifier5", "speed") }}'
+        value_template: '{% if is_state("fan.purifier5", "off") %}off{% else %}{{ state_attr("fan.purifier5", "speed") }}{% endif %}'
       purifier6_mode:
         friendly_name: 儿童房净化器模式
-        value_template: '{{ state_attr("fan.purifier6", "speed") }}'
+        value_template: '{% if is_state("fan.purifier6", "off") %}off{% else %}{{ state_attr("fan.purifier6", "speed") }}{% endif %}'
       purifier7_mode:
         friendly_name: 主卧净化器模式
-        value_template: '{{ state_attr("fan.purifier7", "speed") }}'
+        value_template: '{% if is_state("fan.purifier7", "off") %}off{% else %}{{ state_attr("fan.purifier7", "speed") }}{% endif %}'
 
       fresher_mode:
         friendly_name: 客厅新风机模式
