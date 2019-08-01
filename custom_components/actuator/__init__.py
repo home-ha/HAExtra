@@ -32,14 +32,10 @@ def setup(hass, config):
     hass.services.register(DOMAIN, 'actuate', actuate, schema=ACTUATE_SCHEMA)
     return True
 
-def actuate(call):
-    call_data = call.data
+class Actuator(object):
+    def __init__(self):
+        
 
-    entity_id = call_data.get('entity_id')
-    entity_attr = call_data.get('entity_attr')
-    service_attr = call_data.get('service_attr') or entity_attr
-
-    ignore_interval = call_data.get('ignore_interval')
     if ignore_interval is None:
         ignore_interval = 180
     if ignore_interval > 0:
@@ -126,3 +122,12 @@ def actuate(call):
 
     _LOGGER.warn('%s, %s=%s, ->off', sensor_log, friendly_name, state_value)
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
+
+def actuate(call):
+    call_data = call.data
+
+    entity_id = call_data.get('entity_id')
+    entity_attr = call_data.get('entity_attr')
+    service_attr = call_data.get('service_attr') or entity_attr
+
+    ignore_interval = call_data.get('ignore_interval')

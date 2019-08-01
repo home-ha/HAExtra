@@ -253,6 +253,46 @@ sensor:
         value_template: '{{ state_attr("fan.fresher2", "temperature") }}'
         unit_of_measurement: °C
 
+      fan_mode:
+        friendly_name: Fan Mode
+        value_template: '{% if is_state("fan.fan", "off") %}Off{% else %}{{ state_attr("fan.fan", "speed_level") }}{% endif %}'
+      fan2_mode:
+        friendly_name: Fan2 Mode
+        value_template: '{% if is_state("fan.fan2", "off") %}Off{% else %}{{ state_attr("fan.fan2", "speed_level") }}{% endif %}'
+
+      purifier_mode:
+        friendly_name: Purifier Mode
+        value_template: '{{ state_attr("fan.purifier", "speed") }}'
+      purifier4_mode:
+        friendly_name: Purifier4 Mode
+        value_template: '{{ state_attr("fan.purifier4", "speed") }}'
+      purifier5_mode:
+        friendly_name: Purifier5 Mode
+        value_template: '{{ state_attr("fan.purifier5", "speed") }}'
+      purifier6_mode:
+        friendly_name: Purifier6 Mode
+        value_template: '{{ state_attr("fan.purifier6", "speed") }}'
+      purifier7_mode:
+        friendly_name: Purifier7 Mode
+        value_template: '{{ state_attr("fan.purifier7", "speed") }}'
+
+      fresher_mode:
+        friendly_name: Fresher Mode
+        value_template: '{{ state_attr("fan.fresher", "speed") }}'
+      fresher2_mode:
+        friendly_name: Fresher2 Mode
+        value_template: '{{ state_attr("fan.fresher2", "speed") }}'
+
+      daikin3_mode:
+        friendly_name: Daikin3 Mode
+        value_template: '{% if is_state("climate.daikin3", "off") %}Off{% else %}{{ state_attr("climate.daikin3", "fan_mode") }}{% endif %}'
+      daikin4_mode:
+        friendly_name: Daikin4 Mode
+        value_template: '{% if is_state("climate.daikin4", "off") %}Off{% else %}{{ state_attr("climate.daikin4", "fan_mode") }}{% endif %}'
+      mitsubishi_mode:
+        friendly_name: Mitsubishi Mode
+        value_template: '{% if is_state("climate.mitsubishi", "off") %}Off{% else %}{{ state_attr("climate.mitsubishi", "fan_mode") }}{% endif %}'
+
 switch:
   #TODO
   - platform: wake_on_lan
