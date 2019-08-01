@@ -87,8 +87,8 @@ Bedroom:
     - fan.purifier7
     - sensor.fresher2_temperature
     - sensor.fresher2_humidity
-    - sensor.fresher2_pm25
-    - sensor.fresher2_co2
+    # - sensor.fresher2_pm25
+    # - sensor.fresher2_co2
 
 Parentsroom:
   entities:
