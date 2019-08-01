@@ -26,7 +26,7 @@
 - alias: Humidity High @Bedroom
   trigger:
     - platform: numeric_state
-      entity_id: sensor.purifier6_humidity
+      entity_id: sensor.purifier7_humidity
       above: 75
       for:
         minutes: 10
@@ -42,7 +42,7 @@
 - alias: Humidity Normal @Bedroom
   trigger:
     - platform: numeric_state
-      entity_id: sensor.purifier6_humidity
+      entity_id: sensor.purifier7_humidity
       below: 72
       for:
         minutes: 10
@@ -88,14 +88,14 @@
 # - alias: Humidity Low @Kidsroom
 #   trigger:
 #     - platform: numeric_state
-#       entity_id: sensor.purifier6_humidity
+#       entity_id: sensor.purifier7_humidity
 #       below: 52
 #       for:
 #         minutes: 10
 #   action:
 #     - service: fan.turn_on
-#       entity_id: fan.purifier6
+#       entity_id: fan.purifier7
 #     - service: fan.oscillate
 #       data:
-#         entity_id: fan.purifier6
+#         entity_id: fan.purifier7
 #         oscillating: true

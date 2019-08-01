@@ -84,7 +84,7 @@ Bedroom:
     #- media_player.x9300d
     - climate.daikin3
     - fan.fresher2
-    - fan.purifier7
+    - fan.purifier6
     - sensor.fresher2_temperature
     - sensor.fresher2_humidity
     # - sensor.fresher2_pm25
@@ -103,14 +103,14 @@ Kidsroom:
     - light.kidsroom_light
     - climate.daikin4
     #- fan.fan2
-    - fan.purifier6
+    - fan.purifier7
     - fan.fan2
     - switch.outlet2
-    - sensor.purifier6_temperature
-    - sensor.purifier6_humidity
-    - sensor.purifier6_pm25
-    - sensor.purifier6_co2
-    - sensor.purifier6_hcho
+    - sensor.purifier7_temperature
+    - sensor.purifier7_humidity
+    - sensor.purifier7_pm25
+    - sensor.purifier7_co2
+    - sensor.purifier7_hcho
 
 Studyroom:
   entities:
@@ -234,7 +234,7 @@ TBedroom:
     - media_player.x9300d
     - climate.daikin3
     - fan.fresher2
-    - fan.purifier7
+    - fan.purifier6
     - sensor.fresher2_temperature
     - sensor.fresher2_humidity
     - sensor.fresher2_pm25
@@ -255,13 +255,13 @@ TKidsroom:
     - light.kidsroom_light
     - climate.daikin4
     - fan.fan2
-    - fan.purifier6
+    - fan.purifier7
     - switch.outlet2
-    - sensor.purifier6_temperature
-    - sensor.purifier6_humidity
-    - sensor.purifier6_pm25
-    - sensor.purifier6_co2
-    - sensor.purifier6_hcho
+    - sensor.purifier7_temperature
+    - sensor.purifier7_humidity
+    - sensor.purifier7_pm25
+    - sensor.purifier7_co2
+    - sensor.purifier7_hcho
 
 TStudyroom:
   view: yes

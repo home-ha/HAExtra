@@ -67,11 +67,11 @@ fan.purifier5:
   hagenie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.purifier6:
-  friendly_name: 儿童房净化器
+  friendly_name: 主卧净化器
   hagenie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.purifier7:
-  friendly_name: 主卧净化器
+  friendly_name: 儿童房净化器
   hagenie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.wall_fan:
@@ -317,19 +317,19 @@ sensor.illumination_34ce0090901a:
 sensor.purifier4_co2:
   friendly_name: 书房二氧化碳
   icon: mdi:periodic-table-co2
-sensor.purifier6_co2:
+sensor.purifier7_co2:
   friendly_name: 儿童房二氧化碳
   icon: mdi:periodic-table-co2
-sensor.purifier6_hcho:
+sensor.purifier7_hcho:
   friendly_name: 儿童房甲醛
   icon: mdi:biohazard
-sensor.purifier6_humidity:
+sensor.purifier7_humidity:
   friendly_name: 儿童房湿度
-sensor.purifier6_pm25:
+sensor.purifier7_pm25:
   dash_click: https://www.lewei50.com/u/g/33981
   friendly_name: 儿童房颗粒物
   icon: mdi:blur
-sensor.purifier6_temperature:
+sensor.purifier7_temperature:
   friendly_name: 儿童房温度
 sensor.purifier_humidity:
   friendly_name: 次卧湿度

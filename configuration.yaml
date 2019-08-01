@@ -241,10 +241,10 @@ sensor:
         friendly_name: 餐厅净化器模式
         value_template: '{% if is_state("fan.purifier5", "off") %}off{% else %}{{ state_attr("fan.purifier5", "speed") }}{% endif %}'
       purifier6_mode:
-        friendly_name: 儿童房净化器模式
+        friendly_name: 主卧净化器模式
         value_template: '{% if is_state("fan.purifier6", "off") %}off{% else %}{{ state_attr("fan.purifier6", "speed") }}{% endif %}'
       purifier7_mode:
-        friendly_name: 主卧净化器模式
+        friendly_name: 儿童房净化器模式
         value_template: '{% if is_state("fan.purifier7", "off") %}off{% else %}{{ state_attr("fan.purifier7", "speed") }}{% endif %}'
 
       fresher_mode:
