@@ -85,6 +85,8 @@ Bedroom:
     - climate.daikin3
     - fan.fresher2
     - fan.purifier6
+    - fan.bedroom_fan
+    - light.bedroom_light
     - sensor.fresher2_temperature
     - sensor.fresher2_humidity
     # - sensor.fresher2_pm25
@@ -100,7 +102,6 @@ Parentsroom:
 Kidsroom:
   entities:
     - light.lamp2
-    - light.kidsroom_light
     - climate.daikin4
     #- fan.fan2
     - fan.purifier7
@@ -235,6 +236,8 @@ TBedroom:
     - climate.daikin3
     - fan.fresher2
     - fan.purifier6
+    - fan.bedroom_fan
+    - light.bedroom_light
     - sensor.fresher2_temperature
     - sensor.fresher2_humidity
     - sensor.fresher2_pm25
@@ -252,7 +255,6 @@ TKidsroom:
   view: yes
   entities:
     - light.lamp2
-    - light.kidsroom_light
     - climate.daikin4
     - fan.fan2
     - fan.purifier7

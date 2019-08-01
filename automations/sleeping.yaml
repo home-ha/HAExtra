@@ -25,6 +25,16 @@
     - service: miai.set_vol
       data:
         vol: 25
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin3
+        temperature: 25
+        #hvac_mode: cool
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.daikin4
+        temperature: 25
+        #hvac_mode: cool
 
 # 开始睡觉
 - alias: Sleeping Began
@@ -36,16 +46,6 @@
       entity_id: climate.daikin1
     - service: climate.turn_off
       entity_id: climate.daikin2
-    - service: climate.set_temperature
-      data:
-        entity_id: climate.daikin3
-        temperature: 25
-        #hvac_mode: cool
-    - service: climate.set_temperature
-      data:
-        entity_id: climate.daikin4
-        temperature: 25
-        #hvac_mode: cool
 
 # 进入深睡
 - alias: Sleeping Deepin
