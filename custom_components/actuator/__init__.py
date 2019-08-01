@@ -42,7 +42,8 @@ def execute(params):
     sensor_state = _hass.states.get(sensor_id)
     try:
         sensor_attributes = sensor_state.attributes
-        sensor_value = float(sensor_state.state if sensor_attr is None else sensor_attributes.get(sensor_attr))
+        sensor_value = sensor_state.state if sensor_attr is None else sensor_attributes.get(sensor_attr)
+        sensor_number = float(sensor_value)
     except AttributeError:
         _LOGGER.error("Sensor %s %s error", sensor_id, sensor_attr or '')
         return
@@ -69,7 +70,7 @@ def execute(params):
 
     i = len(sensor_values) - 1
     while i >= 0:
-        if sensor_value >= sensor_values[i]:
+        if sensor_number >= sensor_values[i]:
             from_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
             to_value = entity_values[i]
 
