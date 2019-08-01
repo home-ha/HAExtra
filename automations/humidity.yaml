@@ -72,7 +72,7 @@
 # - alias: Humidity Low @Bedroom
 #   trigger:
 #     - platform: numeric_state
-#       entity_id: sensor.purifier7_humidity
+#       entity_id: sensor.fresher2_humidity
 #       below: 52
 #       for:
 #         minutes: 10

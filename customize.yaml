@@ -290,12 +290,14 @@ sensor.balcony_temperature:
 sensor.fan_temperature:
   friendly_name: 书房风扇温度
 sensor.fresher2_co2:
-  friendly_name: 主卧新风二氧化碳
+  dash_click: location.reload()
+  dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
+  friendly_name: 主卧二氧化碳
   icon: mdi:periodic-table-co2
 sensor.fresher2_humidity:
-  friendly_name: 主卧新风湿度
+  friendly_name: 主卧湿度
 sensor.fresher2_pm25:
-  friendly_name: 主卧新风颗粒物
+  friendly_name: 主卧颗粒物
   icon: mdi:blur
 sensor.fresher2_temperature:
   friendly_name: 主卧新风温度
@@ -324,26 +326,14 @@ sensor.purifier6_hcho:
 sensor.purifier6_humidity:
   friendly_name: 儿童房湿度
 sensor.purifier6_pm25:
+  dash_click: https://www.lewei50.com/u/g/33981
   friendly_name: 儿童房颗粒物
   icon: mdi:blur
 sensor.purifier6_temperature:
   friendly_name: 儿童房温度
-sensor.purifier7_co2:
-  dash_click: location.reload()
-  dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
-  friendly_name: 主卧二氧化碳
-  icon: mdi:periodic-table-co2
-sensor.purifier7_hcho:
-  friendly_name: 主卧甲醛
+sensor.purifier6_hcho:
+  friendly_name: 儿童房甲醛
   icon: mdi:biohazard
-sensor.purifier7_humidity:
-  friendly_name: 主卧湿度
-sensor.purifier7_pm25:
-  dash_click: https://www.lewei50.com/u/g/33981
-  friendly_name: 主卧颗粒物
-  icon: mdi:blur
-sensor.purifier7_temperature:
-  friendly_name: 主卧温度
 sensor.purifier_humidity:
   friendly_name: 次卧湿度
   icon: mdi:water-percent

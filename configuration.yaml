@@ -138,6 +138,11 @@ sensor:
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU2/status
   - platform: mqtt
+    state_topic: NodeMCU4/co2
+    name: Purifier4 CO2
+    unit_of_measurement: ppm
+    availability_topic: NodeMCU4/status
+  - platform: mqtt
     device_class: temperature
     state_topic: NodeMCU6/temperature
     name: Purifier6 Temperature
@@ -160,32 +165,10 @@ sensor:
     unit_of_measurement: ppm
     availability_topic: NodeMCU6/status
   - platform: mqtt
-    device_class: temperature
-    state_topic: NodeMCU7/temperature
-    name: Purifier7 Temperature
-    unit_of_measurement: °C
-    availability_topic: NodeMCU7/status
-  - platform: mqtt
-    device_class: humidity
-    state_topic: NodeMCU7/humidity
-    name: Purifier7 Humidity
-    unit_of_measurement: '%'
-    availability_topic: NodeMCU7/status
-  - platform: mqtt
-    state_topic: NodeMCU7/pm2dot5
-    name: Purifier7 PM25
-    unit_of_measurement: μg/m³
-    availability_topic: NodeMCU7/status
-  # - platform: mqtt
-  #   state_topic: NodeMCU7/hcho
-  #   name: Purifier7 HCHO
-  #   unit_of_measurement: mg/m³
-  #   availability_topic: NodeMCU7/status
-  - platform: mqtt
-    state_topic: NodeMCU7/co2
-    name: Purifier7 CO2
-    unit_of_measurement: ppm
-    availability_topic: NodeMCU7/status
+    state_topic: NodeMCU6/hcho
+    name: Purifier6 HCHO
+    unit_of_measurement: mg/m³
+    availability_topic: NodeMCU6/status
   # - platform: phicomm
   #   name: AirCat
   #   username: !secret phicomm_username
@@ -196,102 +179,90 @@ sensor:
     sensors:
       purifier_temperature:
         device_class: temperature
-        friendly_name: Purifier Temperature
         value_template: '{{ state_attr("fan.purifier", "temperature") }}'
         unit_of_measurement: °C
       purifier_humidity:
         device_class: humidity
-        friendly_name: Purifier Humidity
         value_template: '{{ state_attr("fan.purifier", "humidity") }}'
         unit_of_measurement: '%'
       purifier_pm25:
-        friendly_name: Purifier PM25
         value_template: '{{ state_attr("fan.purifier", "aqi") }}'
         unit_of_measurement: μg/m³
 
       fresher_temperature:
         device_class: temperature
-        friendly_name: Fresher Temperature
         value_template: '{{ state_attr("fan.fresher", "temperature") }}'
         unit_of_measurement: °C
       fresher_humidity:
         device_class: humidity
-        friendly_name: Fresher Humidity
         value_template: '{{ state_attr("fan.fresher", "humidity") }}'
         unit_of_measurement: '%'
       fresher_pm25:
-        friendly_name: Fresher PM25
         value_template: '{{ state_attr("fan.fresher", "aqi") }}'
         unit_of_measurement: μg/m³
       fresher_co2:
-        friendly_name: Fresher CO2
         value_template: '{{ state_attr("fan.fresher", "co2") }}'
         unit_of_measurement: ppm
 
       fresher2_temperature:
         device_class: temperature
-        friendly_name: Fresher2 Temperature
         value_template: '{{ state_attr("fan.fresher2", "temperature") }}'
         unit_of_measurement: °C
       fresher2_humidity:
         device_class: humidity
-        friendly_name: Fresher2 Humidity
         value_template: '{{ state_attr("fan.fresher2", "humidity") }}'
         unit_of_measurement: '%'
       fresher2_pm25:
-        friendly_name: Fresher2 PM25
         value_template: '{{ state_attr("fan.fresher2", "aqi") }}'
         unit_of_measurement: μg/m³
       fresher2_co2:
-        friendly_name: Fresher2 CO2
         value_template: '{{ state_attr("fan.fresher2", "co2") }}'
         unit_of_measurement: ppm
 
       fan_temperature:
         device_class: temperature
-        friendly_name: Fan Temperature
-        value_template: '{{ state_attr("fan.fresher2", "temperature") }}'
+        value_template: '{{ state_attr("fan.fan", "temperature") }}'
         unit_of_measurement: °C
 
       fan_mode:
-        friendly_name: Fan Mode
-        value_template: '{% if is_state("fan.fan", "off") %}Off{% else %}{{ state_attr("fan.fan", "speed_level") }}{% endif %}'
+        friendly_name: 书房风扇模式
+        value_template: '{% if is_state("fan.fan", "off") %}off{% else %}{{ state_attr("fan.fan", "speed_level") }}{% endif %}'
       fan2_mode:
-        friendly_name: Fan2 Mode
-        value_template: '{% if is_state("fan.fan2", "off") %}Off{% else %}{{ state_attr("fan.fan2", "speed_level") }}{% endif %}'
+        friendly_name: 儿童房风扇模式
+        value_template: '{% if is_state("fan.fan2", "off") %}off{% else %}{{ state_attr("fan.fan2", "speed_level") }}{% endif %}'
 
       purifier_mode:
-        friendly_name: Purifier Mode
+        friendly_name: 次卧净化器模式
         value_template: '{{ state_attr("fan.purifier", "speed") }}'
       purifier4_mode:
-        friendly_name: Purifier4 Mode
+        friendly_name: 书房净化器模式
         value_template: '{{ state_attr("fan.purifier4", "speed") }}'
       purifier5_mode:
-        friendly_name: Purifier5 Mode
+        friendly_name: 客厅净化器模式
         value_template: '{{ state_attr("fan.purifier5", "speed") }}'
       purifier6_mode:
-        friendly_name: Purifier6 Mode
+        friendly_name: 儿童房净化器模式
         value_template: '{{ state_attr("fan.purifier6", "speed") }}'
       purifier7_mode:
-        friendly_name: Purifier7 Mode
+        friendly_name: 主卧净化器模式
         value_template: '{{ state_attr("fan.purifier7", "speed") }}'
 
       fresher_mode:
-        friendly_name: Fresher Mode
+        friendly_name: 客厅新风机模式
         value_template: '{{ state_attr("fan.fresher", "speed") }}'
       fresher2_mode:
-        friendly_name: Fresher2 Mode
+        friendly_name: 主卧新风机模式
         value_template: '{{ state_attr("fan.fresher2", "speed") }}'
 
       daikin3_mode:
-        friendly_name: Daikin3 Mode
-        value_template: '{% if is_state("climate.daikin3", "off") %}Off{% else %}{{ state_attr("climate.daikin3", "fan_mode") }}{% endif %}'
+        friendly_name: 主卧空调模式
+        value_template: '{% if is_state("climate.daikin3", "off") %}off{% else %}{{ state_attr("climate.daikin3", "fan_mode") }}{% endif %}'
       daikin4_mode:
-        friendly_name: Daikin4 Mode
-        value_template: '{% if is_state("climate.daikin4", "off") %}Off{% else %}{{ state_attr("climate.daikin4", "fan_mode") }}{% endif %}'
+        friendly_name: 儿童房空调模式
+        value_template: '{% if is_state("climate.daikin4", "off") %}off{% else %}{{ state_attr("climate.daikin4", "fan_mode") }}{% endif %}'
       mitsubishi_mode:
-        friendly_name: Mitsubishi Mode
-        value_template: '{% if is_state("climate.mitsubishi", "off") %}Off{% else %}{{ state_attr("climate.mitsubishi", "fan_mode") }}{% endif %}'
+        friendly_name: 书房空调模式
+        value_template: '{% if is_state("climate.mitsubishi", "off") %}off{% else %}{{ state_attr("climate.mitsubishi", "fan_mode") }}{% endif %}'
 
 switch:
   #TODO

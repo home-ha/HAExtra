@@ -7,8 +7,8 @@ default_view:
     # - device_tracker.zphone
     - sensor.balcony_pm25
     - sensor.aircat_pm25
-    - sensor.purifier7_pm25
-    - sensor.purifier7_co2
+    - sensor.fresher2_pm25
+    - sensor.fresher2_co2
     - sensor.fresher_co2
     - group.livingroom
     - group.diningroom
@@ -85,11 +85,6 @@ Bedroom:
     - climate.daikin3
     - fan.fresher2
     - fan.purifier7
-    - sensor.purifier7_temperature
-    - sensor.purifier7_humidity
-    #- sensor.purifier7_pm25
-    #- sensor.purifier7_co2
-    #- sensor.purifier7_hcho
     - sensor.fresher2_temperature
     - sensor.fresher2_humidity
     - sensor.fresher2_pm25
@@ -115,6 +110,7 @@ Kidsroom:
     - sensor.purifier6_humidity
     - sensor.purifier6_pm25
     - sensor.purifier6_co2
+    - sensor.purifier6_hcho
 
 Studyroom:
   entities:
@@ -134,7 +130,7 @@ Studyroom:
     - sensor.aircat2_humidity
     - sensor.aircat2_pm25
     - sensor.aircat2_hcho
-    #- sensor.purifier4_co2
+    - sensor.purifier4_co2
     - sensor.studyroom_lightness
 
 Balcony:
@@ -239,11 +235,6 @@ TBedroom:
     - climate.daikin3
     - fan.fresher2
     - fan.purifier7
-    - sensor.purifier7_temperature
-    - sensor.purifier7_humidity
-    - sensor.purifier7_pm25
-    - sensor.purifier7_co2
-    - sensor.purifier7_hcho
     - sensor.fresher2_temperature
     - sensor.fresher2_humidity
     - sensor.fresher2_pm25
@@ -270,6 +261,7 @@ TKidsroom:
     - sensor.purifier6_humidity
     - sensor.purifier6_pm25
     - sensor.purifier6_co2
+    - sensor.purifier6_hcho
 
 TStudyroom:
   view: yes

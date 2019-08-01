@@ -121,8 +121,8 @@ def actuate(call):
         key = params['entity_id'] + '~' +(params.get('service_attr') or params.get('entity_attr'))
         if key not in _executors:
             _executors[key] = DelayExecutor(key, delay, params)
-        else:
-            _LOGGER.debug('%s ignored, %s', key, _executors)
+        #else:
+        #    _LOGGER.debug('%s ignored', key)
 
 def setup(hass, config):
     global _hass
