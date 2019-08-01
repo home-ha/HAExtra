@@ -31,6 +31,6 @@ actuate:
     entity_values:
       description: Entity value array for service call
       example: '[low, medium, high]'
-    ignore_interval:
-      description: Time interval between two execution. Default 180
+    delay:
+      description: Delay seconds, calls from now to now+delay will be ignored. Default 180
       example: 180

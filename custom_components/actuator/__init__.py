@@ -1,7 +1,8 @@
 
-import time, datetime
+import datetime
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.event import async_call_later
 
 import logging
 _LOGGER = logging.getLogger(__name__)
@@ -20,83 +21,58 @@ ACTUATE_SCHEMA = vol.Schema({
     vol.Optional('service'): cv.string,
     vol.Optional('service_attr'): cv.string,
     vol.Required('entity_values'): list,
-    vol.Optional('ignore_interval'): int,
+    vol.Optional('delay'): int,
 })
 
 _hass = None
-_stamps = {}
+_executors = {}
 
-def setup(hass, config):
-    global _hass
-    _hass = hass
-    hass.services.register(DOMAIN, 'actuate', actuate, schema=ACTUATE_SCHEMA)
-    return True
-
-class Actuator(object):
-    def __init__(self):
-        
-
-    if ignore_interval is None:
-        ignore_interval = 180
-    if ignore_interval > 0:
-        global _stamps
-        now = int(time.time())
-        stamp = entity_id + '.' + service_attr
-        if stamp in _stamps and now - _stamps[stamp] < ignore_interval:
-            #_LOGGER.debug('%s ignored', stamp)
-            return
-        _stamps[stamp] = now
-
-    sensor_id = call_data.get('sensor_id')
-    sensor_attr = call_data.get('sensor_attr')
-    alt_time_range = call_data.get('alt_time_range') or [20, 8]
+def execute(params):
+    sensor_id = params.get('sensor_id')
+    sensor_attr = params.get('sensor_attr')
+    alt_time_range = params.get('alt_time_range') or [20, 8]
 
     hour = datetime.datetime.now().hour
     if alt_time_range[1] > alt_time_range[0]:
         alt_time = hour > alt_time_range[0] and hour < alt_time_range[1]
     else:
         alt_time = hour > alt_time_range[0] or hour < alt_time_range[1]
-    sensor_values = call_data.get('alt_sensor_values' if alt_time and 'alt_sensor_values' in call_data else 'sensor_values')
-
-    service = call_data.get('service') or 'set_' + service_attr
-    entity_values = call_data.get('entity_values')
-    domain = entity_id[:entity_id.find('.')]
+    sensor_values = params.get('alt_sensor_values' if alt_time and 'alt_sensor_values' in params else 'sensor_values')
 
     sensor_state = _hass.states.get(sensor_id)
-    sensor_attributes = sensor_state.attributes
     try:
-        sensor_value = sensor_state.state if sensor_attr is None else sensor_attributes.get(sensor_attr)
+        sensor_attributes = sensor_state.attributes
+        sensor_value = float(sensor_state.state if sensor_attr is None else sensor_attributes.get(sensor_attr))
     except AttributeError:
         _LOGGER.error("Sensor %s %s error", sensor_id, sensor_attr or '')
         return
-    try:
-        sensor_number = float(sensor_value)
-    except ValueError:
-        _LOGGER.error("Sensor %s %s Value %s error", sensor_id, sensor_attr or '', sensor_value)
-        return
 
-    sensor_name = sensor_attributes.get('friendly_name')
-    sensor_log = sensor_name
+    sensor_log = sensor_attributes.get('friendly_name')
     if sensor_attr:
          sensor_log += '.' + sensor_attr
     sensor_log += '=' + str(sensor_value)
+
+    entity_id = params.get('entity_id')
+    entity_attr = params.get('entity_attr')
+    service_attr = params.get('service_attr') or entity_attr
+    service = params.get('service') or 'set_' + service_attr
+    entity_values = params.get('entity_values')
+    domain = entity_id[:entity_id.find('.')]
 
     state = _hass.states.get(entity_id)
     if state is None:
         _LOGGER.error("Entity %s error", sensor_id)
         return
-
     state_value = state.state
     state_attributes = state.attributes
-    friendly_name = state_attributes.get('friendly_name')
+    entity_log = state_attributes.get('friendly_name')
 
     i = len(sensor_values) - 1
     while i >= 0:
-        if sensor_number >= sensor_values[i]:
+        if sensor_value >= sensor_values[i]:
             from_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
             to_value = entity_values[i]
 
-            entity_log = friendly_name
             if entity_attr:
                 entity_log += '.' + entity_attr
             entity_log += '=' + str(from_value)
@@ -117,17 +93,39 @@ class Actuator(object):
             i = i - 1
 
     if state_value == 'off':
-        _LOGGER.debug('%s, %s=off', sensor_log, friendly_name)
+        _LOGGER.debug('%s, %s=off', sensor_log, entity_log)
         return
 
-    _LOGGER.warn('%s, %s=%s, ->off', sensor_log, friendly_name, state_value)
+    _LOGGER.warn('%s, %s=%s, ->off', sensor_log, entity_log, state_value)
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
 
+class DelayExecutor(object):
+    
+    def __init__(self, key, delay, params):
+        self.key = key
+        self.params = params
+        async_call_later(_hass, delay, self.call)
+
+    def call(self, *_):
+        execute(self.params)
+        del _executors[self.key]
+
 def actuate(call):
-    call_data = call.data
+    params = call.data
+    delay = params.get('delay')
+    if delay is None:
+        delay = 180
+    if delay == 0:
+        execute(params)
+    else:
+        key = params['entity_id'] + '~' +(params.get('service_attr') or params.get('entity_attr'))
+        if key not in _executors:
+            _executors[key] = DelayExecutor(key, delay, params)
+        else:
+            _LOGGER.debug('%s ignored, %s', key, _executors)
 
-    entity_id = call_data.get('entity_id')
-    entity_attr = call_data.get('entity_attr')
-    service_attr = call_data.get('service_attr') or entity_attr
-
-    ignore_interval = call_data.get('ignore_interval')
+def setup(hass, config):
+    global _hass
+    _hass = hass
+    hass.services.register(DOMAIN, 'actuate', actuate, schema=ACTUATE_SCHEMA)
+    return True
