@@ -238,7 +238,7 @@ sensor:
         friendly_name: 书房净化器模式
         value_template: '{{ state_attr("fan.purifier4", "speed") }}'
       purifier5_mode:
-        friendly_name: 客厅净化器模式
+        friendly_name: 餐厅净化器模式
         value_template: '{{ state_attr("fan.purifier5", "speed") }}'
       purifier6_mode:
         friendly_name: 儿童房净化器模式

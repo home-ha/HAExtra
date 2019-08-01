@@ -80,7 +80,8 @@ def execute(params):
 
             if state_value == 'off':
                 entity_log += ', ->on'
-                _hass.services.call(domain, 'turn_on', {'entity_id': entity_id}, True)
+                if _hass.services.call(domain, 'turn_on', {'entity_id': entity_id}, True) == False:
+                    _LOGGER.error('Error on turn_on %s', entity_id)
 
             if from_value == to_value:
                 _LOGGER.debug('%s; %s', sensor_log, entity_log)
@@ -88,7 +89,8 @@ def execute(params):
 
             data = {'entity_id': entity_id, service_attr or entity_attr: to_value}
             _LOGGER.warn('%s; %s, %s=>%s', sensor_log, entity_log, service, to_value)
-            _hass.services.call(domain, service, data, True)
+            if _hass.services.call(domain, service, data, True) == False:
+                _LOGGER.error('Error on %s: %s', service, entity_id)
             return
         else:
             i = i - 1
@@ -98,7 +100,8 @@ def execute(params):
         return
 
     _LOGGER.warn('%s, %s=%s, ->off', sensor_log, entity_log, state_value)
-    _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
+    if _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True) == False:
+        _LOGGER.error('Error on turn_off: %s', entity_id)
 
 class DelayExecutor(object):
     
@@ -122,8 +125,8 @@ def actuate(call):
         key = params['entity_id'] + '~' +(params.get('service_attr') or params.get('entity_attr'))
         if key not in _executors:
             _executors[key] = DelayExecutor(key, delay, params)
-        #else:
-        #    _LOGGER.debug('%s ignored', key)
+        else:
+           _LOGGER.debug('%s ignored', key)
 
 def setup(hass, config):
     global _hass
