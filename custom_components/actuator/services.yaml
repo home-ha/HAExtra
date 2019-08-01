@@ -32,5 +32,5 @@ actuate:
       description: Entity value array for service call
       example: '[low, medium, high]'
     delay:
-      description: Delay seconds, calls from now to now+delay will be ignored. Default 180
-      example: 180
+      description: Delay seconds, calls from now to now+delay will be ignored. Default 120
+      example: 120

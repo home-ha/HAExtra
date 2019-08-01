@@ -115,7 +115,7 @@ def actuate(call):
     params = call.data
     delay = params.get('delay')
     if delay is None:
-        delay = 180
+        delay = 120
     if delay == 0:
         execute(params)
     else:

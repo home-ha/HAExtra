@@ -41,6 +41,7 @@
         entity_id: fan.purifier
         entity_attr: speed
         entity_values: [Auto, Favorite]
+        delay: 300
     - service: actuator.actuate
       data:
         sensor_id: sensor.purifier_pm25
@@ -51,6 +52,7 @@
         service: xiaomi_miio_set_favorite_level
         service_attr: level
         entity_values: [3, 6, 9, 10]
+        delay: 300
 
 # 儿童房颗粒物变化
 - alias: PM25 Changed @Kidsroom
