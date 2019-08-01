@@ -144,31 +144,31 @@ sensor:
     availability_topic: NodeMCU4/status
   - platform: mqtt
     device_class: temperature
-    state_topic: NodeMCU6/temperature
-    name: Purifier6 Temperature
+    state_topic: NodeMCU7/temperature
+    name: Purifier7 Temperature
     unit_of_measurement: °C
-    availability_topic: NodeMCU6/status
+    availability_topic: NodeMCU7/status
   - platform: mqtt
     device_class: humidity
-    state_topic: NodeMCU6/humidity
-    name: Purifier6 Humidity
+    state_topic: NodeMCU7/humidity
+    name: Purifier7 Humidity
     unit_of_measurement: '%'
-    availability_topic: NodeMCU6/status
+    availability_topic: NodeMCU7/status
   - platform: mqtt
-    state_topic: NodeMCU6/pm2dot5
-    name: Purifier6 PM25
+    state_topic: NodeMCU7/pm2dot5
+    name: Purifier7 PM25
     unit_of_measurement: μg/m³
-    availability_topic: NodeMCU6/status
+    availability_topic: NodeMCU7/status
   - platform: mqtt
-    state_topic: NodeMCU6/co2
-    name: Purifier6 CO2
+    state_topic: NodeMCU7/co2
+    name: Purifier7 CO2
     unit_of_measurement: ppm
-    availability_topic: NodeMCU6/status
+    availability_topic: NodeMCU7/status
   - platform: mqtt
-    state_topic: NodeMCU6/hcho
-    name: Purifier6 HCHO
+    state_topic: NodeMCU7/hcho
+    name: Purifier7 HCHO
     unit_of_measurement: mg/m³
-    availability_topic: NodeMCU6/status
+    availability_topic: NodeMCU7/status
   # - platform: phicomm
   #   name: AirCat
   #   username: !secret phicomm_username
