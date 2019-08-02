@@ -14,7 +14,7 @@ actuate:
       description: Alternative sensor value array for special time range
       example: '[25, 28, 32]'
     alt_time_range:
-      description: Alternative time range. Default is 20:00 am ~ 8:00 am
+      description: Alternative time range. Default is 20:00 pm ~ 8:00 am
       example: '[20, 8]'
     entity_id:
       description: Entity ID to Tune

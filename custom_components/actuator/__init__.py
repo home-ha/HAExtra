@@ -76,7 +76,7 @@ def execute(params):
 
             if entity_attr:
                 entity_log += '.' + entity_attr
-            entity_log += '=' + str(from_value)
+            entity_log += '=' + str(from_value) + '>=' + str(sensor_values[i])
 
             if state_value == 'off':
                 entity_log += ', ->on'
