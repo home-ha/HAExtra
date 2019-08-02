@@ -68,7 +68,7 @@
 - alias: Sleeping Ended
   trigger:
     - platform: time
-      at: '07:20:00'
+      at: '07:30:00'
   action:
     - service: cover.open_cover
       entity_id: cover.studyroom_cover

@@ -8,7 +8,7 @@
   condition:
     - condition: time
       after: '20:00'
-      before: '07:00'
+      before: '07:20'
   action:
     - service: actuator.actuate
       data:
@@ -30,7 +30,7 @@
   condition:
     - condition: time
       after: '20:00'
-      before: '07:00'
+      before: '07:20'
   action:
     - service: actuator.actuate
       data:
@@ -52,7 +52,7 @@
   condition:
     - condition: time
       after: '20:30'
-      before: '07:00'
+      before: '07:20'
   action:
     - service: actuator.actuate
       data:
@@ -74,7 +74,7 @@
   condition:
     - condition: time
       after: '20:30'
-      before: '07:00'
+      before: '07:20'
   action:
     - service: actuator.actuate
       data:
@@ -98,7 +98,7 @@
   condition:
     - condition: time
       after: '20:00'
-      before: '07:00'
+      before: '07:20'
   action:
     - service: actuator.actuate
       data:
