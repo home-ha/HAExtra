@@ -82,11 +82,11 @@
     - service: climate.set_fan_mode
       data:
         entity_id: climate.daikin3
-        fan_mode: auto
+        fan_mode: 自动
     - service: climate.set_fan_mode
       data:
         entity_id: climate.daikin4
-        fan_mode: auto
+        fan_mode: 自动
     - service: climate.turn_off
       entity_id: climate.daikin3
     - service: climate.turn_off
