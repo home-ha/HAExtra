@@ -71,12 +71,13 @@ def execute(params):
     i = len(sensor_values) - 1
     while i >= 0:
         if sensor_number >= sensor_values[i]:
+            sensor_log += '>=' + str(sensor_values[i])
             from_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
             to_value = entity_values[i]
 
             if entity_attr:
                 entity_log += '.' + entity_attr
-            entity_log += '=' + str(from_value) + '>=' + str(sensor_values[i])
+            entity_log += '=' + str(from_value)
 
             if state_value == 'off':
                 entity_log += ', ->on'
@@ -93,6 +94,7 @@ def execute(params):
         else:
             i = i - 1
 
+    sensor_log += '<' + str(sensor_values[0])
     if state_value == 'off':
         _LOGGER.debug('%s, %s=off', sensor_log, entity_log)
         return
