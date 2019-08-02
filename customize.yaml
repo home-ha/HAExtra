@@ -103,14 +103,10 @@ group.all_switches:
 group.all_vacuum_cleaners:
   friendly_name: 扫地机
   hidden: false
-group.automations:
-  friendly_name: 智能
 group.balcony:
   friendly_name: 阳台
 group.bedroom:
   friendly_name: 主卧
-group.controls:
-  friendly_name: 控制
 group.default_view:
   friendly_name: 总览
 group.diningroom:
@@ -123,48 +119,14 @@ group.kitchen:
   friendly_name: 厨房
 group.livingroom:
   friendly_name: 客厅
-group.office:
-  friendly_name: 工位
-  hagenie_zone: 工作间
-group.outside:
-  friendly_name: 室外
-  hagenie_zone: 门口
 group.parentsroom:
   friendly_name: 次卧
 group.passage:
   friendly_name: 过道
 group.studyroom:
   friendly_name: 书房
-group.tbalcony:
-  friendly_name: 阳台
-group.tbedroom:
-  friendly_name: 主卧
-group.tdiningroom:
-  friendly_name: 餐厅
-group.thallway:
-  friendly_name: 玄关
-group.tkidsroom:
-  friendly_name: 儿童房
-group.tlivingroom:
-  friendly_name: 客厅
-group.tparentsroom:
-  friendly_name: 次卧
-group.tpassage:
-  friendly_name: 过道
-group.tstudyroom:
-  friendly_name: 书房
-group.twashroom:
-  friendly_name: 洗手间
 group.washroom:
   friendly_name: 洗手间
-input_boolean.wall_fan_direction:
-  friendly_name: 壁扇方向
-input_boolean.wall_fan_osc:
-  friendly_name: 壁扇摇头
-input_boolean.wall_fan_state:
-  friendly_name: 壁扇状态
-input_select.wall_fan_speed:
-  friendly_name: 壁扇风速
 input_text.miai:
   friendly_name: 小爱音箱
   icon: mdi:speaker-wireless
