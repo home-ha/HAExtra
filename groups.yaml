@@ -127,10 +127,10 @@ Studyroom:
     - vacuum.vacuum
     - fan.purifier4
     - sensor.fan_temperature
-    - sensor.aircat2_temperature
-    - sensor.aircat2_humidity
-    - sensor.aircat2_pm25
-    - sensor.aircat2_hcho
+    # - sensor.aircat2_temperature
+    # - sensor.aircat2_humidity
+    # - sensor.aircat2_pm25
+    # - sensor.aircat2_hcho
     - sensor.purifier4_co2
     - sensor.studyroom_lightness
 
@@ -280,10 +280,10 @@ TStudyroom:
     - vacuum.vacuum
     - fan.purifier4
     - sensor.fan_temperature
-    - sensor.aircat2_temperature
-    - sensor.aircat2_humidity
-    - sensor.aircat2_pm25
-    - sensor.aircat2_hcho
+    # - sensor.aircat2_temperature
+    # - sensor.aircat2_humidity
+    # - sensor.aircat2_pm25
+    # - sensor.aircat2_hcho
     - sensor.purifier4_co2
     - sensor.studyroom_lightness
 

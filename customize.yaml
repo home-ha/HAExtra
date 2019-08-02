@@ -257,13 +257,13 @@ media_player.x9400e:
 remote.apple_tv:
   friendly_name: 苹果遥控
 sensor.aircat2_hcho:
-  friendly_name: 书房甲醛
+  friendly_name: 过道甲醛
 sensor.aircat2_humidity:
-  friendly_name: 书房湿度
+  friendly_name: 过道湿度
 sensor.aircat2_pm25:
-  friendly_name: 书房颗粒物
+  friendly_name: 过道颗粒物
 sensor.aircat2_temperature:
-  friendly_name: 书房温度
+  friendly_name: 过道温度
 sensor.aircat3_hcho:
   friendly_name: 工位甲醛
 sensor.aircat3_humidity:
@@ -290,7 +290,7 @@ sensor.balcony_pm25:
 sensor.balcony_temperature:
   friendly_name: 阳台温度
 sensor.fan_temperature:
-  friendly_name: 书房风扇温度
+  friendly_name: 书房温度
 sensor.fresher2_co2:
   dash_click: location.reload()
   dash_extra: 'eval:${state}>1000 ? "<font color=red>空气闷</font>" : ""'
