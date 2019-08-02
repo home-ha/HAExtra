@@ -119,16 +119,14 @@ class DelayExecutor(object):
 def actuate(call):
     params = call.data
     delay = params.get('delay')
-    if delay is None:
-        delay = 120
-    if delay == 0:
-        execute(params)
-    else:
+    if delay:
         key = params['entity_id'] + '~' +(params.get('service_attr') or params.get('entity_attr'))
         if key not in _executors:
             _executors[key] = DelayExecutor(key, delay, params)
         #else:
         #    _LOGGER.debug('%s ignored', key)
+    else:
+        execute(params)
 
 def setup(hass, config):
     global _hass
