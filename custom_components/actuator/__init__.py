@@ -30,14 +30,17 @@ _executors = {}
 def execute(params):
     sensor_id = params.get('sensor_id')
     sensor_attr = params.get('sensor_attr')
-    alt_time_range = params.get('alt_time_range') or [20, 8]
 
-    hour = datetime.datetime.now().hour
-    if alt_time_range[1] > alt_time_range[0]:
-        alt_time = hour > alt_time_range[0] and hour < alt_time_range[1]
+    alt_time_range = params.get('alt_time_range') or [20, 8]
+    if 'alt_sensor_values' in params:
+        hour = datetime.datetime.now().hour
+        if alt_time_range[1] > alt_time_range[0]:
+            alt_time = hour >= alt_time_range[0] and hour < alt_time_range[1]
+        else:
+            alt_time = hour >= alt_time_range[0] or hour < alt_time_range[1]
     else:
-        alt_time = hour > alt_time_range[0] or hour < alt_time_range[1]
-    sensor_values = params.get('alt_sensor_values' if alt_time and 'alt_sensor_values' in params else 'sensor_values')
+        alt_time = False
+    sensor_values = params.get('alt_sensor_values' if alt_time else 'sensor_values')
 
     sensor_state = _hass.states.get(sensor_id)
     try:
