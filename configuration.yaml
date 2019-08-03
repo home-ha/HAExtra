@@ -250,7 +250,7 @@ sensor:
 
       purifier_mode:
         friendly_name: 次卧净化器模式
-        value_template: '{% if is_state("fan.purifier", "off") %}off{% elif is_state_attr("fan.purifier", "speed", "Auto") %}自{% else %}{% endif %}'
+        value_template: '{% set mode = state_attr("fan.purifier", "speed") %}{% if is_state("fan.purifier", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Favorite" %}{{ state_attr("fan.purifier", "favorite_level") }}{% else %}{{ mode }}{% endif %}'
       purifier4_mode:
         friendly_name: 书房净化器模式
         value_template: '{% set mode = state_attr("fan.purifier4", "speed") %}{% if is_state("fan.purifier4", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'

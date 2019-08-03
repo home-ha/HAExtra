@@ -119,7 +119,9 @@ class DelayExecutor(object):
 def actuate(call):
     params = call.data
     delay = params.get('delay')
-    if delay:
+    if delay is None:
+        delay = 120
+    if delay > 0:
         key = params['entity_id'] + '~' +(params.get('service_attr') or params.get('entity_attr'))
         if key not in _executors:
             _executors[key] = DelayExecutor(key, delay, params)
