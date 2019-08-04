@@ -1,12 +1,17 @@
 # 客厅空调触发打开
 - alias: Climate Turn On @Livingroom
   trigger:
-    - platform: state
-      entity_id: binary_sensor.motion_sensor_158d0001d66ce9
-      to: 'on'
+    # - platform: state
+    #   entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+    #   to: 'on'
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
       to: 'off'
+    # - platform: numeric_state
+    #   entity_id: sensor.fresher_temperature
+    #   above: 29
+    #   for:
+    #     minutes: 3
   condition:
     - condition: time
       after: '08:00'
@@ -39,7 +44,7 @@
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
       to: 'on'
       for:
-        minutes: 3
+        minutes: 2
     - platform: state
       entity_id: light.livingroom_light
       from: 'on'
