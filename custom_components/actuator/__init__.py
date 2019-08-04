@@ -113,8 +113,8 @@ class DelayExecutor(object):
         async_call_later(_hass, delay, self.call)
 
     def call(self, *_):
-        execute(self.params)
         del _executors[self.key]
+        execute(self.params)
 
 def actuate(call):
     params = call.data
