@@ -160,11 +160,13 @@ Balcony:
     - climate.daikin2
     - climate.daikin3
     - climate.daikin4
+    - climate.mitsubishi
 
 智能:
   view: yes
   icon: mdi:robot
   entities:
+    - sensor.daikin2_mode
     - sensor.daikin3_mode
     - sensor.daikin4_mode
     - sensor.mitsubishi_mode

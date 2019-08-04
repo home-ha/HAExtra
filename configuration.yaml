@@ -224,6 +224,9 @@ sensor:
         value_template: '{{ state_attr("fan.fan", "temperature") }}'
         unit_of_measurement: °C
 
+      daikin2_mode:
+        friendly_name: 客厅空调模式
+        value_template: '{% set mode = state_attr("climate.daikin2", "fan_mode") %}{% if is_state("climate.daikin2", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
       daikin3_mode:
         friendly_name: 主卧空调模式
         value_template: '{% set mode = state_attr("climate.daikin3", "fan_mode") %}{% if is_state("climate.daikin3", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
