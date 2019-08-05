@@ -76,7 +76,7 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 -   依赖库升级到 `broadlink==0.9.0`，解决 N1 armbian HA 0.8x 下面 segment fault 的问题；
 -   `self._travel == 0` 改成 `self._travel <= 0` 避免相关 BUG。
 
-# 4. [caiyun/weather.py](custom_components/caiyun/weather.py)
+# 4. [caiyun/weather](custom_components/caiyun/weather.py)
 
 彩云天气的标准天气插件，支持15天预报。另外，[旧版 sensror](extra/sensor/caiyun.py) 已不再使用，详情请参考[https://yonsm.github.io/caiyun](https://yonsm.github.io/caiyun)
 
