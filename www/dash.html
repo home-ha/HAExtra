@@ -478,6 +478,7 @@
 				fan: '送风',
 				fan_only: '送风',
 
+				None: '无',
 				unknown: '未知',
 				unavailable: '不可用'
 			}
@@ -538,7 +539,7 @@
 				var name = attributes.hasOwnProperty('dash_name') ? renderTemplate(attributes.dash_name, state, attributes) : attributes.friendly_name
 				var html = '<div class="name">' + name + '</div>'
 
-				var na = state == '' || state == 'unavailable' || state == 'unknown'
+				var na = state == '' || state == 'unavailable' || state == 'unknown' ||  state == 'None'
 				var off =
 					state == 'off' || state == 'not_home' || state == 'closed' || state == 'docked' || state == 'idle' || state == 'low' || na ? ' off' : ''
 
@@ -672,7 +673,15 @@
 					} else {
 						result += template.slice(end)
 					}
-					return result.startsWith('eval:') ? eval(result.slice(5)) : result
+					if (result.startsWith('eval:')) {
+						try {
+							return eval(result.slice(5))
+						} catch (e) {
+							console.log('执行错误：' + result)
+							return '错误'
+						}
+					}
+					return result
 				}
 			}
 
