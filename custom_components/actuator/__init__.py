@@ -74,7 +74,7 @@ def execute(params):
     i = len(sensor_values) - 1
     while i >= 0:
         if sensor_number >= sensor_values[i]:
-            sensor_log += '>=' + str(sensor_values[i])
+            sensor_log += '≥' + str(sensor_values[i])
             from_value = state_value if entity_attr is None else state_attributes.get(entity_attr)
             to_value = entity_values[i]
 
@@ -83,7 +83,7 @@ def execute(params):
             entity_log += '=' + str(from_value)
 
             if state_value == 'off':
-                entity_log += ', ->on'
+                entity_log += ', ⇒on'
                 _hass.services.call(domain, 'turn_on', {'entity_id': entity_id}, True)
 
             if from_value == to_value:
@@ -91,7 +91,7 @@ def execute(params):
                 return
 
             data = {'entity_id': entity_id, service_attr or entity_attr: to_value}
-            _LOGGER.warn('%s; %s, %s=>%s', sensor_log, entity_log, service, to_value)
+            _LOGGER.warn('%s; %s, %s⇒%s', sensor_log, entity_log, service, to_value)
             _hass.services.call(domain, service, data, True)
             return
         else:
@@ -102,7 +102,7 @@ def execute(params):
         _LOGGER.debug('%s, %s=off', sensor_log, entity_log)
         return
 
-    _LOGGER.warn('%s, %s=%s, ->off', sensor_log, entity_log, state_value)
+    _LOGGER.warn('%s, %s=%s, ⇒off', sensor_log, entity_log, state_value)
     _hass.services.call(domain, 'turn_off', {'entity_id': entity_id}, True)
 
 class DelayExecutor(object):
