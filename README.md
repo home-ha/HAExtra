@@ -99,17 +99,13 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 
 但上述文章是老的实现方式，不适用于此插件。此插件使用姿势更妙，无需第三方服务器，直接使用 Home Assistant 作为服务器和 OAuth，链路更高效。具体可参考网友的帖子 [https://bbs.hassbian.com/thread-4758-1-1.html](https://bbs.hassbian.com/thread-4758-1-1.html)
 
-# 8.[miai](custom_components/miai/__init__.py)
+另外一键接入 Home Assistant 的大部分设备到小爱同学，没有维护了：[miai](https://github.com/Yonsm/HAExtra/blob/master/extra/custom_components/miai.py)。小爱同学的智能设备使用控制方式没有天猫精灵好，需要唤醒词语。详情请参考 [https://bbs.hassbian.com/thread-4680-1-1.html](https://bbs.hassbian.com/thread-4680-1-1.html)
 
-类似 aligenie.py，一键接入 Home Assistant 的大部分设备到小爱同学。但小爱同学的智能设备使用控制方式没有天猫精灵好，需要唤醒词语。
-
-详情请参考 [https://bbs.hassbian.com/thread-4680-1-1.html](https://bbs.hassbian.com/thread-4680-1-1.html)
-
-# 9. [hello_miai](custom_components/hello_miai/__init__.py)
+# 8. [miai](custom_components/miai/__init__.py)
 
 小爱同学 TTS 播报插件，可以参考 automation.yaml 中大量使用到相关功能；还可以 [在HomeAssistant中输入文本，让小爱音TTS箱朗读出来](https://bbs.hassbian.com/thread-4184-1-1.html)；我并非原创者，源自 [https://bbs.hassbian.com/thread-3669-1-1.html](https://bbs.hassbian.com/thread-3669-1-1.html)
 
-# 10. [actuator](custom_components/actuator/__init__.py)
+# 9. [actuator](custom_components/actuator/__init__.py)
 
 根据传感器数值区间来自动控制设备，详情请参考 [https://bbs.hassbian.com/thread-7876-1-1.html](https://bbs.hassbian.com/thread-7876-1-1.html)
 
