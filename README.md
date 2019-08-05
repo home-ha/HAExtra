@@ -59,15 +59,15 @@ panel_iframe:
 
 **注意：部分命名为 2.py 是因为和 HA 官方的插件命名冲突或者派生而来**
 
-# 1. [modbus2/climate.py](custom_components/modbus2/climate.py)
+# 1. [modbus2/climate](custom_components/modbus2/climate.py)
 
 通用 ModBus 空调插件，比 HA 官方做的更通用、更好，详情请参考 [https://yonsm.github.io/modbus](https://yonsm.github.io/modbus)
 
-# 2. [saswell/climate.py](custom_components/saswell/climate.py)
+# 2. [saswell/climate](custom_components/saswell/climate.py)
 
 SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.io/saswell](https://yonsm.github.io/saswell)
 
-# 3. [broadlink2/cover.py](custom_components/broadlink2/cover.py)
+# 3. [broadlink2/cover](custom_components/broadlink2/cover.py)
 
 基于 broadlink 万能遥控器的窗帘插件（支持 RF），详情请参考 [https://bbs.hassbian.com/thread-1924-1-1.html](https://bbs.hassbian.com/thread-1924-1-1.html)
 
@@ -80,36 +80,36 @@ SasWell 温控面板插件（地暖），详情请参考 [https://yonsm.github.i
 
 彩云天气的标准天气插件，支持15天预报。另外，[旧版 sensror](extra/sensor/caiyun.py) 已不再使用，详情请参考[https://yonsm.github.io/caiyun](https://yonsm.github.io/caiyun)
 
-# 5. [aircat/sensor.py](custom_components/aircat/sensor.py)
+# 5. [aircat/sensor](custom_components/aircat/sensor.py)
 
 基于 DNS 拦截实现的斐讯悟空空间检测仪 M1 插件，详情请参考网友发的帖子 [https://bbs.hassbian.com/thread-4601-1-1.html](https://bbs.hassbian.com/thread-4601-1-1.html)
 
 另外，基于斐讯在线云数据实现的斐讯悟空空间检测仪 M1 插件 [extra/sensor/phicomm.py](extra/sensor/phicomm.py)，详情请参考 [https://yonsm.github.io/phicomm](https://yonsm.github.io/phicomm)
 
-# 6. [mqtt2/swicth.py](custom_components/mqtt2/swicth.py)
+# 6. [mqtt2/swicth](custom_components/mqtt2/switch.py)
 
 基于 mqtt swicth 扩展的 MQTT 开关，支持以下功能：
 
 - 支持 icon_template 配置，可以使用 Jinja 脚本运算出不同的图标（参考我的 configuration.yaml 中的 mqtt2 Speaker）；
 - 支持 original_state attribute。
 
-# 7. [aligenie.py](custom_components/aligenie.py)
+# 7. [aligenie](custom_components/aligenie/__init__.py)
 
 几乎零配置，一键接入 Home Assistant 的大部分设备到天猫精灵，可以语音控制相关设备开关。详情请参考 [https://bbs.hassbian.com/thread-2700-1-1.html](https://bbs.hassbian.com/thread-2700-1-1.html)
 
 但上述文章是老的实现方式，不适用于此插件。此插件使用姿势更妙，无需第三方服务器，直接使用 Home Assistant 作为服务器和 OAuth，链路更高效。具体可参考网友的帖子 [https://bbs.hassbian.com/thread-4758-1-1.html](https://bbs.hassbian.com/thread-4758-1-1.html)
 
-# 8.[miai.py](custom_components/miai.py)
+# 8.[miai](custom_components/miai/__init__.py)
 
 类似 aligenie.py，一键接入 Home Assistant 的大部分设备到小爱同学。但小爱同学的智能设备使用控制方式没有天猫精灵好，需要唤醒词语。
 
 详情请参考 [https://bbs.hassbian.com/thread-4680-1-1.html](https://bbs.hassbian.com/thread-4680-1-1.html)
 
-# 9. [hello_miai.py](custom_components/hello_miai.py)
+# 9. [hello_miai](custom_components/hello_miai/__init__.py)
 
 小爱同学 TTS 播报插件，可以参考 automation.yaml 中大量使用到相关功能；还可以 [在HomeAssistant中输入文本，让小爱音TTS箱朗读出来](https://bbs.hassbian.com/thread-4184-1-1.html)；我并非原创者，源自 [https://bbs.hassbian.com/thread-3669-1-1.html](https://bbs.hassbian.com/thread-3669-1-1.html)
 
-# 10. [actuator/__init__.py](custom_components/actuator/__init__.py)
+# 10. [actuator](custom_components/actuator/__init__.py)
 
 根据传感器数值区间来自动控制设备，详情请参考 [https://bbs.hassbian.com/thread-7876-1-1.html](https://bbs.hassbian.com/thread-7876-1-1.html)
 
