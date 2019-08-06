@@ -1,4 +1,4 @@
-- alias: 空调调节@主卧
+- alias: 调节空调@主卧
   trigger:
     - platform: time
       at: '20:30:01'
@@ -19,7 +19,7 @@
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
-- alias: 空调调节@儿童房
+- alias: 调节空调@儿童房
   trigger:
     - platform: time
       at: '20:30:01'
@@ -40,7 +40,7 @@
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
-- alias: 空调调节@书房
+- alias: 调节空调@书房
   trigger:
     - platform: time
       at: '21:00:01'
@@ -61,7 +61,7 @@
         entity_attr: fan_mode
         entity_values: [low, mid, high, highest]
 
-- alias: 风扇调节@书房
+- alias: 调节风扇@书房
   trigger:
     - platform: time
       at: '21:00:01'
@@ -84,7 +84,7 @@
         service_attr: speed
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
-- alias: 风扇调节@儿童房
+- alias: 调节风扇@儿童房
   trigger:
     - platform: time
       at: '20:30:01'

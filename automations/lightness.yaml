@@ -1,4 +1,4 @@
-- alias: 窗帘关@书房
+- alias: 书房窗帘关
   trigger:
     - platform: time
       at: '12:30:00'
@@ -18,7 +18,7 @@
     - service: cover.close_cover
       entity_id: cover.studyroom_cover
 
-- alias: 窗帘开@书房
+- alias: 书房窗帘开
   trigger:
     - platform: sun
       event: sunset
