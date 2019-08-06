@@ -1,5 +1,4 @@
-# 客厅二氧化碳变化
-- alias: CO2 Changed @Livingroom
+- alias: 新风调节@客厅
   trigger:
     - platform: state
       entity_id: sensor.fresher_co2
@@ -12,8 +11,7 @@
         entity_attr: speed
         entity_values: [Auto, Middle, Strong]
 
-# 主卧二氧化碳变化
-- alias: CO2 Changed @Bedroom
+- alias: 新风调节@主卧
   trigger:
     - platform: state
       entity_id: sensor.fresher2_co2

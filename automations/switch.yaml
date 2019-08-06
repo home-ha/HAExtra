@@ -1,5 +1,4 @@
-#过道无线开关单击
-- alias: Switch Clicked @Passage
+- alias: 过道按钮单击—播报空气
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -11,8 +10,7 @@
       data_template:
         message: '阳台PM2.5为{{ states("sensor.balcony_pm25") }}，餐厅PM2.5为{{ states("sensor.aircat_pm25") }}，主卧PM2.5为{{ states("sensor.fresher2_pm25") }}。客厅二氧化碳浓度为{{ states("sensor.fresher_co2") }}，主卧二氧化碳浓度为{{ states("sensor.fresher2_co2") }}，儿童房二氧化碳浓度为{{ states("sensor.purifier7_co2") }}'
 
-# 过道无线开关双击
-- alias: Switch DbClicked @Passage
+- alias: 过道按钮双击—启用烘干
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -24,8 +22,7 @@
       data:
         message: 晾衣机将于今晚定时开启烘干功能
 
-# 过道无线开关长按
-- alias: Switch Pressed @Passage
+- alias: 过道按钮长按—开关过道灯感应
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -33,32 +30,44 @@
         entity_id: binary_sensor.switch_158d0001e59b33
         click_type: long_click_press
   action:
-    # - service: automation.toggle
-    #   entity_id: automation.passage_light_on_day
-    # - service: automation.toggle
-    #   entity_id: automation.passage_light_off_day
-    # - service: automation.toggle
-    #   entity_id: automation.passage_light_off_brighten
-    # - service: automation.toggle
-    #   entity_id: automation.passage_light_on_night
-    # - service: automation.toggle
-    #   entity_id: automation.passage_light_off_night
     - service: automation.toggle
-      entity_id: automation.passage_backlight_reaction
+      entity_id: automation.guo_dao_deng_bai_tian_kai
+    - service: automation.toggle
+      entity_id: automation.guo_dao_deng_wan_shang_kai
+    - service: automation.toggle
+      entity_id: automation.guo_dao_bei_jing_deng_gan_ying
     - service: miai.say
       data_template:
-        message: '过道灯自动感应功能已{% if is_state("automation.passage_backlight_reaction", "on") %}启用{% else %}暂停，所有灯光将在10秒后关闭{% endif %}'
+        message: '过道灯自动感应功能已{% if is_state("automation.guo_dao_bei_jing_deng_gan_ying", "on") %}启用{% else %}暂停，所有灯光将在10秒后关闭{% endif %}'
     - delay: '00:00:10'
     - condition: state
-      entity_id: automation.passage_backlight_reaction
+      entity_id: automation.guo_dao_bei_jing_deng_gan_ying
       state: 'off'
     - service: automation.turn_on
-      entity_id: automation.passage_light_reaction_enabler
+      entity_id: automation.guo_dao_deng_gan_ying_qi_yong
     - service: homeassistant.turn_off
       entity_id: group.all_lights
 
-# 书房无线开关单击
-- alias: Switch Clicked @Studyroom
+- alias: 过道灯感应启用
+  initial_state: false
+  trigger:
+    - platform: time
+      at: '07:00:00'
+  action:
+    - service: automation.turn_on
+      entity_id: automation.guo_dao_deng_bai_tian_kai
+    - service: automation.turn_on
+      entity_id: automation.guo_dao_deng_wan_shang_kai
+    - service: automation.turn_on
+      entity_id: automation.guo_dao_bei_jing_deng_gan_ying
+    - service: miai.say
+      data:
+        message: 过道灯自动感应功能已启用
+    - delay: '00:00:10'
+    - service: automation.turn_off
+      entity_id: automation.guo_dao_deng_gan_ying_qi_yong
+
+- alias: 书房按钮单击—切换音箱
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -71,8 +80,7 @@
         topic: NodeMCU3/relay/0/set
         payload: toggle
 
-# 书房无线开关双击
-- alias: Switch DbClicked @Studyroom
+- alias: 书房按钮双击—开关投影仪
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -86,8 +94,7 @@
     - service: switch.toggle
       entity_id: switch.projector
 
-# 书房无线开关长按
-- alias: Switch Pressed @Studyroom
+- alias: 书房按钮长按—关闭音箱
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click

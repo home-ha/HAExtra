@@ -1,5 +1,4 @@
-# 客厅空调触发打开
-- alias: Climate Turn On @Livingroom
+- alias: 空调开@客厅
   trigger:
     # - platform: state
     #   entity_id: binary_sensor.motion_sensor_158d0001d66ce9
@@ -37,8 +36,7 @@
     - service: climate.turn_on
       entity_id: climate.daikin2
 
-# 客厅空调触发关闭
-- alias: Climate Turn Off @Livingroom
+- alias: 空调关@客厅
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b

@@ -1,5 +1,4 @@
-# 餐厅湿度过高
-- alias: Humidity High @Diningroom
+- alias: 除湿机开@餐厅
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat_humidity
@@ -10,8 +9,7 @@
     - service: switch.turn_on
       entity_id: switch.outlet
 
-# 餐厅湿度正常
-- alias: Humidity Normal @Diningroom
+- alias: 除湿机关@餐厅
   trigger:
     - platform: numeric_state
       entity_id: sensor.aircat_humidity
@@ -22,8 +20,7 @@
     - service: switch.turn_off
       entity_id: switch.outlet
 
-# 卧室湿度过高
-- alias: Humidity High @Bedroom
+- alias: 除湿机开@卧室
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier7_humidity
@@ -38,8 +35,7 @@
     - service: switch.turn_on
       entity_id: switch.outlet2
 
-# 卧室湿度正常
-- alias: Humidity Normal @Bedroom
+- alias: 除湿机关@卧室
   trigger:
     - platform: numeric_state
       entity_id: sensor.purifier7_humidity
@@ -52,8 +48,7 @@
     - service: switch.turn_off
       entity_id: switch.outlet2
 
-# 餐厅湿度过低
-# - alias: Humidity Low @Diningroom
+# - alias: 加湿器开@餐厅
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: sensor.purifier5_humidity
@@ -68,8 +63,7 @@
 #         entity_id: fan.purifier5
 #         oscillating: true
 
-# 主卧湿度过低
-# - alias: Humidity Low @Bedroom
+# - alias: 加湿器开@主卧
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: sensor.fresher2_humidity
@@ -84,8 +78,7 @@
 #         entity_id: fan.purifier7
 #         oscillating: true
 
-# 儿童房湿度过低
-# - alias: Humidity Low @Kidsroom
+# - alias: 加湿器开@儿童房
 #   trigger:
 #     - platform: numeric_state
 #       entity_id: sensor.purifier7_humidity

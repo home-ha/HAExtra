@@ -1,5 +1,4 @@
-# 书房亮度太高
-- alias: Lightness High @Studyroom
+- alias: 窗帘关@书房
   trigger:
     - platform: time
       at: '12:30:00'
@@ -19,8 +18,7 @@
     - service: cover.close_cover
       entity_id: cover.studyroom_cover
 
-# 书房亮度正常
-- alias: Lightness Normal @Studyroom
+- alias: 窗帘开@书房
   trigger:
     - platform: sun
       event: sunset

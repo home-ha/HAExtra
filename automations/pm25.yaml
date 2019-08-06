@@ -1,5 +1,4 @@
-# 餐厅颗粒物变化
-- alias: PM25 Changed @Diningroom
+- alias: 净化器调节@餐厅
   trigger:
     - platform: state
       entity_id: sensor.aircat_pm25
@@ -12,8 +11,7 @@
         entity_attr: speed
         entity_values: [low, medium, high]
 
-# 主卧颗粒物变化
-- alias: PM25 Changed @Bedroom
+- alias: 净化器调节@主卧
   trigger:
     - platform: state
       entity_id: sensor.fresher2_pm25
@@ -27,8 +25,7 @@
         entity_attr: speed
         entity_values: [low, medium, high]
 
-# 次卧颗粒物变化
-- alias: PM25 Changed @Parentsroom
+- alias: 净化器调节@次卧
   trigger:
     - platform: state
       entity_id: sensor.purifier_pm25
@@ -54,8 +51,7 @@
         entity_values: [3, 6, 9, 10]
         delay: 300
 
-# 儿童房颗粒物变化
-- alias: PM25 Changed @Kidsroom
+- alias: 净化器调节@儿童房
   trigger:
     - platform: state
       entity_id: sensor.purifier7_pm25
@@ -69,8 +65,7 @@
         entity_attr: speed
         entity_values: [low, medium, high]
 
-# 书房颗粒物变化
-- alias: PM25 Changed @Studyroom
+- alias: 净化器调节@书房
   initial_state: false
   trigger:
     - platform: state

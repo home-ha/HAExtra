@@ -1,5 +1,4 @@
-# 主卧空调温度变化
-- alias: Temperature Changed @Bedroom
+- alias: 空调调节@主卧
   trigger:
     - platform: time
       at: '20:30:01'
@@ -13,15 +12,14 @@
     - service: actuator.actuate
       data:
         sensor_id: sensor.fresher2_temperature
-        sensor_values: [28, 29.3, 30, 31, 32]
-        alt_sensor_values: [28.3, 29.5, 30, 31, 32]
+        sensor_values: [27.8, 29.3, 30, 31, 32]
+        alt_sensor_values: [28, 29.5, 30, 31, 32]
         alt_time_range: [2, 7]
         entity_id: climate.daikin3
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
-# 儿童房空调温度变化
-- alias: Temperature Changed @Kidsroom
+- alias: 空调调节@儿童房
   trigger:
     - platform: time
       at: '20:30:01'
@@ -42,8 +40,7 @@
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
-# 书房空调温度变化
-- alias: Temperature Changed @Studyroom
+- alias: 空调调节@书房
   trigger:
     - platform: time
       at: '21:00:01'
@@ -64,8 +61,7 @@
         entity_attr: fan_mode
         entity_values: [low, mid, high, highest]
 
-# 书房风扇温度变化
-- alias: Temperature Changed @Fan
+- alias: 风扇调节@书房
   trigger:
     - platform: time
       at: '21:00:01'
@@ -88,8 +84,7 @@
         service_attr: speed
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
-# 儿童房风扇温度变化
-- alias: Temperature Changed @Fan2
+- alias: 风扇调节@儿童房
   trigger:
     - platform: time
       at: '20:30:01'

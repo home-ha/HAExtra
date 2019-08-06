@@ -1,5 +1,4 @@
-#  小爱音箱文本朗读
-- alias: Speech Text @MiAI
+- alias: 小爱音箱朗读
   trigger:
     - platform: state
       entity_id: input_text.miai

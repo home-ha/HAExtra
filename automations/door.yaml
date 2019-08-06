@@ -1,5 +1,4 @@
-# 入户门开启
-# - alias: Door Opened @Entrance
+# - alias: 入户门开启
 # #   trigger:
 #     platform: state
 #     entity_id: binary_sensor.door_window_sensor_158d0001f3e5be
@@ -12,8 +11,8 @@
 #       ringtone_id: 10001
 #       ringtone_vol:100
 
-# 阳台移门开合
-- alias: Door Toggled @Balcony
+#
+- alias: 阳台灯感应
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
@@ -30,14 +29,3 @@
   action:
     - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
       entity_id: light.balcony_light
-
-# 阳台移门关闭
-# - alias: Balcony Door Closed
-#   trigger:
-#     - platform: state
-#       entity_id: binary_sensor.door_window_sensor_158d000228a52b
-#       from: 'on'
-#       to: 'off'
-#   action:
-#     - service: fan.turn_on
-#       entity_id: fan.fresher

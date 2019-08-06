@@ -1,5 +1,4 @@
-# 准备睡眠
-- alias: Sleeping Ahead
+- alias: 睡眠准备
   trigger:
     - platform: time
       at: '20:30:00'
@@ -36,15 +35,14 @@
         temperature: 25
         #hvac_mode: cool
 
-# 开始睡觉
-# - alias: Sleeping Began
+# - alias: 睡眠开始
 #   trigger:
 #     - platform: time
 #       at: '21:30:00'
 #   action:
 
 # 进入深睡
-- alias: Sleeping Deepin
+- alias: 睡眠深入
   trigger:
     - platform: time
       at: '00:00:01'
@@ -60,8 +58,7 @@
         temperature: 26
         #hvac_mode: cool
 
-# 结束睡眠
-- alias: Sleeping Ended
+- alias: 睡眠结束
   trigger:
     - platform: time
       at: '07:30:00'
