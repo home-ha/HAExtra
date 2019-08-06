@@ -44,7 +44,7 @@
       entity_id: automation.guo_dao_bei_jing_deng_gan_ying
       state: 'off'
     - service: automation.turn_on
-      entity_id: automation.guo_dao_deng_gan_ying_chong_qi
+      entity_id: automation.guo_dao_deng_gan_ying_zhong_qi
     - service: homeassistant.turn_off
       entity_id: group.all_lights
 
@@ -65,7 +65,7 @@
         message: 过道灯自动感应功能已重新启用
     - delay: '00:00:10'
     - service: automation.turn_off
-      entity_id: automation.guo_dao_deng_gan_ying_chong_qi
+      entity_id: automation.guo_dao_deng_gan_ying_zhong_qi
 
 - alias: 按钮@书房单击—切换音箱
   trigger:
