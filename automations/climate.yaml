@@ -17,7 +17,7 @@
       before: '21:00'
     - condition: numeric_state
       entity_id: sensor.fresher_temperature
-      above: 28.5
+      above: 29
     - condition: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
       state: 'off'
