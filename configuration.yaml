@@ -581,7 +581,7 @@ climate:
     name: Mitsubishi
     device_code: 1120
     controller_data: Remote
-    temperature_sensor: sensor.fan_temperature
+    temperature_sensor: sensor.purifier4_temperature
     humidity_sensor: sensor.aircat2_humidity
     #power_sensor: binary_sensor.ac_power
 
