@@ -105,6 +105,7 @@ Kidsroom:
     - climate.daikin4
     - fan.purifier7
     - fan.fan
+    - sensor.fan_temperature
     # - switch.outlet2
     - sensor.purifier7_temperature
     - sensor.purifier7_humidity
@@ -125,7 +126,7 @@ Studyroom:
     - fan.fan2
     - vacuum.vacuum
     - fan.purifier4
-    - sensor.fan_temperature
+    - sensor.purifier4_temperature
     # - sensor.aircat2_temperature
     # - sensor.aircat2_humidity
     # - sensor.aircat2_pm25
@@ -268,8 +269,9 @@ Balcony:
   entities:
     - light.lamp2
     - climate.daikin4
-    - fan.fan
     - fan.purifier7
+    - fan.fan
+    - sensor.fan_temperature
     # - switch.outlet2
     - sensor.purifier7_temperature
     - sensor.purifier7_humidity
@@ -291,7 +293,7 @@ Balcony:
     - fan.fan2
     - vacuum.vacuum
     - fan.purifier4
-    - sensor.fan_temperature
+    - sensor.purifier4_temperature
     # - sensor.aircat2_temperature
     # - sensor.aircat2_humidity
     # - sensor.aircat2_pm25
