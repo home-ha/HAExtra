@@ -45,9 +45,9 @@ customizer.customizer:
 fan.bedroom_fan:
   friendly_name: 主卧壁扇
 fan.fan:
-  friendly_name: 书房风扇
-fan.fan2:
   friendly_name: 儿童房风扇
+fan.fan2:
+  friendly_name: 书房风扇
 fan.fresher:
   friendly_name: 客厅新风机
   hagenie_deviceType: VMC

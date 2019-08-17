@@ -103,9 +103,8 @@ Kidsroom:
   entities:
     - light.lamp2
     - climate.daikin4
-    #- fan.fan2
     - fan.purifier7
-    - fan.fan2
+    - fan.fan
     # - switch.outlet2
     - sensor.purifier7_temperature
     - sensor.purifier7_humidity
@@ -123,7 +122,7 @@ Studyroom:
     - switch.projector
     - switch.speaker
     - climate.mitsubishi
-    - fan.fan
+    - fan.fan2
     - vacuum.vacuum
     - fan.purifier4
     - sensor.fan_temperature
@@ -269,7 +268,7 @@ Balcony:
   entities:
     - light.lamp2
     - climate.daikin4
-    - fan.fan2
+    - fan.fan
     - fan.purifier7
     # - switch.outlet2
     - sensor.purifier7_temperature
@@ -289,7 +288,7 @@ Balcony:
     - switch.projector
     - switch.speaker
     - climate.mitsubishi
-    - fan.fan
+    - fan.fan2
     - vacuum.vacuum
     - fan.purifier4
     - sensor.fan_temperature

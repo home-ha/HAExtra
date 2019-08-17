@@ -138,6 +138,12 @@ sensor:
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU2/status
   - platform: mqtt
+    device_class: temperature
+    state_topic: NodeMCU4/temperature
+    name: Purifier4 Temperature
+    unit_of_measurement: °C
+    availability_topic: NodeMCU4/status
+  - platform: mqtt
     state_topic: NodeMCU4/co2
     name: Purifier4 CO2
     unit_of_measurement: ppm
@@ -238,10 +244,10 @@ sensor:
         value_template: '{% set mode = state_attr("climate.mitsubishi", "fan_mode") %}{% if is_state("climate.mitsubishi", "off") %}off{% elif mode == "low" %}一{% elif mode == "mid" %}二{% elif mode == "high" %}三{% elif mode == "highest" %}四{% else %}{{ mode }}{% endif %}'
 
       fan_mode:
-        friendly_name: 书房风扇模式
+        friendly_name: 儿童房风扇模式
         value_template: '{% set mode = state_attr("fan.fan", "speed_level") %}{% if is_state("fan.fan", "off") %}off{% elif mode == "Level 1" %}一{% elif mode == "Level 2" %}二{% elif mode == "Level 3" %}三{% elif mode == "Level 4" %}四{% else %}{{ mode }}{% endif %}'
       fan2_mode:
-        friendly_name: 儿童房风扇模式
+        friendly_name: 书房风扇模式
         value_template: '{% set mode = state_attr("fan.fan2", "speed_level") %}{% if is_state("fan.fan2", "off") %}off{% elif mode == "Level 1" %}一{% elif mode == "Level 2" %}二{% elif mode == "Level 3" %}三{% elif mode == "Level 4" %}四{% else %}{{ mode }}{% endif %}'
 
       fresher_mode:
