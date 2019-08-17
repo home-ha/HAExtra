@@ -144,6 +144,12 @@ sensor:
     unit_of_measurement: °C
     availability_topic: NodeMCU4/status
   - platform: mqtt
+    device_class: humidity
+    state_topic: NodeMCU4/humidity
+    name: Purifier4 Humidity
+    unit_of_measurement: '%'
+    availability_topic: NodeMCU4/status
+  - platform: mqtt
     state_topic: NodeMCU4/co2
     name: Purifier4 CO2
     unit_of_measurement: ppm
@@ -180,7 +186,7 @@ sensor:
   #   username: !secret phicomm_username
   #   password: !secret phicomm_password
   - platform: aircat
-    mac: ['B0F8931EA148'] #, 'B0F893249132']
+    mac: ['B0F8931EA148', 'B0F893249132']
   - platform: template
     sensors:
       purifier_temperature:

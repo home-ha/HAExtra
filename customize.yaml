@@ -281,6 +281,8 @@ sensor.illumination_34ce0090901a:
 sensor.purifier4_co2:
   friendly_name: 书房二氧化碳
   icon: mdi:periodic-table-co2
+sensor.purifier4_humidity:
+  friendly_name: 书房湿度
 sensor.purifier4_temperature:
   friendly_name: 书房温度
   unit_of_measurement: °C

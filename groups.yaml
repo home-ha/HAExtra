@@ -72,6 +72,10 @@ Passage:
     - binary_sensor.motion_sensor_158d0001d66ce9
     # - binary_sensor.lightness
     - input_text.miai
+    - sensor.aircat2_temperature
+    - sensor.aircat2_humidity
+    - sensor.aircat2_pm25
+    - sensor.aircat2_hcho
 
 Washroom:
   entities:
@@ -127,10 +131,7 @@ Studyroom:
     - vacuum.vacuum
     - fan.purifier4
     - sensor.purifier4_temperature
-    # - sensor.aircat2_temperature
-    # - sensor.aircat2_humidity
-    # - sensor.aircat2_pm25
-    # - sensor.aircat2_hcho
+    - sensor.purifier4_humidity
     - sensor.purifier4_co2
     - sensor.studyroom_lightness
 
@@ -234,6 +235,10 @@ Balcony:
     - binary_sensor.motion_sensor_158d0001d66ce9
     # - binary_sensor.lightness
     - input_text.miai
+    - sensor.aircat2_temperature
+    - sensor.aircat2_humidity
+    - sensor.aircat2_pm25
+    - sensor.aircat2_hcho
 
 洗手间:
   view: yes
@@ -294,10 +299,7 @@ Balcony:
     - vacuum.vacuum
     - fan.purifier4
     - sensor.purifier4_temperature
-    # - sensor.aircat2_temperature
-    # - sensor.aircat2_humidity
-    # - sensor.aircat2_pm25
-    # - sensor.aircat2_hcho
+    - sensor.purifier4_humidity
     - sensor.purifier4_co2
     - sensor.studyroom_lightness
 
