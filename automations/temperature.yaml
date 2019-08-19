@@ -56,12 +56,13 @@
         sensor_id: sensor.purifier4_temperature
         #sensor_values: [28, 28.5, 32, 34] #fan_temperature
         #alt_sensor_values: [28.8, 30, 32, 34]
-        sensor_values: [29.8, 30.8, 32, 33]
-        alt_sensor_values: [30.5, 31, 32, 33]
+        sensor_values: [29.5, 30, 32, 33]
+        alt_sensor_values: [30, 31, 32, 33]
         alt_time_range: [2, 8]
         entity_id: climate.mitsubishi
         entity_attr: fan_mode
         entity_values: [low, mid, high, highest]
+        delay: 0
 
 - alias: 调节风扇@书房
   trigger:
