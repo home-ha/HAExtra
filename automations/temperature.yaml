@@ -13,7 +13,7 @@
       data:
         sensor_id: sensor.fresher2_temperature
         sensor_values: [27.5, 29.3, 30, 31, 32]
-        sensor_values: [28, 29.5, 30, 31, 32]
+        alt_sensor_values: [28, 29.5, 30, 31, 32]
         #alt_sensor_values: [28.5, 29.5, 30, 31, 32]
         alt_time_range: [2, 7]
         entity_id: climate.daikin3
