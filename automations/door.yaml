@@ -1,0 +1,31 @@
+# - alias: 入户门开启
+# #   trigger:
+#     platform: state
+#     entity_id: binary_sensor.door_window_sensor_158d0001f3e5be
+#     from: 'off'
+#     to: 'on'
+#   action:
+#   - service: xiaomi_aqara.play_ringtone
+#     data:
+#       gw_mac: 34CE0090901A
+#       ringtone_id: 10001
+#       ringtone_vol:100
+
+#
+- alias: 阳台灯感应
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      from: 'on'
+      to: 'off'
+  condition:
+    - condition: state
+      entity_id: sun.sun
+      state: below_horizon
+  action:
+    - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
+      entity_id: light.balcony_light

@@ -1,0 +1,94 @@
+- alias: 除湿机开@餐厅
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.aircat_humidity
+      above: 74
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_on
+      entity_id: switch.outlet
+
+- alias: 除湿机关@餐厅
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.aircat_humidity
+      below: 70
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_off
+      entity_id: switch.outlet
+
+- alias: 除湿机开@卧室
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier7_humidity
+      above: 75
+      for:
+        minutes: 10
+  condition:
+    - condition: state
+      entity_id: sun.sun
+      state: above_horizon
+  action:
+    - service: switch.turn_on
+      entity_id: switch.outlet2
+
+- alias: 除湿机关@卧室
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.purifier7_humidity
+      below: 72
+      for:
+        minutes: 10
+    - platform: time
+      at: '20:30:00'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.outlet2
+
+# - alias: 加湿器开@餐厅
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.purifier5_humidity
+#       below: 52
+#       for:
+#         minutes: 10
+#   action:
+#     - service: fan.turn_on
+#       entity_id: fan.purifier5
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.purifier5
+#         oscillating: true
+
+# - alias: 加湿器开@主卧
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.fresher2_humidity
+#       below: 52
+#       for:
+#         minutes: 10
+#   action:
+#     - service: fan.turn_on
+#       entity_id: fan.purifier7
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.purifier7
+#         oscillating: true
+
+# - alias: 加湿器开@儿童房
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.purifier7_humidity
+#       below: 52
+#       for:
+#         minutes: 10
+#   action:
+#     - service: fan.turn_on
+#       entity_id: fan.purifier7
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.purifier7
+#         oscillating: true

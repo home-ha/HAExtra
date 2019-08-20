@@ -3,35 +3,43 @@ turn_on_projector:
   alias: 打开投影仪
   sequence:
     - service: automation.turn_off
-      entity_id: automation.study_switch_dbclicked
+      entity_id: automation.shu_fang_an_niu_shuang_ji_kai_guan_tou_ying_yi
     - service: switch.turn_on
       entity_id: switch.projector_power
     - delay: 2
-    - service: switch.turn_on
-      entity_id: switch.benq
-    - service: switch.turn_on
-      entity_id: switch.himedia
+    - service: broadlink.send # BenQ On
+      data:
+        host: Remote
+        packet: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
+    - service: broadlink.send # HiMedia On
+      data:
+        host: Remote
+        packet: 'JgBgAAABJ5QSExITExITExI4EhMSExITEjgSOBI4EjgTEhM4EjgSOBI4EhMSOBI4EjgTEhM4EhMSExI4EhMSExITEjgSExM3EwAFGQABJksSAAxWAAEnSxIADFYAASZLEgANBQAAAAAAAAAA'
     - service: cover.close_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
     #- service: cover.close_cover
     #  entity_id: cover.airer
-    - service: fan.turn_on
-      entity_id: fan.purifier
+    - service: homeassistant.turn_on
+      entity_id:
+        - fan.purifier
+        - switch.speaker
+        #- switch.station
+    - service: homeassistant.turn_off
+      entity_id:
+        - light.studyroom_light
+        - light.passage_light
+        #- light.airer_light
     - service: fan.set_speed
       data:
         entity_id: fan.purifier
         speed: auto
-    - service: switch.turn_on
-      entity_id: switch.speaker
-    #- service: light.turn_off
-    #  entity_id: light.airer_light
-    - service: light.turn_off
-      entity_id: light.study_light
     - delay: 2
-    - service: switch.turn_on
-      entity_id: switch.benq
+    - service: broadlink.send # BenQ On
+      data:
+        host: Remote
+        packet: 'JgDYAAABJ5QSExITEhMRFBEUERMSExITEhMRFBEUERMSOBE4EhMSExI4ETgSOBE4EhMSExI4ERQRExITEhMSExE4EjgSExE4EgAF='
     - service: automation.turn_on
-      entity_id: automation.study_switch_dbclicked
+      entity_id: automation.shu_fang_an_niu_shuang_ji_kai_guan_tou_ying_yi
     - condition: numeric_state
       entity_id: sensor.purifier_temperature
       above: 28
@@ -43,25 +51,33 @@ turn_off_projector:
   alias: 关闭投影仪
   sequence:
     - service: automation.turn_off
-      entity_id: automation.study_switch_dbclicked
-    - service: switch.turn_off
-      entity_id: switch.benq
-    - service: switch.turn_off
-      entity_id: switch.himedia
+      entity_id: automation.shu_fang_an_niu_shuang_ji_kai_guan_tou_ying_yi
+    - service: broadlink.send # BenQ Off
+      data:
+        host: Remote
+        packet: 'JgAgAQABJ5QSExITEhITEhMSEhMSExITEhITEhMSEhMSOBI3ExISExITEjcTNxI3ExITEhI4EhITNxITEhMSExI3EzcSExI3EwAF='
+    - service: broadlink.send # HiMedia Off
+      data:
+        host: Remote
+        packet: 'JgBgAAABJ5QSExITExITExI4EhMSExITEjgSOBI4EjgTEhM4EjgSOBI4EhMSOBI4EjgTEhM4EhMSExI4EhMSExITEjgSExM3EwAFGQABJksSAAxWAAEnSxIADFYAASZLEgANBQAAAAAAAAAA'
     - service: cover.open_cover
-      entity_id: cover.study_cover
+      entity_id: cover.studyroom_cover
     - service: mqtt.publish
       data:
         topic: NodeMCU3/relay/0/set
         payload: 'off'
-    - service: switch.turn_off
-      entity_id: switch.benq
-    - service_template: "{% if is_state('sun.sun', 'below_horizon') %}light.turn_on{% else %}light.turn_off{% endif %}"
-      entity_id: light.study_light
-    - service: switch.turn_off
-      entity_id: switch.mitsubishi
+    - service: broadlink.send # BenQ Off
+      data:
+        host: Remote
+        packet: 'JgAgAQABJ5QSExITEhITEhMSEhMSExITEhITEhMSEhMSOBI3ExISExITEjcTNxI3ExITEhI4EhITNxITEhMSExI3EzcSExI3EwAF='
+    - service_template: '{% if is_state("sun.sun", "below_horizon") %}light.turn_on{% else %}light.turn_off{% endif %}'
+      entity_id:
+        - light.studyroom_light
+        #- light.passage_light
+    - service: climate.turn_off
+      entity_id: climate.mitsubishi
     - delay: 250
     - service: switch.turn_off
       entity_id: switch.projector_power
     - service: automation.turn_on
-      entity_id: automation.study_switch_dbclicked
+      entity_id: automation.shu_fang_an_niu_shuang_ji_kai_guan_tou_ying_yi

@@ -168,7 +168,7 @@ class xiaomi_tts:
                 auth_post_data['captCode']=captCode
                 self._headers['Cookie']=self._headers['Cookie']+'; ick={}'.format(self._cookies['ick'])
             r= self._request.post(url,headers=self._headers,data=auth_post_data,timeout=3,cookies=self._cookies,verify=False)
-            self._cookies['pwdToken']=self._request.cookies.get_dict()['pwdToken']
+            self._cookies['pwdToken']=self._request.cookies.get_dict()['passToken']
             self._serviceLoginAuth2_json=json.loads(r.text[11:])
             return True
         except BaseException as e:
@@ -213,15 +213,16 @@ class xiaomi_tts:
             r = self._request.post(url,headers={'Cookie':tts_cookie},timeout=10,verify=False)
             if json.loads(r.text)['message'] == 'Success':
                 return True
-            elif json.loads(r.text)['message'] == 'ubus error':
+            elif json.loads(r.text)['error'] == 'ubus error':
                 _LOGGER.error(json.loads(r.text))
-            elif json.loads(r.text)['message'] == 'Unauthorized':
+            elif json.loads(r.text)['error'] == 'Unauthorized':
                 _LOGGER.error(json.loads(r.text))
                 self.login_resutl = False
                 return False
             else:
-                self.login_resutl = False
-                return False
+                _LOGGER.error(json.loads(r.text))
+                # self.login_resutl = False
+                return True
         except IndexError as e:
             _LOGGER.error('你没有那个音箱！')
         except AttributeError as e:
@@ -240,9 +241,9 @@ class xiaomi_tts:
             r = self._request.post(url,headers={'Cookie':tts_cookie},timeout=10,verify=False)
             if json.loads(r.text)['message'] == 'Success':
                 return True
-            elif json.loads(r.text)['message'] == 'ubus error':
+            elif json.loads(r.text)['error'] == 'ubus error':
                 _LOGGER.error(json.loads(r.text))
-            elif json.loads(r.text)['message'] == 'Unauthorized':
+            elif json.loads(r.text)['error'] == 'Unauthorized':
                 _LOGGER.error(json.loads(r.text))
                 self.login_resutl = False
                 return False
@@ -264,9 +265,9 @@ class xiaomi_tts:
             r = self._request.post(url,headers={'Cookie':tts_cookie},timeout=10,verify=False)
             if json.loads(r.text)['message'] == 'Success':
                 return True
-            elif json.loads(r.text)['message'] == 'ubus error':
+            elif json.loads(r.text)['error'] == 'ubus error':
                 _LOGGER.error(json.loads(r.text))
-            elif json.loads(r.text)['message'] == 'Unauthorized':
+            elif json.loads(r.text)['error'] == 'Unauthorized':
                 _LOGGER.error(json.loads(r.text))
                 self.login_resutl = False
                 return False
@@ -295,7 +296,7 @@ DEFAULT_MIAI_NUM = '0'
 DEFAULT_MIAI_SPEED = 0.27
 DEFAULT_WAIT_TIME = 0
 
-DOMAIN = 'hello_miai'
+DOMAIN = 'miai'
 
 SERVICE_SCHEMA = vol.Schema({
 vol.Required(ATTR_MESSAGE): cv.string,
@@ -433,9 +434,9 @@ def setup(hass, config):
 
 
 
-    hass.services.register(DOMAIN, 'force_send', send_message,
+    hass.services.register(DOMAIN, 'speak', send_message,
                            schema=SERVICE_SCHEMA)
-    hass.services.register(DOMAIN, 'send', add_msg2queue,
+    hass.services.register(DOMAIN, 'say', add_msg2queue,
                            schema=SERVICE_SCHEMA_FOR_QUEUE)
     hass.services.register(DOMAIN, 'set_vol', player_set_volume,
                            schema=SERVICE_SCHEMA_FOR_SET_VOLUME)

@@ -1,0 +1,10 @@
+- alias: 小爱音箱朗读
+  trigger:
+    - platform: state
+      entity_id: input_text.miai
+  action:
+    - condition: template
+      value_template: '{{ states("input_text.miai") != "unknown" and states("input_text.miai") != "" }}'
+    - service: miai.say
+      data_template:
+        message: '{{ states("input_text.miai") }}'

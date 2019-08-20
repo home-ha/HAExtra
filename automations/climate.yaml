@@ -1,0 +1,88 @@
+- alias: 客厅空调开
+  trigger:
+    # - platform: state
+    #   entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+    #   to: 'on'
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      to: 'off'
+    # - platform: numeric_state
+    #   entity_id: sensor.fresher_temperature
+    #   above: 29
+    #   for:
+    #     minutes: 3
+  condition:
+    - condition: time
+      after: '08:00'
+      before: '21:00'
+    - condition: numeric_state
+      entity_id: sensor.fresher_temperature
+      above: 29
+    - condition: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      state: 'off'
+    - condition: state
+      entity_id: climate.daikin2
+      state: 'off'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sun.sun
+          state: above_horizon
+        - condition: state
+          entity_id: light.livingroom_light
+          state: 'on'
+  action:
+    - service: climate.turn_on
+      entity_id: climate.daikin2
+
+- alias: 客厅空调关
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      to: 'on'
+      for:
+        minutes: 2
+    - platform: state
+      entity_id: light.livingroom_light
+      from: 'on'
+      to: 'off'
+      for:
+        seconds: 15
+    - platform: numeric_state
+      entity_id: sensor.fresher_temperature
+      below: 27
+      for:
+        minutes: 3
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: climate.daikin1
+          state: cool
+        - condition: state
+          entity_id: climate.daikin1
+          state: heat
+        - condition: state
+          entity_id: climate.daikin1
+          state: dry
+        - condition: state
+          entity_id: climate.daikin1
+          state: fan_only
+        - condition: state
+          entity_id: climate.daikin2
+          state: cool
+        - condition: state
+          entity_id: climate.daikin2
+          state: heat
+        - condition: state
+          entity_id: climate.daikin2
+          state: dry
+        - condition: state
+          entity_id: climate.daikin2
+          state: fan_only
+  action:
+    - service: climate.turn_off
+      entity_id: climate.daikin2
+    - service: climate.turn_off
+      entity_id: climate.daikin1

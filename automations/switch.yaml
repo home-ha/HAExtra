@@ -1,0 +1,108 @@
+- alias: 按钮@过道单击—播报空气
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d0001e59b33
+        click_type: single
+  action:
+    - service: miai.say
+      data_template:
+        message: '阳台PM2.5为{{ states("sensor.balcony_pm25") }}，餐厅PM2.5为{{ states("sensor.aircat_pm25") }}，主卧PM2.5为{{ states("sensor.fresher2_pm25") }}。客厅二氧化碳浓度为{{ states("sensor.fresher_co2") }}，主卧二氧化碳浓度为{{ states("sensor.fresher2_co2") }}，儿童房二氧化碳浓度为{{ states("sensor.purifier7_co2") }}'
+
+- alias: 按钮@过道双击—启用烘干
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d0001e59b33
+        click_type: double
+  action:
+    - service: miai.say
+      data:
+        message: 晾衣机将于今晚定时开启烘干功能
+
+- alias: 按钮@过道长按—开关过道灯感应
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d0001e59b33
+        click_type: long_click_press
+  action:
+    - service: automation.toggle
+      entity_id: automation.guo_dao_deng_bai_tian_kai
+    - service: automation.toggle
+      entity_id: automation.guo_dao_deng_wan_shang_kai
+    - service: automation.toggle
+      entity_id: automation.guo_dao_bei_jing_deng_gan_ying
+    - service: miai.say
+      data_template:
+        message: '过道灯自动感应功能已{% if is_state("automation.guo_dao_bei_jing_deng_gan_ying", "on") %}启用{% else %}暂停，所有灯光将在10秒后关闭{% endif %}'
+    - delay: '00:00:10'
+    - condition: state
+      entity_id: automation.guo_dao_bei_jing_deng_gan_ying
+      state: 'off'
+    - service: automation.turn_on
+      entity_id: automation.guo_dao_deng_gan_ying_zhong_qi
+    - service: homeassistant.turn_off
+      entity_id: group.all_lights
+
+- alias: 过道灯感应重启
+  initial_state: false
+  trigger:
+    - platform: time
+      at: '07:00:00'
+  action:
+    - service: automation.turn_on
+      entity_id: automation.guo_dao_deng_bai_tian_kai
+    - service: automation.turn_on
+      entity_id: automation.guo_dao_deng_wan_shang_kai
+    - service: automation.turn_on
+      entity_id: automation.guo_dao_bei_jing_deng_gan_ying
+    - service: miai.say
+      data:
+        message: 过道灯自动感应功能已重新启用
+    - delay: '00:00:10'
+    - service: automation.turn_off
+      entity_id: automation.guo_dao_deng_gan_ying_zhong_qi
+
+- alias: 按钮@书房单击—切换音箱
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d000201a73f
+        click_type: single
+  action:
+    - service: mqtt.publish
+      data:
+        topic: NodeMCU3/relay/0/set
+        payload: toggle
+
+- alias: 按钮@书房双击—开关投影仪
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d000201a73f
+        click_type: double
+  action:
+    - service: miai.say
+      data_template:
+        message: '正在{% if is_state("switch.projector", "on") %}关闭{% else %}打开{% endif %}投影仪'
+    - service: switch.toggle
+      entity_id: switch.projector
+
+- alias: 按钮@书房长按—关闭音箱
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d000201a73f
+        click_type: long_click_press
+  action:
+    - service: mqtt.publish
+      data:
+        topic: NodeMCU3/relay/0/set
+        payload: 'off'

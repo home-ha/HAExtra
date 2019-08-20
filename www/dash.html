@@ -188,7 +188,6 @@
 		<script>
 			_ws = null // WebSocket handle
 			_wsid = 0 // WebSocket session id
-			_wsapi = null // WebSocket api url
 			_token = null // Access token or password
 			_call_entity_id = null // Processing entity_id
 			_entities = null // All entities
@@ -211,14 +210,18 @@
 				document.styleSheets[1].cssRules[0].style.width = width + 'px'
 				//alert('clientWidth:' + clientWidth + ' count:' + count + ' width:' + width);
 
+				connect()
+			}
+
+			function connect() {
 				// Parse api url
 				var params = location.search.split('@')
 				if (params.length > 1 && params[1].startsWith('ws')) {
-					_wsapi = params[1]
+					var wsapi = params[1]
 				} else {
-					_wsapi = (location.protocol == 'https:' ? 'wss://' : 'ws://') + location.host
+					var wsapi = (location.protocol == 'https:' ? 'wss://' : 'ws://') + location.host
 				}
-				_wsapi += '/api/websocket'
+				wsapi += '/api/websocket'
 
 				// Parse access token
 				_token = params[0].slice(1)
@@ -228,13 +231,9 @@
 					} catch (e) {}
 				}
 
-				connect()
-			}
-
-			function connect() {
 				floater('loading')
 
-				_ws = new WebSocket(_wsapi)
+				_ws = new WebSocket(wsapi)
 				_ws.onopen = handleOpen
 				_ws.onclose = handleClose
 				_ws.onmessage = handleMessage
@@ -302,8 +301,8 @@
 						}
 						break
 					case 'auth_invalid':
-						var error = '无效认证！请先<a href="javascript:location=\'' + location.protocol + '//' + location.host + '\'">登录首页</a>'
-						error += '，或指定密码和地址' + location.href.split('?')[0] + '?password@ws:host:8123'
+						var error = '无效认证！请先 <a href="javascript:location=\'' + location.protocol + '//' + location.host + '\'">登录首页</a> 并保存后 <a href="javascript:location.reload()">刷新</a>'
+						error += '<div style="font-size:8px; color:#999999; line-height: 16px">也可以指定长期访问令牌和地址，如：' + location.href.split('?')[0] + '?password@ws:host:8123</div>'
 						floater('error', error)
 						break
 					default:
@@ -313,8 +312,8 @@
 			}
 
 			_DOMAIN_ICONS = {
-				sensor: 'flower',
 				weather: 'weather-partlycloudy',
+				sensor: 'flower',
 				binary_sensor: 'bullseye',
 				device_tracker: 'account',
 
@@ -398,6 +397,8 @@
 				var off = grid.children[1].className.startsWith('state off')
 				if (grid.className == 'entity cover') {
 					var service = off ? 'open_cover' : 'close_cover'
+				} else if (grid.className == 'entity vacuum') {
+					var service = off ? 'start' : 'return_to_base'
 				} else {
 					var service = off ? 'turn_on' : 'turn_off'
 				}
@@ -427,7 +428,7 @@
 				var grid = extra.parentElement
 				var mode = moder.options[moder.selectedIndex].value
 				if (grid.className == 'entity climate') {
-					callService('set_operation_mode', { entity_id: grid.id, operation_mode: mode }, moder)
+					callService('set_hvac_mode', { entity_id: grid.id, hvac_mode: mode }, moder)
 				} else {
 					callService('set_speed', { entity_id: grid.id, speed: mode }, moder)
 				}
@@ -475,7 +476,9 @@
 				heat: '制热',
 				dry: '除湿',
 				fan: '送风',
+				fan_only: '送风',
 
+				None: '无',
 				unknown: '未知',
 				unavailable: '不可用'
 			}
@@ -536,7 +539,7 @@
 				var name = attributes.hasOwnProperty('dash_name') ? renderTemplate(attributes.dash_name, state, attributes) : attributes.friendly_name
 				var html = '<div class="name">' + name + '</div>'
 
-				var na = state == '' || state == 'unavailable' || state == 'unknown'
+				var na = state == '' || state == 'unavailable' || state == 'unknown' ||  state == 'None'
 				var off =
 					state == 'off' || state == 'not_home' || state == 'closed' || state == 'docked' || state == 'idle' || state == 'low' || na ? ' off' : ''
 
@@ -588,12 +591,12 @@
 						}
 
 						extra += '<select class="moder" onclick="event.stopPropagation()" onchange="handleMode(this)">'
-						var current = domain == 'climate' ? attributes.operation_mode : attributes.speed
-						var mode_list = domain == 'climate' ? attributes.operation_list : attributes.speed_list
+						var current = domain == 'climate' ? state : (attributes.speed_level || attributes.speed)
+						var mode_list = domain == 'climate' ? attributes.hvac_modes : attributes.speed_list
 						for (var i in mode_list) {
 							var mode = mode_list[i]
 							var key = mode.toLowerCase()
-							var text = _STATE_MAPS[key] || mode.replace('level', '档位')
+							var text = _STATE_MAPS[key] || mode.replace(/level/ig, '档位')
 							extra += '<option value="' + mode + '"' + (mode == current ? ' selected' : '') + '>' + text
 							if (mode == current && domain == 'climate') {
 								extra += ' ' + attributes.temperature
@@ -670,7 +673,15 @@
 					} else {
 						result += template.slice(end)
 					}
-					return result.startsWith('eval:') ? eval(result.slice(5)) : result
+					if (result.startsWith('eval:')) {
+						try {
+							return eval(result.slice(5))
+						} catch (e) {
+							console.log('执行错误：' + result)
+							return '错误'
+						}
+					}
+					return result
 				}
 			}
 

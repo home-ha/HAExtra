@@ -1,0 +1,26 @@
+- alias: 调节新风@客厅
+  trigger:
+    - platform: state
+      entity_id: sensor.fresher_co2
+  action:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.fresher_co2
+        sensor_values: [500, 680, 730]
+        entity_id: fan.fresher
+        entity_attr: speed
+        entity_values: [Auto, Middle, Strong]
+
+- alias: 调节新风@主卧
+  trigger:
+    - platform: state
+      entity_id: sensor.fresher2_co2
+  action:
+    - service: actuator.actuate
+      data:
+        sensor_id: sensor.fresher2_co2
+        sensor_values: [500, 730, 800]
+        alt_sensor_values: [550, 800, 1100]
+        entity_id: fan.fresher2
+        entity_attr: speed
+        entity_values: [Auto, Middle, Strong]

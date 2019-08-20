@@ -46,8 +46,9 @@ class MqttSwitch2(MqttSwitch):
             icon_template.hass = self.hass
 
         @callback
-        def state_message_received(topic, payload, qos):
+        def state_message_received(msg):
             """Handle new MQTT state messages."""
+            payload = msg.payload
             if icon_template is not None:
                 self._icon = icon_template.async_render_with_possible_json_value(payload)
 

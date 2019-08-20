@@ -4,7 +4,6 @@ Saswell platform that offers a Saswell climate device.
 For more details about this platform, please refer to the documentation
 https://home-assistant.io/components/climate/saswell
 """
-
 import asyncio
 import logging
 
@@ -13,12 +12,13 @@ from datetime import timedelta
 import time
 import voluptuous as vol
 
-from homeassistant.components.climate import (
-    ClimateDevice, SUPPORT_TARGET_TEMPERATURE, SUPPORT_AWAY_MODE,
-    SUPPORT_ON_OFF, SUPPORT_OPERATION_MODE)
-from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.components.climate import ClimateDevice, PLATFORM_SCHEMA
+from homeassistant.components.climate.const import (SUPPORT_TARGET_TEMPERATURE,
+    SUPPORT_PRESET_MODE, ATTR_HVAC_MODE, HVAC_MODE_HEAT, HVAC_MODE_OFF,
+    CURRENT_HVAC_HEAT, CURRENT_HVAC_OFF, ATTR_CURRENT_TEMPERATURE,
+    ATTR_PRESET_MODE, PRESET_HOME, PRESET_AWAY)
 from homeassistant.const import (
-    CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SCAN_INTERVAL,
+    ATTR_ID, CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SCAN_INTERVAL,
     ATTR_TEMPERATURE)
 from homeassistant.helpers.event import async_track_time_interval
 import homeassistant.helpers.config_validation as cv
@@ -36,17 +36,8 @@ CTRL_URL = "http://api.scinan.com/v1.0/sensors/control?" \
     "control_data=%%7B%%22value%%22%%3A%%22%s%%22%%7D&device_id=%s" \
     "&format=json&sensor_id=%s&sensor_type=1"
 
-CONF_TEMPERATURE = 'temperature'
-CONF_TARGET_TEMPERATURE = 'target_temperature'
-CONF_OPERATION = 'operation'
-CONF_AWAY = 'away'
-CONF_IS_ON = 'is_on'
-
-CONF_OPERATION_LIST = 'operation_list'
-CONF_FAN_LIST = 'fan_list'
-CONF_SWING_LIST = 'swing_list'
-
 DEFAULT_NAME = 'Saswell'
+ATTR_AVAILABLE = 'available'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
@@ -56,9 +47,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
         vol.All(cv.time_period, cv.positive_timedelta)),
 })
 
-
-async def async_setup_platform(hass, config, async_add_devices,
-                               discovery_info=None):
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the Saswell climate devices."""
     name = config.get(CONF_NAME)
     username = config.get(CONF_USERNAME)
@@ -74,7 +63,7 @@ async def async_setup_platform(hass, config, async_add_devices,
     devices = []
     for index in range(len(saswell.devs)):
         devices.append(SaswellClimate(saswell, name, index))
-    async_add_devices(devices)
+    async_add_entities(devices)
 
     saswell.devices = devices
     async_track_time_interval(hass, saswell.async_update, scan_interval)
@@ -99,13 +88,12 @@ class SaswellClimate(ClimateDevice):
     @property
     def available(self):
         """Return if the sensor data are available."""
-        return self.get_value('online')
+        return self.get_value(ATTR_AVAILABLE)
 
     @property
     def supported_features(self):
         """Return the list of supported features."""
-        return SUPPORT_TARGET_TEMPERATURE | SUPPORT_AWAY_MODE | \
-            SUPPORT_ON_OFF | SUPPORT_OPERATION_MODE
+        return SUPPORT_TARGET_TEMPERATURE | SUPPORT_PRESET_MODE
 
     @property
     def temperature_unit(self):
@@ -120,32 +108,37 @@ class SaswellClimate(ClimateDevice):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        return self.get_value(CONF_TEMPERATURE)
+        return self.get_value(ATTR_CURRENT_TEMPERATURE)
 
     @property
     def target_temperature(self):
         """Return the temperature we try to reach."""
-        return self.get_value(CONF_TARGET_TEMPERATURE)
+        return self.get_value(ATTR_TEMPERATURE)
 
     @property
-    def current_operation(self):
+    def hvac_action(self):
         """Return current operation ie. heat, cool, idle."""
-        return 'heat' if self.is_on else 'off'
+        return CURRENT_HVAC_HEAT if self.hvac_mode == HVAC_MODE_HEAT else CURRENT_HVAC_OFF
 
     @property
-    def operation_list(self):
+    def hvac_mode(self):
+        """Return hvac target hvac state."""
+        return self.get_value(ATTR_HVAC_MODE)
+
+    @property
+    def hvac_modes(self):
         """Return the list of available operation modes."""
-        return ['heat', 'off']
+        return [HVAC_MODE_HEAT, HVAC_MODE_OFF]
 
     @property
-    def is_away_mode_on(self):
-        """Return if away mode is on."""
-        return self.get_value(CONF_AWAY)
+    def preset_mode(self):
+        """Return preset mode."""
+        return self.get_value(ATTR_PRESET_MODE)
 
     @property
-    def is_on(self):
-        """Return true if the device is on."""
-        return self.get_value(CONF_IS_ON)
+    def preset_modes(self):
+        """Return preset modes."""
+        return [PRESET_HOME, PRESET_AWAY]
 
     @property
     def should_poll(self):  # pylint: disable=no-self-use
@@ -156,30 +149,18 @@ class SaswellClimate(ClimateDevice):
         """Set new target temperatures."""
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is not None:
-            await self.set_value(CONF_TARGET_TEMPERATURE, temperature)
+            await self.set_value(ATTR_TEMPERATURE, temperature)
+        #self.async_write_ha_state()
 
-    async def async_set_operation_mode(self, operation_mode):
+    async def async_set_hvac_mode(self, hvac_mode):
         """Set new target temperature."""
-        if operation_mode == 'off':
-            await self.set_value(CONF_IS_ON, False)
-        else:
-            await self.set_value(CONF_IS_ON, True)
+        await self.set_value(ATTR_HVAC_MODE, hvac_mode)
+        #self.async_write_ha_state()
 
-    async def async_turn_away_mode_on(self):
-        """Turn away mode on."""
-        await self.set_value(CONF_AWAY, True)
-
-    async def async_turn_away_mode_off(self):
-        """Turn away mode off."""
-        await self.set_value(CONF_AWAY, False)
-
-    async def async_turn_on(self):
-        """Turn on."""
-        await self.set_value(CONF_IS_ON, True)
-
-    async def async_turn_off(self):
-        """Turn off."""
-        await self.set_value(CONF_IS_ON, False)
+    async def async_set_preset_mode(self, preset_mode):
+        """Update preset_mode on."""
+        await self.set_value(ATTR_PRESET_MODE, preset_mode)
+        #self.async_write_ha_state()
 
     def get_value(self, prop):
         """Get property value"""
@@ -239,12 +220,12 @@ class SaswellData():
             devs = []
             for dev in json:
                 status = dev['status'].split(',')
-                devs.append({'is_on': status[1] == '1',
-                             'away': status[5] == '1',  # 8?
-                             'temperature': float(status[2]),
-                             'target_temperature': float(status[3]),
-                             'online': dev['online'] == '1',
-                             'id': dev['id']})
+                devs.append({ATTR_HVAC_MODE: HVAC_MODE_HEAT if status[1] == '1' else HVAC_MODE_OFF,
+                             ATTR_PRESET_MODE: PRESET_AWAY if status[5] == '1' else PRESET_HOME,  # 8?
+                             ATTR_CURRENT_TEMPERATURE: float(status[2]),
+                             ATTR_TEMPERATURE: float(status[3]),
+                             ATTR_AVAILABLE: dev['online'] == '1',
+                             ATTR_ID: dev['id']})
             self.devs = devs
             _LOGGER.info("List device: devs=%s", self.devs)
         except BaseException:
@@ -254,15 +235,15 @@ class SaswellData():
     async def control(self, index, prop, value):
         """Control device via server."""
         try:
-            if prop == 'is_on':
+            if prop == ATTR_HVAC_MODE:
                 sensor_id = '01'
-                data = '1' if value else '0'
-            elif prop == 'target_temperature':
+                data = '1' if value == HVAC_MODE_HEAT else '0'
+            elif prop == ATTR_TEMPERATURE:
                 sensor_id = '02'
                 data = value
-            elif prop == 'away':
+            elif prop == ATTR_PRESET_MODE:
                 sensor_id = '03'
-                data = '1' if value else '0'
+                data = '1' if value == PRESET_AWAY else '0'
             else:
                 return False
 

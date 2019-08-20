@@ -1,10 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
-from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.entity import Entity
-from homeassistant.const import CONF_NAME, CONF_MAC, CONF_SENSORS, TEMP_CELSIUS
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-import voluptuous as vol
 import json
 import socket
 import select
@@ -63,7 +58,7 @@ class AirCatData(object):
         data = conn.recv(
             4096)  # If connection is closed, recv() will result a timeout exception and receive '' next time, so we can purge connection list
         if not data:
-            _LOGGER.error('Closed %s', conn)
+            _LOGGER.debug('Closed %s', conn)
             self._rlist.remove(conn)
             conn.close()
             return
@@ -92,7 +87,7 @@ class AirCatData(object):
             except:
                 _LOGGER.error('%d Received invalid: %s', self._times, data)
         else:
-            _LOGGER.error('%d Received short payload: %s', self._times, data)
+            _LOGGER.debug('%d Received short payload: %s', self._times, data)
 
         response = self.response(data, payload, end)
         if response:
@@ -166,6 +161,11 @@ Support for AirCat air sensor.
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.aircat/
 """
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.entity import Entity
+from homeassistant.const import CONF_NAME, CONF_MAC, CONF_SENSORS, TEMP_CELSIUS
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+import voluptuous as vol
 
 
 SENSOR_PM25 = 'value'

@@ -136,6 +136,13 @@ class CaiYunWeather(WeatherEntity):
     def available(self):
         return bool(self._data)
 
+    @property
+    def state_attributes(self):
+        """Return the state attributes."""
+        attributes = super().state_attributes
+        attributes['pm25'] = self._data.get('pm25')
+        return attributes
+
     # @Throttle(timedelta(minutes=20))
     async def async_update(self):
         """Update Condition and Forecast."""
@@ -152,7 +159,7 @@ class CaiYunWeather(WeatherEntity):
             session = self._hass.helpers.aiohttp_client.async_get_clientsession()
             async with session.get(url, headers=headers) as response:
                 json = await response.json()
-            _LOGGER.info('gotWeatherData: %s', json)
+            #_LOGGER.info('gotWeatherData: %s', json)
             result = json['result']
             realtime = result['realtime']
             if realtime['status'] != 'ok':
@@ -172,9 +179,8 @@ class CaiYunWeather(WeatherEntity):
                 data['wind_bearing'] = wind.get('direction')
             data['ozone'] = realtime.get('o3')
             data['visibility'] = realtime.get('visibility')
-
-            data['attribution'] = result['forecast_keypoint'] + \
-                ' | PM2.5=' + str(realtime.get('pm25'))
+            data['attribution'] = result['forecast_keypoint']
+            data['pm25'] = realtime.get('pm25')
 
             forecasts = {}
             daily = result['daily']
